@@ -6,12 +6,16 @@ public class Edge {
 	private final Node secondNode;
 
 	private Boolean accessible;
+	
+	private Double length;
 
 	public Edge(Node firstNode, Node secondNode) {
 		this.firstNode = firstNode;
 		this.secondNode = secondNode;
 
 		this.accessible = Boolean.TRUE;
+		
+		this.length = this.calcLinearDistance();
 
 		this.firstNode.addEdge(this);
 		this.secondNode.addEdge(this);
@@ -32,8 +36,17 @@ public class Edge {
 	public void setAccessible(Boolean accessible) {
 		this.accessible = accessible;
 	}
+	
+	public Double getLength() {
+		return length;
+	}
 
-	public Double getLength() { // TODO: calculate only once (maybe setter?)
+	public void setLength(Double length) {
+		this.length = length;
+	}
+
+	public Double calcLinearDistance(){
+
 		Integer deltaX = this.getSecondNode().getX() - this.getFirstNode().getX();
 		Integer deltaY = this.getSecondNode().getY() - this.getFirstNode().getY();
 
@@ -48,6 +61,6 @@ public class Edge {
 		}
 
 		return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
-
 	}
+
 }
