@@ -27,7 +27,8 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 		Node lastNode = doEulerianTrail(minSpanningTree, startingNode, path);
 
-		// Connect the last node from the eulerian path with the start node to close the circle
+		// Connect the last node from the eulerian path with the start node to
+		// close the circle
 		path.add(startingNode.getEdgeToNode(lastNode));
 
 		return path;
@@ -83,53 +84,61 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 		Node currentNode = startingNode;
 
 		for (Edge edge : minSpanningTree) {
-			
+
 			// Find all edge from the node in the spanning tree
 			if (edge.getFirstNode() == startingNode) {
-
-				// Remove the edge from the spanning tree, because this edge is used
-				minSpanningTree.remove(edge);
 
 				// Connect the current node with the node from the new edge
 				path.add(currentNode.getEdgeToNode(edge.getSecondNode()));
 
+				// Remove the edge from the spanning tree, because this edge is
+				// used
+				LinkedList<Edge> subMinSpanningTree = (LinkedList<Edge>) minSpanningTree
+						.clone();
+				subMinSpanningTree.remove(edge);
+				
 				// Prepare the currentPath for the gui
 				this.currentPath.clear();
 				this.currentPath.addAll(path);
-				this.currentPath.addAll(minSpanningTree);
+				this.currentPath.addAll(subMinSpanningTree);
 
 				// Notify the observers that we changed
 				this.setChanged();
 				this.notifyObservers();
 
-				// Go deeper and set the result as new current node, so we can handle the branches.
-				currentNode = doEulerianTrail(minSpanningTree, currentNode,
+				// Go deeper and set the result as new current node, so we can
+				// handle the branches.
+				currentNode = doEulerianTrail(subMinSpanningTree, currentNode,
 						path);
 
 			} else if (edge.getSecondNode() == startingNode) {
 
-				// Remove the edge from the spanning tree, because this edge is used
-				minSpanningTree.remove(edge);
-
 				// Connect the current node with the node from the new edge
 				path.add(currentNode.getEdgeToNode(edge.getFirstNode()));
+
+				// Remove the edge from the spanning tree, because this edge is
+				// used
+				LinkedList<Edge> subMinSpanningTree = (LinkedList<Edge>) minSpanningTree
+						.clone();
+				subMinSpanningTree.remove(edge);
 
 				// Prepare the currentPath for the gui
 				this.currentPath.clear();
 				this.currentPath.addAll(path);
-				this.currentPath.addAll(minSpanningTree);
+				this.currentPath.addAll(subMinSpanningTree);
 
 				// Notify the observers that we changed
 				this.setChanged();
 				this.notifyObservers();
-				
-				// Go deeper and set the result as new current node, so we can handle the branches.
-				currentNode = doEulerianTrail(minSpanningTree, currentNode,
+
+				// Go deeper and set the result as new current node, so we can
+				// handle the branches.
+				currentNode = doEulerianTrail(subMinSpanningTree, currentNode,
 						path);
 			}
 		}
 
-		// Return the current node it's always a leaf of the spanning tree.  
+		// Return the current node it's always a leaf of the spanning tree.
 		return currentNode;
 	}
 
