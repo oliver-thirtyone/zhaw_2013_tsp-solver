@@ -1,6 +1,6 @@
 package model.grid;
 
-public class Edge {
+public class Edge  implements Comparable<Edge>{
 
 	private final Node firstNode;
 	private final Node secondNode;
@@ -61,6 +61,11 @@ public class Edge {
 		}
 
 		return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+	}
+
+	@Override
+	public int compareTo(Edge edge) {
+		return this.length.compareTo(edge.getLength());
 	}
 
 }
