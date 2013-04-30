@@ -1,98 +1,112 @@
 package model.algorithm.start;
 
-import java.util.LinkedList;
 import java.util.Set;
 
 import model.grid.Edge;
 import model.grid.Node;
+import model.grid.Path;
 
 public class BruteForce extends StartAlgorithm {
 
+	private final int nodeCount;
+	private final Node[] nodes;
+	private final int[] nodeIndexes;
+
+	private final Path currentLightestPath;
+	private final Path currentNewPath;
+
+	private int outerLoopIndex;
+	private int innerLoopIndex;
+
+	public BruteForce(Set<Node> nodes, Node startingNode) {
+		super(nodes, startingNode);
+
+		this.nodeCount = this.getNodes().size();
+		this.nodes = this.getNodes().toArray(new Node[this.nodeCount]);
+		this.nodeIndexes = new int[this.nodeCount];
+
+		this.currentLightestPath = new Path();
+		this.currentNewPath = new Path();
+
+		this.reset();
+	}
+
 	@Override
-	public LinkedList<Edge> run(Set<Node> nodes, Node startingNode) {
+	protected boolean doStep() {
+		boolean successfulStep = true;
 
-		final LinkedList<Node> initNodePath = new LinkedList<Node>(nodes);
+		// Swap the node indexes
+		int temp = this.nodeIndexes[this.outerLoopIndex];
+		this.nodeIndexes[this.outerLoopIndex] = this.nodeIndexes[this.innerLoopIndex];
+		this.nodeIndexes[this.innerLoopIndex] = temp;
 
-		LinkedList<Edge> shortestPath = new LinkedList<Edge>();
+		// Create the new path
+		this.currentNewPath.clearEdges();
+		for (int i = 1; i <= this.nodeCount; i++) {
+			int firstIndex = this.nodeIndexes[i - 1];
+			int secondIndex = (i == this.nodeCount) ? this.nodeIndexes[0] : this.nodeIndexes[i];
 
-		shortestPath = convertToEdgePath(initNodePath);
+			Node firstNode = this.nodes[firstIndex];
+			Node secondNode = this.nodes[secondIndex];
 
-		Double shortestPathLength = calcPathLength(shortestPath);
+			Edge edge = firstNode.getEdgeToNode(secondNode);
+			if (edge == null) {
+				// FIXME: this path does not work, what do we do now?
+				return false;
+			}
 
-		final int size = initNodePath.size();
-		// Take every element in the list and change it with all other element
-		for (int i = 0; i < size; i++) {
-			// Skipping the combinations which have already been tried
-			for (int ii = i + 1; ii < size; ii++) {
+			this.currentNewPath.addEdge(edge);
+		}
 
-				// TODO: Optimize: Do not create a new object for every next
-				// Calculate next path combination
-				LinkedList<Node> nextNodePath = changeElements(
-						(LinkedList<Node>) initNodePath.clone(), i, ii);
+		// Add the lightest and the new path to the current path (for the GUI)
+		this.getCurrentPath().clearEdges();
+		this.getCurrentPath().addPath(this.currentLightestPath);
+		this.getCurrentPath().addPath(this.currentNewPath);
 
-				LinkedList<Edge> nextPath = convertToEdgePath(nextNodePath);
+		// Check if the new path is lighter
+		if (this.currentLightestPath.getWeight() == 0.0 || this.currentNewPath.getWeight() < this.currentLightestPath.getWeight()) {
+			this.currentLightestPath.clearEdges();
+			this.currentLightestPath.addPath(this.currentNewPath);
+		}
 
-				Double nextPathLength = calcPathLength(nextPath);
+		// Increase the inner loop index
+		this.innerLoopIndex++;
 
-				// Prepare the currentPath for the gui
-				this.currentPath.clear();
-				this.currentPath.addAll(shortestPath);
-				this.currentPath.addAll(nextPath);
+		// Increase the outer loop index if we are done with the inner loop
+		if (this.innerLoopIndex >= this.nodeCount) {
+			this.outerLoopIndex++;
+			this.innerLoopIndex = this.outerLoopIndex + 1; // Skip the combinations that we've already tried
 
-				// Notify the observers that we changed
-				this.setChanged();
-				this.notifyObservers();
-
-				// Check if the next path shorter
-				if (nextPathLength < shortestPathLength) {
-
-					shortestPath = nextPath;
-					shortestPathLength = nextPathLength;
-
-				}
-
+			// Prevent an "index out of bounds"-exception
+			if (this.innerLoopIndex >= this.nodeCount) {
+				this.innerLoopIndex = this.nodeCount - 1;
 			}
 		}
 
-		return shortestPath;
-	}
-
-	private LinkedList<Node> changeElements(LinkedList<Node> list, int first,
-			int second) {
-
-		Node tempNode = list.get(first);
-
-		list.set(first, list.get(second));
-
-		list.set(second, tempNode);
-
-		return list;
-
-	}
-
-	private LinkedList<Edge> convertToEdgePath(LinkedList<Node> path) {
-
-		LinkedList<Edge> edgePath = new LinkedList<Edge>();
-
-		Node currentNode = path.getFirst();
-
-		for (Node node : path) {
-			edgePath.add(currentNode.getEdgeToNode(node));
-			currentNode = node;
+		// Finish the algorithm if we are done with the outer loop
+		if (this.outerLoopIndex >= this.nodeCount) {
+			this.getCurrentPath().clearEdges();
+			this.getCurrentPath().addPath(this.currentLightestPath);
+			this.setFinishedSuccessful(true);
 		}
 
-		return edgePath;
+		return successfulStep;
 	}
 
-	private Double calcPathLength(LinkedList<Edge> path) {
+	@Override
+	protected void reset() {
+		super.reset();
 
-		Double length = 0.0;
+		this.currentLightestPath.clearEdges();
+		this.currentNewPath.clearEdges();
 
-		for (Edge edge : path) {
-			length += edge.getLength();
+		this.outerLoopIndex = 0;
+		this.innerLoopIndex = 0;
+
+		// Initialize the node indexes
+		for (int i = 0; i < this.nodeCount; i++) {
+			this.nodeIndexes[i] = i;
 		}
-
-		return length;
 	}
 
 }

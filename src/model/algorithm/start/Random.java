@@ -10,7 +10,7 @@ public class Random extends StartAlgorithm {
 
 	@Override
 	public LinkedList<Edge> run(Set<Node> nodes, Node startingNode) {
-		
+
 		LinkedList<Node> nodesToVisit = new LinkedList<Node>(nodes);
 		this.currentNode = startingNode;
 
@@ -18,11 +18,11 @@ public class Random extends StartAlgorithm {
 
 			// Remove the current node from the set of nodes to visit
 			nodesToVisit.remove(this.currentNode);
-			
+
 			Node nextNode = null;
 
 			// Get random a new node from the set of nodes to visit
-			nextNode = nodesToVisit.get((int)(Math.random() * (nodesToVisit.size() + 1)));
+			nextNode = nodesToVisit.get((int) (Math.random() * (nodesToVisit.size() + 1)));
 
 			// Add the new edge to the path
 			this.currentPath.add(nextNode.getEdgeToNode(this.currentNode));
@@ -39,10 +39,11 @@ public class Random extends StartAlgorithm {
 		Edge lastEdge = currentNode.getEdgeToNode(startingNode);
 		if (lastEdge != null) {
 			this.currentPath.add(lastEdge);
-		} else {
+		}
+		else {
 			// FIXME: If the last node has no accessible edge to the starting
 			// node we fail here
-			System.err.println("Jetzt hämmer es Problem...");
+			System.err.println("Jetzt hï¿½mmer es Problem...");
 		}
 
 		return currentPath;

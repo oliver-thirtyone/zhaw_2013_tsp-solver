@@ -1,7 +1,6 @@
 package model.algorithm.start;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
 
 import model.grid.Edge;
@@ -9,28 +8,36 @@ import model.grid.Node;
 
 public class NearestNeighborHeuristik extends StartAlgorithm {
 
-	@Override
-	public LinkedList<Edge> run(Set<Node> nodes, Node startingNode) {
-		Set<Node> nodesToVisit = new HashSet<Node>(nodes);
-		this.currentNode = startingNode;
+	private final Set<Node> nodesToVisit;
 
-		while (nodesToVisit.size() > 1) {
+	public NearestNeighborHeuristik(Set<Node> nodes, Node startingNode) {
+		super(nodes, startingNode);
+
+		this.nodesToVisit = new HashSet<Node>(this.getNodes());
+		this.setCurrentNode(this.getStartingNode());
+	}
+
+	@Override
+	protected boolean doStep() {
+		boolean successfulStep = true;
+
+		if (this.nodesToVisit.size() > 1) {
 			Edge shortestEdge = null;
 
 			// Remove the current node from the set of nodes to visit
-			nodesToVisit.remove(this.currentNode);
+			this.nodesToVisit.remove(this.getCurrentNode());
 
 			// Get all available edges from the current node
-			Set<Edge> edges = this.currentNode.getAccessibleEdges();
+			Set<Edge> edges = this.getCurrentNode().getAccessibleEdges();
 
 			// Get the shortest edge to a path that we still have to visit
 			for (Edge edge : edges) {
 
 				// Does this edge lead to a node that we still have to visit?
-				Boolean validEdge = Boolean.FALSE;
-				for (Node nodeToVisit : nodesToVisit) {
+				boolean validEdge = false;
+				for (Node nodeToVisit : this.nodesToVisit) {
 					if (edge.getFirstNode() == nodeToVisit || edge.getSecondNode() == nodeToVisit) {
-						validEdge = Boolean.TRUE;
+						validEdge = true;
 						break;
 					}
 				}
@@ -41,34 +48,53 @@ public class NearestNeighborHeuristik extends StartAlgorithm {
 				}
 
 				// Check if this edge is the shortest
-				if (shortestEdge == null || shortestEdge.getLength() > edge.getLength()) {
+				if (shortestEdge == null || shortestEdge.getWeight() > edge.getWeight()) {
 					shortestEdge = edge;
 				}
 
 			}
 
-			// Add the new edge to the path
-			this.currentPath.add(shortestEdge);
+			if (shortestEdge != null) {
+				// Add the new edge to the path
+				this.getCurrentPath().addEdge(shortestEdge);
 
-			// Set the new current node
-			this.currentNode = shortestEdge.getFirstNode() == this.currentNode ? shortestEdge.getSecondNode() : shortestEdge.getFirstNode();
-
-			// Notify the observers that we changed
-			this.setChanged();
-			this.notifyObservers();
-		}
-
-		// Link the last node with the starting node
-		Edge lastEdge = currentNode.getEdgeToNode(startingNode);
-		if (lastEdge != null) {
-			this.currentPath.add(lastEdge);
+				// Set the new current node
+				if (shortestEdge.getFirstNode() == this.getCurrentNode()) {
+					this.setCurrentNode(shortestEdge.getSecondNode());
+				}
+				else {
+					this.setCurrentNode(shortestEdge.getFirstNode());
+				}
+			}
+			else {
+				System.err.println("No edge found, we stop here...");
+				successfulStep = false;
+			}
 		}
 		else {
-			// FIXME: If the last node has no accessible edge to the starting node we fail here
-			System.err.println("Jetzt h‰mmer es Problem...");
-		}		
+			// Link the last node with the starting node
+			Edge lastEdge = this.getCurrentNode().getEdgeToNode(this.getStartingNode());
+			if (lastEdge != null) {
+				this.getCurrentPath().addEdge(lastEdge);
+				this.setCurrentNode(this.getStartingNode());
 
-		return currentPath;
+				this.setFinishedSuccessful(true);
+			}
+			else {
+				// FIXME: If the last node has no accessible edge to the starting node we fail here
+				System.err.println("Jetzt h√§mmer es Problem...");
+
+				this.setFinishedSuccessful(false);
+				successfulStep = false;
+			}
+		}
+
+		return successfulStep;
 	}
 
+	@Override
+	protected void reset() {
+		super.reset();
+		this.nodesToVisit.clear();
+	}
 }

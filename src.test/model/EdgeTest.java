@@ -22,7 +22,7 @@ public class EdgeTest {
 
 	@Test
 	public void testGetLength() {
-		Assert.assertEquals(Math.sqrt(16 + 36), this.edge.getLength());
+		Assert.assertEquals(Math.sqrt(16 + 36), this.edge.getWeight());
 	}
 
 	@Test

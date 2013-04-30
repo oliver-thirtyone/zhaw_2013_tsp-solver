@@ -5,26 +5,63 @@ import java.util.Set;
 
 public class Node {
 
-	// TODO: Wenn ein Punkt nur ¸ber eine Kante erreichbar erreichbar ist schl‰gt jeder Algorithmus fehl => Wir m¸ssen alle Punkte zuerst validieren bevor wir starten
-	
-	
-	private final Integer x;
-	private final Integer y;
+	// TODO: Wenn ein Punkt nur √ºber eine Kante erreichbar erreichbar ist schl√§gt jeder Algorithmus fehl => Wir m√ºssen alle Punkte zuerst validieren bevor wir starten
+
+	private final int x;
+	private final int y;
 
 	private final Set<Edge> edges;
 
-	public Node(Integer x, Integer y) {
+	public Node(int x, int y) {
 		this.x = x;
 		this.y = y;
 
 		this.edges = new HashSet<Edge>();
 	}
 
-	public Integer getX() {
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+
+		result = prime * result + this.x;
+		result = prime * result + this.y;
+
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (obj == null) {
+			return false;
+		}
+
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+
+		Node other = (Node) obj;
+
+		if (this.x != other.x) {
+			return false;
+		}
+
+		if (this.y != other.y) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public int getX() {
 		return this.x;
 	}
 
-	public Integer getY() {
+	public int getY() {
 		return this.y;
 	}
 
@@ -45,16 +82,17 @@ public class Node {
 	}
 
 	public Edge getEdgeToNode(Node node) {
-		return getEdgeToNode(node, Boolean.TRUE);
+		return this.getEdgeToNode(node, Boolean.TRUE);
 	}
 
 	public Edge getEdgeToNode(Node node, Boolean accessible) {
 		Edge edgeToNode = null;
 
-		for (Edge edge : this.edges) {
+		for (Edge edge : this.getEdges()) {
 			if (edge.getFirstNode() == node || edge.getSecondNode() == node) {
 				if (!accessible || edge.isAccessible()) {
 					edgeToNode = edge;
+					break;
 				}
 			}
 		}

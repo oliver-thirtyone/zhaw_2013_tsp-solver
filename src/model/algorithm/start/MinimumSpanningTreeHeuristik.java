@@ -2,13 +2,8 @@ package model.algorithm.start;
 
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 import model.grid.Edge;
 import model.grid.Node;
@@ -20,12 +15,11 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 		this.calcSpanningTree(nodes);
 
-		LinkedList<Edge> minSpanningTree = (LinkedList<Edge>) this.currentPath
-				.clone();
+		LinkedList<Edge> minSpanningTree = (LinkedList<Edge>) this.currentPath.clone();
 
 		LinkedList<Edge> path = new LinkedList<Edge>();
 
-		Node lastNode = doEulerianTrail(minSpanningTree, startingNode, path);
+		Node lastNode = this.doEulerianTrail(minSpanningTree, startingNode, path);
 
 		// Connect the last node from the eulerian path with the start node to
 		// close the circle
@@ -37,7 +31,7 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 	private void calcSpanningTree(Set<Node> nodes) {
 
 		// Get all eages from the nodes
-		Set<Edge> allEdges = convertToEdgeSet(nodes);
+		Set<Edge> allEdges = this.convertToEdgeSet(nodes);
 
 		// Sort them by length
 		PriorityQueue<Edge> sortedEages = new PriorityQueue<Edge>(allEdges);
@@ -59,7 +53,8 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 					spanningTreeNodes.add(currentEdge.getSecondNode());
 				}
-			} else if (spanningTreeNodes.contains(currentEdge.getSecondNode()) == false) {
+			}
+			else if (spanningTreeNodes.contains(currentEdge.getSecondNode()) == false) {
 
 				this.currentPath.add(currentEdge);
 
@@ -78,8 +73,7 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 	}
 
-	private Node doEulerianTrail(LinkedList<Edge> minSpanningTree,
-			Node startingNode, LinkedList<Edge> path) {
+	private Node doEulerianTrail(LinkedList<Edge> minSpanningTree, Node startingNode, LinkedList<Edge> path) {
 
 		Node currentNode = startingNode;
 
@@ -93,10 +87,9 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 				// Remove the edge from the spanning tree, because this edge is
 				// used
-				LinkedList<Edge> subMinSpanningTree = (LinkedList<Edge>) minSpanningTree
-						.clone();
+				LinkedList<Edge> subMinSpanningTree = (LinkedList<Edge>) minSpanningTree.clone();
 				subMinSpanningTree.remove(edge);
-				
+
 				// Prepare the currentPath for the gui
 				this.currentPath.clear();
 				this.currentPath.addAll(path);
@@ -108,18 +101,17 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 				// Go deeper and set the result as new current node, so we can
 				// handle the branches.
-				currentNode = doEulerianTrail(subMinSpanningTree, currentNode,
-						path);
+				currentNode = this.doEulerianTrail(subMinSpanningTree, currentNode, path);
 
-			} else if (edge.getSecondNode() == startingNode) {
+			}
+			else if (edge.getSecondNode() == startingNode) {
 
 				// Connect the current node with the node from the new edge
 				path.add(currentNode.getEdgeToNode(edge.getFirstNode()));
 
 				// Remove the edge from the spanning tree, because this edge is
 				// used
-				LinkedList<Edge> subMinSpanningTree = (LinkedList<Edge>) minSpanningTree
-						.clone();
+				LinkedList<Edge> subMinSpanningTree = (LinkedList<Edge>) minSpanningTree.clone();
 				subMinSpanningTree.remove(edge);
 
 				// Prepare the currentPath for the gui
@@ -133,8 +125,7 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 				// Go deeper and set the result as new current node, so we can
 				// handle the branches.
-				currentNode = doEulerianTrail(subMinSpanningTree, currentNode,
-						path);
+				currentNode = this.doEulerianTrail(subMinSpanningTree, currentNode, path);
 			}
 		}
 
@@ -144,7 +135,7 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 	private Set<Edge> convertToEdgeSet(Set<Node> nodes) {
 
-		HashSet<Edge> allEdges = new HashSet<Edge>();
+		Set<Edge> allEdges = new HashSet<Edge>();
 
 		for (Node node : nodes) {
 			allEdges.addAll(node.getAccessibleEdges());
