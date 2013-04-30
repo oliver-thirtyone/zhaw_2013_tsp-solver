@@ -27,7 +27,7 @@ public class NearestNeighborHeuristikTest {
 
 	private Set<Node> nodes;
 
-	private StartAlgorithm algorithm;
+	private AStartAlgorithm algorithm;
 
 	@Before
 	public void setUp() {

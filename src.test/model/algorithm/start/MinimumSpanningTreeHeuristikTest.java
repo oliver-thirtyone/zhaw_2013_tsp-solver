@@ -13,7 +13,7 @@ import org.junit.Test;
 
 public class MinimumSpanningTreeHeuristikTest {
 
-	private StartAlgorithm minimumSpanningTreeHeuristik;
+	private AStartAlgorithm minimumSpanningTreeHeuristik;
 
 	private Node nodeNorth;
 	private Node nodeEast;

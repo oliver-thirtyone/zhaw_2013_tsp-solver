@@ -6,7 +6,7 @@ import model.grid.Edge;
 import model.grid.Node;
 import model.grid.Path;
 
-public class BruteForce extends StartAlgorithm {
+public class BruteForceAlgorithm extends AStartAlgorithm {
 
 	private final int nodeCount;
 	private final Node[] nodes;
@@ -18,7 +18,7 @@ public class BruteForce extends StartAlgorithm {
 	private int outerLoopIndex;
 	private int innerLoopIndex;
 
-	public BruteForce(Set<Node> nodes, Node startingNode) {
+	public BruteForceAlgorithm(Set<Node> nodes, Node startingNode) {
 		super(nodes, startingNode);
 
 		this.nodeCount = this.getNodes().size();

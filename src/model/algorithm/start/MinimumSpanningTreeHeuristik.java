@@ -8,7 +8,7 @@ import java.util.Set;
 import model.grid.Edge;
 import model.grid.Node;
 
-public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
+public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 
 	@Override
 	public LinkedList<Edge> run(Set<Node> nodes, Node startingNode) {

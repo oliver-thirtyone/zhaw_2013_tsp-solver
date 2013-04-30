@@ -11,7 +11,7 @@ import model.grid.Path;
 import org.junit.Before;
 import org.junit.Test;
 
-public class BruteForceTest {
+public class BruteForceAlgorithmTest {
 
 	private Node nodeNorth;
 	private Node nodeEast;
@@ -27,7 +27,7 @@ public class BruteForceTest {
 
 	private Set<Node> nodes;
 
-	private StartAlgorithm algorithm;
+	private AStartAlgorithm algorithm;
 
 	@Before
 	public void setUp() {
@@ -49,7 +49,7 @@ public class BruteForceTest {
 		this.edgeEastWest = new Edge(this.nodeEast, this.nodeWest);
 		this.edgeSouthWest = new Edge(this.nodeSouth, this.nodeWest);
 
-		this.algorithm = new BruteForce(this.nodes, this.nodeNorth);
+		this.algorithm = new BruteForceAlgorithm(this.nodes, this.nodeNorth);
 	}
 
 	@Test

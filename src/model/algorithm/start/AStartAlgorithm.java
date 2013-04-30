@@ -5,12 +5,12 @@ import java.util.Set;
 import model.algorithm.Algorithm;
 import model.grid.Node;
 
-public abstract class StartAlgorithm extends Algorithm {
+public abstract class AStartAlgorithm extends Algorithm {
 
 	private final Set<Node> nodes;
 	private final Node startingNode;
 
-	public StartAlgorithm(Set<Node> nodes, Node startingNode) {
+	public AStartAlgorithm(Set<Node> nodes, Node startingNode) {
 		super();
 
 		this.nodes = nodes;
