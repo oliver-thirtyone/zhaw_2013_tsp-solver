@@ -1,23 +1,30 @@
 package model.algorithm.start;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Set;
 
 import model.grid.Edge;
+import model.grid.Grid;
 import model.grid.Node;
 
 public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 
+	// FIXME: Refactor this class !!!
+	public MinimumSpanningTreeHeuristik(Grid grid) {
+		super(grid);
+	}
+
 	@Override
-	public LinkedList<Edge> run(Set<Node> nodes, Node startingNode) {
+	public boolean doStep() {
+		Set<Node> nodes = this.getGrid().getNodes();
+		Node startingNode = this.getGrid().getStartingNode();
 
 		this.calcSpanningTree(nodes);
 
-		LinkedList<Edge> minSpanningTree = (LinkedList<Edge>) this.currentPath.clone();
+		Set<Edge> minSpanningTree = new HashSet<Edge>(this.getCurrentPath().getEdges());
 
-		LinkedList<Edge> path = new LinkedList<Edge>();
+		Set<Edge> path = new HashSet<Edge>();
 
 		Node lastNode = this.doEulerianTrail(minSpanningTree, startingNode, path);
 
@@ -25,7 +32,8 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 		// close the circle
 		path.add(startingNode.getEdgeToNode(lastNode));
 
-		return path;
+		this.setFinishedSuccessful(true);
+		return true;
 	}
 
 	private void calcSpanningTree(Set<Node> nodes) {
@@ -45,7 +53,7 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 			// Skip eages where no new eages contains, it will build a circle
 			if (spanningTreeNodes.contains(currentEdge.getFirstNode()) == false) {
 
-				this.currentPath.add(currentEdge);
+				this.getCurrentPath().addEdge(currentEdge);
 
 				spanningTreeNodes.add(currentEdge.getFirstNode());
 
@@ -53,31 +61,28 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 
 					spanningTreeNodes.add(currentEdge.getSecondNode());
 				}
-			}
-			else if (spanningTreeNodes.contains(currentEdge.getSecondNode()) == false) {
+			} else if (spanningTreeNodes.contains(currentEdge.getSecondNode()) == false) {
 
-				this.currentPath.add(currentEdge);
+				this.getCurrentPath().addEdge(currentEdge);
 
 				spanningTreeNodes.add(currentEdge.getSecondNode());
 			}
 
-			// Notify the observers that we changed
-			this.setChanged();
-			this.notifyObservers();
+			// TODO: step finished here
 
 			// Break if all nodes are connected
-			if (edgeCount <= this.currentPath.size()) {
+			if (edgeCount <= this.getCurrentPath().getEdges().size()) {
 				break;
 			}
 		}
 
 	}
 
-	private Node doEulerianTrail(LinkedList<Edge> minSpanningTree, Node startingNode, LinkedList<Edge> path) {
+	private Node doEulerianTrail(Set<Edge> subMinSpanningTree2, Node startingNode, Set<Edge> path) {
 
 		Node currentNode = startingNode;
 
-		for (Edge edge : minSpanningTree) {
+		for (Edge edge : subMinSpanningTree2) {
 
 			// Find all edge from the node in the spanning tree
 			if (edge.getFirstNode() == startingNode) {
@@ -87,41 +92,36 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 
 				// Remove the edge from the spanning tree, because this edge is
 				// used
-				LinkedList<Edge> subMinSpanningTree = (LinkedList<Edge>) minSpanningTree.clone();
+				HashSet<Edge> subMinSpanningTree = new HashSet<Edge>(subMinSpanningTree2);
 				subMinSpanningTree.remove(edge);
 
 				// Prepare the currentPath for the gui
-				this.currentPath.clear();
-				this.currentPath.addAll(path);
-				this.currentPath.addAll(subMinSpanningTree);
+				this.getCurrentPath().clearEdges();
+				this.getCurrentPath().addEdges(path);
+				this.getCurrentPath().addEdges(subMinSpanningTree);
 
-				// Notify the observers that we changed
-				this.setChanged();
-				this.notifyObservers();
+				// TODO: step finished here
 
 				// Go deeper and set the result as new current node, so we can
 				// handle the branches.
 				currentNode = this.doEulerianTrail(subMinSpanningTree, currentNode, path);
 
-			}
-			else if (edge.getSecondNode() == startingNode) {
+			} else if (edge.getSecondNode() == startingNode) {
 
 				// Connect the current node with the node from the new edge
 				path.add(currentNode.getEdgeToNode(edge.getFirstNode()));
 
 				// Remove the edge from the spanning tree, because this edge is
 				// used
-				LinkedList<Edge> subMinSpanningTree = (LinkedList<Edge>) minSpanningTree.clone();
+				Set<Edge> subMinSpanningTree = new HashSet<Edge>(subMinSpanningTree2);
 				subMinSpanningTree.remove(edge);
 
 				// Prepare the currentPath for the gui
-				this.currentPath.clear();
-				this.currentPath.addAll(path);
-				this.currentPath.addAll(subMinSpanningTree);
+				this.getCurrentPath().clearEdges();
+				this.getCurrentPath().addEdges(path);
+				this.getCurrentPath().addEdges(subMinSpanningTree);
 
-				// Notify the observers that we changed
-				this.setChanged();
-				this.notifyObservers();
+				// TODO: step finished here
 
 				// Go deeper and set the result as new current node, so we can
 				// handle the branches.
@@ -138,7 +138,7 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 		Set<Edge> allEdges = new HashSet<Edge>();
 
 		for (Node node : nodes) {
-			allEdges.addAll(node.getAccessibleEdges());
+			allEdges.addAll(node.getAccessibleEdgeCollection());
 		}
 
 		return allEdges;

@@ -30,8 +30,7 @@ public class Runner extends Observable implements Runnable {
 			if (this.getState() == RunnerState.PAUSED) {
 				try {
 					Thread.sleep(Runner.PAUSE_SLEEP_MILLISECONDS);
-				}
-				catch (InterruptedException exception) {
+				} catch (InterruptedException exception) {
 					exception.printStackTrace();
 				}
 				continue;
@@ -41,8 +40,7 @@ public class Runner extends Observable implements Runnable {
 			if (this.getStepDelay() != 0) {
 				try {
 					Thread.sleep(this.getStepDelay());
-				}
-				catch (InterruptedException exception) {
+				} catch (InterruptedException exception) {
 					exception.printStackTrace();
 				}
 			}
@@ -68,11 +66,11 @@ public class Runner extends Observable implements Runnable {
 
 	public synchronized boolean canReset() {
 		switch (this.getState()) {
-			case READY:
-			case STOPPED:
-				return true;
-			default:
-				break;
+		case READY:
+		case STOPPED:
+			return true;
+		default:
+			break;
 		}
 
 		return false;
@@ -97,10 +95,10 @@ public class Runner extends Observable implements Runnable {
 
 	public synchronized boolean canInitialize() {
 		switch (this.getState()) {
-			case NOT_READY:
-				return true;
-			default:
-				break;
+		case NOT_READY:
+			return true;
+		default:
+			break;
 		}
 
 		return false;
@@ -129,11 +127,11 @@ public class Runner extends Observable implements Runnable {
 
 	public synchronized boolean canStart() {
 		switch (this.getState()) {
-			case READY:
-			case PAUSED:
-				return true;
-			default:
-				break;
+		case READY:
+		case PAUSED:
+			return true;
+		default:
+			break;
 		}
 
 		return false;
@@ -155,11 +153,11 @@ public class Runner extends Observable implements Runnable {
 
 	public synchronized boolean canStep() {
 		switch (this.getState()) {
-			case READY:
-			case PAUSED:
-				return true;
-			default:
-				break;
+		case READY:
+		case PAUSED:
+			return true;
+		default:
+			break;
 		}
 
 		return false;
@@ -181,11 +179,11 @@ public class Runner extends Observable implements Runnable {
 
 	public synchronized boolean canPause() {
 		switch (this.getState()) {
-			case RUNNING:
-			case STEPPING:
-				return true;
-			default:
-				break;
+		case RUNNING:
+		case STEPPING:
+			return true;
+		default:
+			break;
 		}
 
 		return false;
@@ -204,12 +202,12 @@ public class Runner extends Observable implements Runnable {
 
 	public synchronized boolean canStop() {
 		switch (this.getState()) {
-			case RUNNING:
-			case STEPPING:
-			case PAUSED:
-				return true;
-			default:
-				break;
+		case RUNNING:
+		case STEPPING:
+		case PAUSED:
+			return true;
+		default:
+			break;
 		}
 
 		return false;

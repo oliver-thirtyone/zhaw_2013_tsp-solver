@@ -1,17 +1,18 @@
 package model.algorithm.start;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import junit.framework.Assert;
+import model.algorithm.Path;
 import model.grid.Edge;
+import model.grid.Grid;
+import model.grid.GridFactory;
 import model.grid.Node;
-import model.grid.Path;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class BruteForceAlgorithmTest {
+
+	private Grid grid;
 
 	private Node nodeNorth;
 	private Node nodeEast;
@@ -25,31 +26,31 @@ public class BruteForceAlgorithmTest {
 	private Edge edgeEastWest;
 	private Edge edgeSouthWest;
 
-	private Set<Node> nodes;
-
 	private AStartAlgorithm algorithm;
 
 	@Before
 	public void setUp() {
-		this.nodeNorth = new Node(0, 5);
-		this.nodeEast = new Node(4, 0); // Nearest node to the node in the north
-		this.nodeSouth = new Node(0, -5);
-		this.nodeWest = new Node(-5, 0);
+		this.grid = new Grid();
 
-		this.nodes = new HashSet<Node>();
-		this.nodes.add(this.nodeNorth);
-		this.nodes.add(this.nodeEast);
-		this.nodes.add(this.nodeSouth);
-		this.nodes.add(this.nodeWest);
+		this.nodeNorth = GridFactory.createNode(0, 5);
+		this.nodeEast = GridFactory.createNode(4, 0); // Nearest node to the node in the north
+		this.nodeSouth = GridFactory.createNode(0, -5);
+		this.nodeWest = GridFactory.createNode(-5, 0);
 
-		this.edgeNorthEast = new Edge(this.nodeNorth, this.nodeEast);
-		this.edgeNorthSouth = new Edge(this.nodeNorth, this.nodeSouth);
-		this.edgeNorthWest = new Edge(this.nodeNorth, this.nodeWest);
-		this.edgeEastSouth = new Edge(this.nodeEast, this.nodeSouth);
-		this.edgeEastWest = new Edge(this.nodeEast, this.nodeWest);
-		this.edgeSouthWest = new Edge(this.nodeSouth, this.nodeWest);
+		this.grid.addNode(this.nodeNorth);
+		this.grid.addNode(this.nodeEast);
+		this.grid.addNode(this.nodeSouth);
+		this.grid.addNode(this.nodeWest);
+		this.grid.setStartingNode(nodeNorth);
 
-		this.algorithm = new BruteForceAlgorithm(this.nodes, this.nodeNorth);
+		this.edgeNorthEast = GridFactory.getEdge(this.nodeNorth, this.nodeEast);
+		this.edgeNorthSouth = GridFactory.getEdge(this.nodeNorth, this.nodeSouth);
+		this.edgeNorthWest = GridFactory.getEdge(this.nodeNorth, this.nodeWest);
+		this.edgeEastSouth = GridFactory.getEdge(this.nodeEast, this.nodeSouth);
+		this.edgeEastWest = GridFactory.getEdge(this.nodeEast, this.nodeWest);
+		this.edgeSouthWest = GridFactory.getEdge(this.nodeSouth, this.nodeWest);
+
+		this.algorithm = new BruteForceAlgorithm(this.grid);
 	}
 
 	@Test

@@ -1,19 +1,21 @@
 package model.algorithm.start;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import model.grid.Edge;
+import model.grid.Grid;
 import model.grid.Node;
 
 public class NearestNeighborHeuristik extends AStartAlgorithm {
 
 	private final Set<Node> nodesToVisit;
 
-	public NearestNeighborHeuristik(Set<Node> nodes, Node startingNode) {
-		super(nodes, startingNode);
+	public NearestNeighborHeuristik(Grid grid) {
+		super(grid);
 
-		this.nodesToVisit = new HashSet<Node>(this.getNodes());
+		this.nodesToVisit = new HashSet<Node>(this.getGrid().getNodes());
 
 		this.reset();
 	}
@@ -29,7 +31,7 @@ public class NearestNeighborHeuristik extends AStartAlgorithm {
 			this.nodesToVisit.remove(this.getCurrentNode());
 
 			// Get all available edges from the current node
-			Set<Edge> edges = this.getCurrentNode().getAccessibleEdges();
+			Collection<Edge> edges = this.getCurrentNode().getAccessibleEdgeCollection();
 
 			// Get the shortest edge to a node that we still have to visit
 			for (Edge edge : edges) {
@@ -62,26 +64,22 @@ public class NearestNeighborHeuristik extends AStartAlgorithm {
 				// Set the new current node
 				if (shortestEdge.getFirstNode() == this.getCurrentNode()) {
 					this.setCurrentNode(shortestEdge.getSecondNode());
-				}
-				else {
+				} else {
 					this.setCurrentNode(shortestEdge.getFirstNode());
 				}
-			}
-			else {
+			} else {
 				System.err.println("No edge found, we stop here...");
 				successfulStep = false;
 			}
-		}
-		else {
+		} else {
 			// Link the last node with the starting node
-			Edge lastEdge = this.getCurrentNode().getEdgeToNode(this.getStartingNode());
+			Edge lastEdge = this.getCurrentNode().getEdgeToNode(this.getGrid().getStartingNode());
 			if (lastEdge != null) {
 				this.getCurrentPath().addEdge(lastEdge);
-				this.setCurrentNode(this.getStartingNode());
+				this.setCurrentNode(this.getGrid().getStartingNode());
 
 				this.setFinishedSuccessful(true);
-			}
-			else {
+			} else {
 				// FIXME: If the last node has no accessible edge to the starting node we fail here
 				System.err.println("Jetzt hämmer es Problem...");
 
@@ -98,7 +96,7 @@ public class NearestNeighborHeuristik extends AStartAlgorithm {
 		super.reset();
 
 		this.nodesToVisit.clear();
-		this.nodesToVisit.addAll(this.getNodes());
-		this.setCurrentNode(this.getStartingNode());
+		this.nodesToVisit.addAll(this.getGrid().getNodes());
+		this.setCurrentNode(this.getGrid().getStartingNode());
 	}
 }

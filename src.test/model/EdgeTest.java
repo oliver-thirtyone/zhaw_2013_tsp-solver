@@ -2,6 +2,8 @@ package model;
 
 import junit.framework.Assert;
 import model.grid.Edge;
+import model.grid.Grid;
+import model.grid.GridFactory;
 import model.grid.Node;
 
 import org.junit.Before;
@@ -9,15 +11,23 @@ import org.junit.Test;
 
 public class EdgeTest {
 
+	private Grid grid;
+
 	private Node firstNode;
 	private Node secondNode;
 	private Edge edge;
 
 	@Before
 	public void setUp() {
-		this.firstNode = new Node(2, 3);
-		this.secondNode = new Node(-2, -3);
-		this.edge = new Edge(this.firstNode, this.secondNode);
+		this.grid = new Grid();
+
+		this.firstNode = GridFactory.createNode(2, 3);
+		this.secondNode = GridFactory.createNode(-2, -3);
+
+		this.grid.addNode(firstNode);
+		this.grid.addNode(secondNode);
+
+		this.edge = GridFactory.getEdge(firstNode, secondNode);
 	}
 
 	@Test
@@ -27,8 +37,8 @@ public class EdgeTest {
 
 	@Test
 	public void testNodeEdges() {
-		Assert.assertEquals(1, this.firstNode.getEdges().size());
-		Assert.assertEquals(1, this.secondNode.getEdges().size());
+		Assert.assertEquals(1, this.firstNode.getEdgeCollection().size());
+		Assert.assertEquals(1, this.secondNode.getEdgeCollection().size());
 	}
 
 }

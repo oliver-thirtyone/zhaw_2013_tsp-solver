@@ -1,39 +1,43 @@
 package model.algorithm.start;
 
-import java.util.Set;
-
 import model.algorithm.Algorithm;
+import model.grid.Grid;
 import model.grid.Node;
 
 public abstract class AStartAlgorithm extends Algorithm {
 
-	private final Set<Node> nodes;
-	private final Node startingNode;
+	private final Grid grid;
 
-	public AStartAlgorithm(Set<Node> nodes, Node startingNode) {
+	public AStartAlgorithm(Grid grid) {
 		super();
-
-		this.nodes = nodes;
-		this.startingNode = startingNode;
+		this.grid = grid;
 	}
 
 	@Override
 	public final void validateArguments() {
 		boolean validArguments = true;
 
-		if (this.startingNode == null) {
+		if (this.getGrid().getStartingNode() == null) {
 			System.err.println("The starting node cannot be null");
 			validArguments = false;
 		}
 
-		if (!this.nodes.contains(this.startingNode)) {
+		if (!this.getGrid().getNodes().contains(this.getGrid().getStartingNode())) {
 			System.err.println("The starting node must be in the node set");
 			validArguments = false;
 		}
 
-		if (this.nodes.size() < 2) {
-			System.err.println("We need at least two nodes in the node set");
+		if (this.getGrid().getNodes().size() < 3) {
+			System.err.println("We need at least three nodes in the node set");
 			validArguments = false;
+		}
+
+		for (Node node : this.getGrid().getNodes()) {
+			if (node.getNumberOfEdges() < 2) {
+				System.err.println("Each node needs at least two accessible edges");
+				validArguments = false;
+				break;
+			}
 		}
 
 		// TODO: further validations...
@@ -41,12 +45,8 @@ public abstract class AStartAlgorithm extends Algorithm {
 		this.setValidArguments(validArguments);
 	}
 
-	public Set<Node> getNodes() {
-		return this.nodes;
-	}
-
-	public Node getStartingNode() {
-		return this.startingNode;
+	public Grid getGrid() {
+		return this.grid;
 	}
 
 }

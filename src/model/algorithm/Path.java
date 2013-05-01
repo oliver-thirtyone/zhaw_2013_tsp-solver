@@ -1,9 +1,12 @@
-package model.grid;
+package model.algorithm;
 
 import java.util.HashSet;
+import java.util.Observable;
 import java.util.Set;
 
-public class Path {
+import model.grid.Edge;
+
+public class Path extends Observable {
 
 	private final Set<Edge> edges;
 	private double weight;
@@ -46,8 +49,7 @@ public class Path {
 			if (other.edges != null) {
 				return false;
 			}
-		}
-		else if (!this.edges.equals(other.edges)) {
+		} else if (!this.edges.equals(other.edges)) {
 			return false;
 		}
 
@@ -62,10 +64,12 @@ public class Path {
 		return this.edges;
 	}
 
-	public synchronized void addEdge(Edge edge) {
-		if (this.edges.add(edge)) {
-			this.weight += edge.getWeight();
-		}
+	public boolean containsEdge(Edge edge) {
+		return this.edges.contains(edge);
+	}
+
+	public synchronized void addPath(Path path) {
+		this.addEdges(path.getEdges());
 	}
 
 	public synchronized void addEdges(Set<Edge> edges) {
@@ -74,14 +78,17 @@ public class Path {
 		}
 	}
 
-	public synchronized void addPath(Path path) {
-		this.addEdges(path.getEdges());
+	public synchronized void addEdge(Edge edge) {
+		if (this.edges.add(edge)) {
+			this.weight += edge.getWeight();
+
+			this.setChanged();
+			this.notifyObservers(this);
+		}
 	}
 
-	public synchronized void removeEdge(Edge edge) {
-		if (this.edges.remove(edge)) {
-			this.weight -= edge.getWeight();
-		}
+	public synchronized void removePath(Path path) {
+		this.removeEdges(path.getEdges());
 	}
 
 	public synchronized void removeEdges(Set<Edge> edges) {
@@ -90,17 +97,21 @@ public class Path {
 		}
 	}
 
-	public synchronized void removePath(Path path) {
-		this.removeEdges(path.getEdges());
+	public synchronized void removeEdge(Edge edge) {
+		if (this.edges.remove(edge)) {
+			this.weight -= edge.getWeight();
+
+			this.setChanged();
+			this.notifyObservers(this);
+		}
 	}
 
 	public synchronized void clearEdges() {
 		this.edges.clear();
 		this.weight = 0.0;
-	}
 
-	public synchronized boolean containsEdge(Edge edge) {
-		return this.edges.contains(edge);
+		this.setChanged();
+		this.notifyObservers(this);
 	}
 
 	public double getWeight() {

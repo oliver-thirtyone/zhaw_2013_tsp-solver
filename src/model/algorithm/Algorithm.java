@@ -1,7 +1,6 @@
 package model.algorithm;
 
 import model.grid.Node;
-import model.grid.Path;
 
 public abstract class Algorithm {
 

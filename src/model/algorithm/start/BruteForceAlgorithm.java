@@ -1,10 +1,9 @@
 package model.algorithm.start;
 
-import java.util.Set;
-
+import model.algorithm.Path;
 import model.grid.Edge;
+import model.grid.Grid;
 import model.grid.Node;
-import model.grid.Path;
 
 public class BruteForceAlgorithm extends AStartAlgorithm {
 
@@ -18,11 +17,11 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 	private int outerLoopIndex;
 	private int innerLoopIndex;
 
-	public BruteForceAlgorithm(Set<Node> nodes, Node startingNode) {
-		super(nodes, startingNode);
+	public BruteForceAlgorithm(Grid grid) {
+		super(grid);
 
-		this.nodeCount = this.getNodes().size();
-		this.nodes = this.getNodes().toArray(new Node[this.nodeCount]);
+		this.nodeCount = this.getGrid().getNodes().size();
+		this.nodes = this.getGrid().getNodes().toArray(new Node[this.nodeCount]);
 		this.nodeIndexes = new int[this.nodeCount];
 
 		this.currentLightestPath = new Path();

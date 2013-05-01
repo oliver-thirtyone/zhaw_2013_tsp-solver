@@ -4,14 +4,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 import junit.framework.Assert;
+import model.algorithm.Path;
 import model.grid.Edge;
+import model.grid.Grid;
+import model.grid.GridFactory;
 import model.grid.Node;
-import model.grid.Path;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class RandomAlgorithmTest {
+
+	private Grid grid;
 
 	private Node nodeNorth;
 	private Node nodeEast;
@@ -24,10 +28,12 @@ public class RandomAlgorithmTest {
 
 	@Before
 	public void setUp() {
-		this.nodeNorth = new Node(0, 5);
-		this.nodeEast = new Node(5, 0);
-		this.nodeSouth = new Node(0, -5);
-		this.nodeWest = new Node(-5, 0);
+		this.grid = new Grid();
+
+		this.nodeNorth = GridFactory.createNode(0, 5);
+		this.nodeEast = GridFactory.createNode(5, 0);
+		this.nodeSouth = GridFactory.createNode(0, -5);
+		this.nodeWest = GridFactory.createNode(-5, 0);
 
 		this.nodes = new HashSet<Node>();
 		this.nodes.add(this.nodeNorth);
@@ -35,14 +41,13 @@ public class RandomAlgorithmTest {
 		this.nodes.add(this.nodeSouth);
 		this.nodes.add(this.nodeWest);
 
-		new Edge(this.nodeNorth, this.nodeEast);
-		new Edge(this.nodeNorth, this.nodeSouth);
-		new Edge(this.nodeNorth, this.nodeWest);
-		new Edge(this.nodeEast, this.nodeSouth);
-		new Edge(this.nodeEast, this.nodeWest);
-		new Edge(this.nodeSouth, this.nodeWest);
+		this.grid.addNode(nodeNorth);
+		this.grid.addNode(nodeEast);
+		this.grid.addNode(nodeSouth);
+		this.grid.addNode(nodeWest);
+		this.grid.setStartingNode(nodeNorth);
 
-		this.algorithm = new RandomAlgorithm(this.nodes, this.nodeNorth);
+		this.algorithm = new RandomAlgorithm(this.grid);
 	}
 
 	@Test

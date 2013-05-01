@@ -1,11 +1,10 @@
 package model.algorithm.start;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
-
 import junit.framework.Assert;
+import model.algorithm.Path;
 import model.grid.Edge;
+import model.grid.Grid;
+import model.grid.GridFactory;
 import model.grid.Node;
 
 import org.junit.Before;
@@ -13,7 +12,7 @@ import org.junit.Test;
 
 public class MinimumSpanningTreeHeuristikTest {
 
-	private AStartAlgorithm minimumSpanningTreeHeuristik;
+	private Grid grid;
 
 	private Node nodeNorth;
 	private Node nodeEast;
@@ -27,47 +26,60 @@ public class MinimumSpanningTreeHeuristikTest {
 	private Edge edgeEastWest;
 	private Edge edgeSouthWest;
 
-	private Set<Node> nodes;
+	private AStartAlgorithm algorithm;
 
 	@Before
 	public void setUp() {
-		this.minimumSpanningTreeHeuristik = new MinimumSpanningTreeHeuristik();
+		this.grid = new Grid();
 
-		this.nodeNorth = new Node(3, 1);
-		this.nodeEast = new Node(4, 2); 
-		this.nodeSouth = new Node(1, 3);
-		this.nodeWest = new Node(2, 4);
+		this.nodeNorth = GridFactory.createNode(3, 1);
+		this.nodeEast = GridFactory.createNode(4, 2);
+		this.nodeSouth = GridFactory.createNode(1, 3);
+		this.nodeWest = GridFactory.createNode(2, 4);
 
-		this.nodes = new HashSet<Node>();
-		this.nodes.add(nodeNorth);
-		this.nodes.add(nodeEast);
-		this.nodes.add(nodeSouth);
-		this.nodes.add(nodeWest);
+		this.grid.addNode(this.nodeNorth);
+		this.grid.addNode(this.nodeEast);
+		this.grid.addNode(this.nodeSouth);
+		this.grid.addNode(this.nodeWest);
+		this.grid.setStartingNode(nodeNorth);
 
-		this.edgeNorthEast = new Edge(nodeNorth, nodeEast);
-		this.edgeNorthSouth = new Edge(nodeNorth, nodeSouth);
-		this.edgeNorthWest = new Edge(nodeNorth, nodeWest);
-		this.edgeEastSouth = new Edge(nodeEast, nodeSouth);
-		this.edgeEastWest = new Edge(nodeEast, nodeWest);
-		this.edgeSouthWest = new Edge(nodeSouth, nodeWest);
+		this.edgeNorthEast = GridFactory.getEdge(this.nodeNorth, this.nodeEast);
+		this.edgeNorthSouth = GridFactory.getEdge(this.nodeNorth, this.nodeSouth);
+		this.edgeNorthWest = GridFactory.getEdge(this.nodeNorth, this.nodeWest);
+		this.edgeEastSouth = GridFactory.getEdge(this.nodeEast, this.nodeSouth);
+		this.edgeEastWest = GridFactory.getEdge(this.nodeEast, this.nodeWest);
+		this.edgeSouthWest = GridFactory.getEdge(this.nodeSouth, this.nodeWest);
+
+		this.algorithm = new MinimumSpanningTreeHeuristik(this.grid);
 	}
 
 	@Test
 	public void test() {
-		LinkedList<Edge> path = this.minimumSpanningTreeHeuristik.run(nodes, nodeNorth);
+		Path currentPath = this.algorithm.getCurrentPath();
+
+		// Make sure that we can not take a step yet
+		Assert.assertFalse(this.algorithm.step());
+
+		// Validate the arguments
+		this.algorithm.validateArguments();
+		Assert.assertTrue(this.algorithm.hasValidArguments());
+
+		// Step through the algorithm
+		do {
+			Assert.assertTrue(this.algorithm.step());
+		} while (!this.algorithm.hasFinishedSuccessful());
 
 		// Check if we have four edges
-		Assert.assertEquals(4, path.size());
-		
+		Assert.assertEquals(4, currentPath.getNumberOfEdges());
+
 		// Check if we went the right path
-		Assert.assertTrue(path.contains(edgeNorthEast));
-		Assert.assertTrue(path.contains(edgeEastSouth));
-		Assert.assertTrue(path.contains(edgeSouthWest));
-		Assert.assertTrue(path.contains(edgeNorthWest));
+		Assert.assertTrue(currentPath.containsEdge(this.edgeNorthEast));
+		Assert.assertTrue(currentPath.containsEdge(this.edgeEastSouth));
+		Assert.assertTrue(currentPath.containsEdge(this.edgeSouthWest));
+		Assert.assertTrue(currentPath.containsEdge(this.edgeNorthWest));
 
 		// Check if these edges are not part of the path
-		Assert.assertFalse(path.contains(edgeNorthSouth));
-		Assert.assertFalse(path.contains(edgeEastWest));
+		Assert.assertFalse(currentPath.containsEdge(this.edgeNorthSouth));
+		Assert.assertFalse(currentPath.containsEdge(this.edgeEastWest));
 	}
-
 }

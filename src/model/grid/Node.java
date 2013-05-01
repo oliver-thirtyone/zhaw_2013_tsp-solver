@@ -1,22 +1,23 @@
 package model.grid;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
+import java.util.Observable;
 
-public class Node {
-
-	// TODO: Wenn ein Punkt nur über eine Kante erreichbar erreichbar ist schlägt jeder Algorithmus fehl => Wir müssen alle Punkte zuerst validieren bevor wir starten
+public class Node extends Observable {
 
 	private final int x;
 	private final int y;
 
-	private final Set<Edge> edges;
+	private final Map<Node, Edge> edges;
 
-	public Node(int x, int y) {
+	protected Node(int x, int y) {
 		this.x = x;
 		this.y = y;
 
-		this.edges = new HashSet<Edge>();
+		this.edges = new HashMap<Node, Edge>();
 	}
 
 	@Override
@@ -24,35 +25,30 @@ public class Node {
 		final int prime = 31;
 		int result = 1;
 
-		result = prime * result + this.x;
-		result = prime * result + this.y;
+		result = prime * result + x;
+		result = prime * result + y;
 
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
 
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
 
-		if (this.getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 
 		Node other = (Node) obj;
 
-		if (this.x != other.x) {
+		if (x != other.x)
 			return false;
-		}
 
-		if (this.y != other.y) {
+		if (y != other.y)
 			return false;
-		}
 
 		return true;
 	}
@@ -65,14 +61,18 @@ public class Node {
 		return this.y;
 	}
 
-	public Set<Edge> getEdges() {
+	public Map<Node, Edge> getEdges() {
 		return this.edges;
 	}
 
-	public Set<Edge> getAccessibleEdges() {
-		Set<Edge> accessibleEdges = new HashSet<Edge>();
+	public Collection<Edge> getEdgeCollection() {
+		return this.edges.values();
+	}
 
-		for (Edge edge : this.edges) {
+	public Collection<Edge> getAccessibleEdgeCollection() {
+		Collection<Edge> accessibleEdges = new HashSet<Edge>();
+
+		for (Edge edge : this.getEdgeCollection()) {
 			if (edge.isAccessible()) {
 				accessibleEdges.add(edge);
 			}
@@ -81,35 +81,95 @@ public class Node {
 		return accessibleEdges;
 	}
 
-	public Edge getEdgeToNode(Node node) {
-		return this.getEdgeToNode(node, Boolean.TRUE);
+	public int getNumberOfEdges() {
+		return this.edges.size();
 	}
 
-	public Edge getEdgeToNode(Node node, Boolean accessible) {
-		Edge edgeToNode = null;
+	public boolean hasEdgeToNode(Node node) {
+		return this.hasEdgeToNode(node, Edge.DEFAULT_ACCESS);
+	}
 
-		for (Edge edge : this.getEdges()) {
-			if (edge.getFirstNode() == node || edge.getSecondNode() == node) {
-				if (!accessible || edge.isAccessible()) {
-					edgeToNode = edge;
-					break;
-				}
-			}
+	public boolean hasEdgeToNode(Node node, boolean accessible) {
+		Edge edge = this.getEdgeToNode(node, accessible);
+		return edge != null;
+	}
+
+	public Edge getEdgeToNode(Node node) {
+		return this.getEdgeToNode(node, Edge.DEFAULT_ACCESS);
+	}
+
+	public Edge getEdgeToNode(Node node, boolean accessible) {
+		Edge edge = this.getEdges().get(node);
+
+		// Return null if the edge must be accessible but isn't
+		if (edge != null && accessible && !edge.isAccessible()) {
+			edge = null;
 		}
 
-		return edgeToNode;
+		return edge;
 	}
 
-	protected void addEdge(Edge edge) {
-		this.edges.add(edge);
+	protected Edge addEdgeToNode(Node node) {
+		boolean accessible = Edge.DEFAULT_ACCESS;
+		return this.addEdgeToNode(node, accessible);
 	}
 
-	protected void removeEdge(Edge edge) {
-		this.edges.remove(edge);
+	protected Edge addEdgeToNode(Node node, double weight) {
+		boolean accessible = Edge.DEFAULT_ACCESS;
+		return this.addEdgeToNode(node, weight, accessible);
 	}
 
-	protected void clearEdges(Edge edge) {
-		this.edges.remove(edge);
+	protected Edge addEdgeToNode(Node node, boolean accessible) {
+		double weight = Edge.calcLinearDistance(this, node);
+		return this.addEdgeToNode(node, weight, accessible);
+	}
+
+	protected synchronized Edge addEdgeToNode(Node node, double weight, boolean accessible) {
+		Edge edge = new Edge(this, node, weight, accessible);
+
+		// Add the edge to this node
+		if (!this.hasEdgeToNode(node)) {
+			this.addEdge(node, edge);
+		}
+
+		// Add the edge to the oder node
+		if (!node.hasEdgeToNode(this)) {
+			node.addEdge(this, edge);
+		}
+
+		return edge;
+	}
+
+	protected synchronized void removeEdgeToNode(Node node) {
+		// Remove the edge from this node
+		if (!this.hasEdgeToNode(node)) {
+			this.removeEdge(node);
+		}
+
+		// Remove the edge from the oder node
+		if (!node.hasEdgeToNode(this)) {
+			node.removeEdge(this);
+		}
+	}
+
+	protected synchronized void clearEdges() {
+		for (Node node : this.getEdges().keySet()) {
+			this.removeEdgeToNode(node);
+		}
+	}
+
+	private void addEdge(Node node, Edge edge) {
+		this.edges.put(node, edge);
+
+		this.setChanged();
+		this.notifyObservers(this);
+	}
+
+	private void removeEdge(Node node) {
+		this.edges.remove(node);
+
+		this.setChanged();
+		this.notifyObservers(this);
 	}
 
 }

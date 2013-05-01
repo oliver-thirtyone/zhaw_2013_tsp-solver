@@ -2,11 +2,13 @@ package model.algorithm.start;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import model.grid.Edge;
+import model.grid.Grid;
 import model.grid.Node;
 
 public class RandomAlgorithm extends AStartAlgorithm {
@@ -14,11 +16,11 @@ public class RandomAlgorithm extends AStartAlgorithm {
 	private final SecureRandom random;
 	private final Set<Node> nodesToVisit;
 
-	public RandomAlgorithm(Set<Node> nodes, Node startingNode) {
-		super(nodes, startingNode);
+	public RandomAlgorithm(Grid grid) {
+		super(grid);
 
 		this.random = new SecureRandom();
-		this.nodesToVisit = new HashSet<Node>();
+		this.nodesToVisit = new HashSet<Node>(this.getGrid().getNodes());
 
 		this.reset();
 	}
@@ -34,7 +36,7 @@ public class RandomAlgorithm extends AStartAlgorithm {
 			this.nodesToVisit.remove(this.getCurrentNode());
 
 			// Get all available edges from the current node
-			Set<Edge> edges = this.getCurrentNode().getAccessibleEdges();
+			Collection<Edge> edges = this.getCurrentNode().getAccessibleEdgeCollection();
 
 			// Get the a random edge to a node that we still have to visit
 			List<Edge> possibleEdges = new ArrayList<Edge>(edges);
@@ -58,26 +60,22 @@ public class RandomAlgorithm extends AStartAlgorithm {
 				// Set the new current node
 				if (randomEdge.getFirstNode() == this.getCurrentNode()) {
 					this.setCurrentNode(randomEdge.getSecondNode());
-				}
-				else {
+				} else {
 					this.setCurrentNode(randomEdge.getFirstNode());
 				}
-			}
-			else {
+			} else {
 				System.err.println("No edge found, we stop here...");
 				successfulStep = false;
 			}
-		}
-		else {
+		} else {
 			// Link the last node with the starting node
-			Edge lastEdge = this.getCurrentNode().getEdgeToNode(this.getStartingNode());
+			Edge lastEdge = this.getCurrentNode().getEdgeToNode(this.getGrid().getStartingNode());
 			if (lastEdge != null) {
 				this.getCurrentPath().addEdge(lastEdge);
-				this.setCurrentNode(this.getStartingNode());
+				this.setCurrentNode(this.getGrid().getStartingNode());
 
 				this.setFinishedSuccessful(true);
-			}
-			else {
+			} else {
 				// FIXME: If the last node has no accessible edge to the starting node we fail here
 				System.err.println("Jetzt hämmer es Problem...");
 
@@ -94,8 +92,8 @@ public class RandomAlgorithm extends AStartAlgorithm {
 		super.reset();
 
 		this.nodesToVisit.clear();
-		this.nodesToVisit.addAll(this.getNodes());
-		this.setCurrentNode(this.getStartingNode());
+		this.nodesToVisit.addAll(this.getGrid().getNodes());
+		this.setCurrentNode(this.getGrid().getStartingNode());
 	}
 
 }

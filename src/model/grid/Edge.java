@@ -1,34 +1,26 @@
 package model.grid;
 
-public class Edge implements Comparable<Edge> {
+import java.util.Observable;
+
+public class Edge extends Observable implements Comparable<Edge> {
+
+	public final static boolean DEFAULT_ACCESS = true;
 
 	private final Node firstNode;
 	private final Node secondNode;
-
 	private final double weight;
-	private final boolean accessible;
 
-	public Edge(Node firstNode, Node secondNode) {
-		this(firstNode, secondNode, Edge.calcLinearDistance(firstNode, secondNode), true);
-	}
+	private boolean accessible;
 
-	public Edge(Node firstNode, Node secondNode, boolean accessible, double weight) {
-		this(firstNode, secondNode, weight, accessible);
-	}
+	protected Edge(Node firstNode, Node secondNode, double weight, boolean accessible) throws IllegalArgumentException {
+		if (firstNode.equals(secondNode)) {
+			throw new IllegalArgumentException("The nodes must not be equal");
+		}
 
-	public Edge(Node firstNode, Node secondNode, boolean accessible) {
-		this(firstNode, secondNode, Edge.calcLinearDistance(firstNode, secondNode), accessible);
-	}
-
-	public Edge(Node firstNode, Node secondNode, double weight, boolean accessible) {
 		this.firstNode = firstNode;
 		this.secondNode = secondNode;
-
 		this.weight = weight;
 		this.accessible = accessible;
-
-		this.firstNode.addEdge(this);
-		this.secondNode.addEdge(this);
 	}
 
 	@Override
@@ -68,8 +60,7 @@ public class Edge implements Comparable<Edge> {
 			if (other.firstNode != null) {
 				return false;
 			}
-		}
-		else if (!this.firstNode.equals(other.firstNode)) {
+		} else if (!this.firstNode.equals(other.firstNode) && !this.firstNode.equals(other.secondNode)) {
 			return false;
 		}
 
@@ -77,8 +68,7 @@ public class Edge implements Comparable<Edge> {
 			if (other.secondNode != null) {
 				return false;
 			}
-		}
-		else if (!this.secondNode.equals(other.secondNode)) {
+		} else if (!this.secondNode.equals(other.secondNode) && !this.secondNode.equals(other.firstNode)) {
 			return false;
 		}
 
@@ -87,6 +77,11 @@ public class Edge implements Comparable<Edge> {
 		}
 
 		return true;
+	}
+
+	@Override
+	public int compareTo(Edge edge) { // FIXME: compareTo is the wrong name
+		return new Double(this.weight).compareTo(new Double(edge.getWeight()));
 	}
 
 	public Node getFirstNode() {
@@ -105,12 +100,14 @@ public class Edge implements Comparable<Edge> {
 		return this.accessible;
 	}
 
-	@Override
-	public int compareTo(Edge edge) { // FIXME: compareTo is the wrong name
-		return new Double(this.weight).compareTo(new Double(edge.getWeight()));
+	public void setAccessible(boolean accessible) {
+		this.accessible = accessible;
+
+		this.setChanged();
+		this.notifyObservers(this);
 	}
 
-	private static double calcLinearDistance(Node firstNode, Node secondNode) {
+	protected static double calcLinearDistance(Node firstNode, Node secondNode) {
 		int deltaX = secondNode.getX() - firstNode.getX();
 		int deltaY = secondNode.getY() - firstNode.getY();
 
