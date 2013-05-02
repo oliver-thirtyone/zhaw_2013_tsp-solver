@@ -11,7 +11,7 @@ import tspsolver.model.grid.GridFactory;
 import tspsolver.model.grid.Node;
 import tspsolver.model.grid.Path;
 
-public class TwoOptHeuristikTest {
+public class LinKernighanHeuristikTest {
 
 	private Path path;
 	private Grid grid;
@@ -53,7 +53,7 @@ public class TwoOptHeuristikTest {
 		this.edgeEastWest = GridFactory.getEdge(this.nodeEast, this.nodeWest);
 		this.edgeSouthWest = GridFactory.getEdge(this.nodeSouth, this.nodeWest);
 
-		this.algorithm = new TwoOptHeuristik(this.path);
+		this.algorithm = new LinKernighanHeuristik(this.path);
 	}
 
 	@Test

@@ -2,9 +2,9 @@ package tspsolver.model.algorithm.optimizer;
 
 import tspsolver.model.grid.Path;
 
-public class TwoOptHeuristik extends AOptimizerAlgorithm {
+public class LinKernighanHeuristik extends AOptimizerAlgorithm {
 
-	public TwoOptHeuristik(Path path) {
+	public LinKernighanHeuristik(Path path) {
 		super(path);
 	}
 
