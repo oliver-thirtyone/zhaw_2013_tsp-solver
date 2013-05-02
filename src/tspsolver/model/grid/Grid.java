@@ -77,8 +77,12 @@ public class Grid extends Observable implements Observer {
 	}
 
 	public void setStartingNode(Node startingNode) {
+		if (this.startingNode != null) {
+			this.fireStartingNodeUpdate(this.startingNode, UpdateAction.REMOVE);
+		}
+
 		this.startingNode = startingNode;
-		this.fireStartingNodeUpdate(startingNode, UpdateAction.MODIFY);
+		this.fireStartingNodeUpdate(this.startingNode, UpdateAction.ADD);
 	}
 
 	private void fireNodeUpdate(Node node, UpdateAction action) {

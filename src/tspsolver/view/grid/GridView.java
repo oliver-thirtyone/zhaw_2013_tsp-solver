@@ -17,6 +17,9 @@ import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
 import tspsolver.model.grid.Path;
+import tspsolver.model.grid.updates.NodeUpdate;
+import tspsolver.model.grid.updates.StartingNodeUpdate;
+import tspsolver.model.grid.updates.UpdateAction;
 
 import com.kitfox.svg.Circle;
 import com.kitfox.svg.Group;
@@ -42,7 +45,7 @@ public class GridView extends JPanel implements Observer {
 	private final SVGDiagram svgDiagram;
 	private final SVGIcon svgIcon;
 
-	private final Map<Node, Circle> svgCircles;
+	private final Map<Node, NodeView> nodeViews;
 	private final Map<Edge, Line> svgLines;
 
 	public GridView(Grid grid, Path path) {
@@ -65,7 +68,7 @@ public class GridView extends JPanel implements Observer {
 		this.svgIcon.setSvgURI(svgURI);
 		this.svgIcon.setAntiAlias(true);
 
-		this.svgCircles = new HashMap<Node, Circle>();
+		this.nodeViews = new HashMap<Node, NodeView>();
 		this.svgLines = new HashMap<Edge, Line>();
 
 		// Observe the grid and the path
@@ -73,6 +76,18 @@ public class GridView extends JPanel implements Observer {
 		this.path.addObserver(this);
 
 		this.update(this.grid, this.grid);
+	}
+
+	protected Grid getGrid() {
+		return this.grid;
+	}
+
+	protected Path getPath() {
+		return this.path;
+	}
+
+	protected SVGDiagram getSVGDiagram() {
+		return this.svgDiagram;
 	}
 
 	@Override
@@ -86,6 +101,48 @@ public class GridView extends JPanel implements Observer {
 
 	@Override
 	public void update(Observable observable, Object argument) {
+		if (argument instanceof NodeUpdate) {
+			NodeUpdate update = (NodeUpdate) argument;
+			UpdateAction action = update.getAction();
+
+			Node node = update.getNode();
+			NodeView nodeView = null;
+
+			switch (action) {
+				case ADD:
+					nodeView = new NodeView(node, this);
+					nodeView.createCircle();
+					this.nodeViews.put(node, nodeView);
+					break;
+				case REMOVE:
+					nodeView = this.nodeViews.get(node);
+					nodeView.deleteCircle();
+					this.nodeViews.remove(node);
+					break;
+			}
+		}
+		else if (argument instanceof StartingNodeUpdate) {
+			NodeUpdate update = (StartingNodeUpdate) argument;
+			UpdateAction action = update.getAction();
+
+			Node node = update.getNode();
+			NodeView nodeView = this.nodeViews.get(node);
+
+			// If this node is not visible, we can not change its color
+			if (nodeView == null) {
+				break;
+			}
+
+			switch (action) {
+				case ADD:
+					nodeView.modifyCircle(NodeView.STARTING_NODE_COLOR);
+					break;
+				case REMOVE:
+					nodeView.modifyCircle(NodeView.NORMAL_NODE_COLOR);
+					break;
+			}
+		}
+
 		// Remove the current circles
 		Node[] currentNodes = this.svgCircles.keySet().toArray(new Node[this.svgCircles.size()]);
 		for (Node node : currentNodes) {

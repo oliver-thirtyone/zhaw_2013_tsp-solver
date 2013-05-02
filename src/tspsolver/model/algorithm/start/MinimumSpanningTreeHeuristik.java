@@ -14,6 +14,9 @@ import tspsolver.model.grid.comparators.EdgeWeightComparator;
 
 public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 
+	// FIXME: PELOSO NACHRICHT:
+	// Zirkel-Bildung zu schlecht berechnet. z.B: Wenn bei einem Quadrat die obere und die untere Kante verbunden wurden haben wir ein Problem...
+
 	// FIXME: Refactor this class !!!
 	public MinimumSpanningTreeHeuristik(Path path, Grid grid) {
 		super(path, grid);
