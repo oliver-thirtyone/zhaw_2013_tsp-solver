@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Observable;
 import java.util.Set;
 
+import tspsolver.model.grid.updates.PathUpdate;
+import tspsolver.model.grid.updates.UpdateAction;
+
 public class Path extends Observable {
 
 	private final Set<Edge> edges;
@@ -81,8 +84,7 @@ public class Path extends Observable {
 		if (this.edges.add(edge)) {
 			this.weight += edge.getWeight();
 
-			this.setChanged();
-			this.notifyObservers(this);
+			this.firePathUpdate(edge, UpdateAction.ADD);
 		}
 	}
 
@@ -100,17 +102,15 @@ public class Path extends Observable {
 		if (this.edges.remove(edge)) {
 			this.weight -= edge.getWeight();
 
-			this.setChanged();
-			this.notifyObservers(this);
+			this.firePathUpdate(edge, UpdateAction.REMOVE);
 		}
 	}
 
 	public synchronized void clearEdges() {
-		this.edges.clear();
-		this.weight = 0.0;
-
-		this.setChanged();
-		this.notifyObservers(this);
+		Edge[] edgesToClear = this.edges.toArray(new Edge[this.edges.size()]);
+		for (Edge edge : edgesToClear) {
+			this.removeEdge(edge);
+		}
 	}
 
 	public double getWeight() {
@@ -119,5 +119,12 @@ public class Path extends Observable {
 
 	public int getNumberOfEdges() {
 		return this.edges.size();
+	}
+
+	private void firePathUpdate(Edge edge, UpdateAction action) {
+		PathUpdate update = new PathUpdate(edge, action);
+
+		this.setChanged();
+		this.notifyObservers(update);
 	}
 }

@@ -5,8 +5,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Observer;
 
-public class Node extends Observable {
+import tspsolver.model.grid.updates.EdgeUpdate;
+import tspsolver.model.grid.updates.UpdateAction;
+
+public class Node extends Observable implements Observer {
 
 	private final int x;
 	private final int y;
@@ -25,32 +29,43 @@ public class Node extends Observable {
 		final int prime = 31;
 		int result = 1;
 
-		result = prime * result + x;
-		result = prime * result + y;
+		result = prime * result + this.x;
+		result = prime * result + this.y;
 
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
+		}
 
-		if (obj == null)
+		if (obj == null) {
 			return false;
+		}
 
-		if (getClass() != obj.getClass())
+		if (this.getClass() != obj.getClass()) {
 			return false;
+		}
 
 		Node other = (Node) obj;
 
-		if (x != other.x)
+		if (this.x != other.x) {
 			return false;
+		}
 
-		if (y != other.y)
+		if (this.y != other.y) {
 			return false;
+		}
 
 		return true;
+	}
+
+	@Override
+	public void update(Observable observable, Object argument) {
+		this.setChanged();
+		this.notifyObservers(argument);
 	}
 
 	public int getX() {
@@ -158,18 +173,26 @@ public class Node extends Observable {
 		}
 	}
 
-	private void addEdge(Node node, Edge edge) {
-		this.edges.put(node, edge);
+	private void addEdge(Node toNode, Edge edge) {
+		edge.addObserver(this);
 
-		this.setChanged();
-		this.notifyObservers(this);
+		this.edges.put(toNode, edge);
+		this.fireEdgeUpdate(edge, UpdateAction.ADD);
 	}
 
-	private void removeEdge(Node node) {
-		this.edges.remove(node);
+	private void removeEdge(Node toNode) {
+		Edge edge = this.edges.get(toNode);
+		edge.deleteObserver(this);
+
+		this.edges.remove(toNode);
+		this.fireEdgeUpdate(edge, UpdateAction.REMOVE);
+	}
+
+	private void fireEdgeUpdate(Edge edge, UpdateAction action) {
+		EdgeUpdate update = new EdgeUpdate(edge, action);
 
 		this.setChanged();
-		this.notifyObservers(this);
+		this.notifyObservers(update);
 	}
 
 }

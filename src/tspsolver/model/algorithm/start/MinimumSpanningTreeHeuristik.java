@@ -1,13 +1,16 @@
 package tspsolver.model.algorithm.start;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.PriorityQueue;
+import java.util.List;
 import java.util.Set;
 
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
 import tspsolver.model.grid.Path;
+import tspsolver.model.grid.comparators.EdgeWeightComparator;
 
 public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 
@@ -39,19 +42,22 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 
 	private void calcSpanningTree(Set<Node> nodes) {
 
-		// Get all eages from the nodes
+		// Get all edges from the nodes
 		Set<Edge> allEdges = this.convertToEdgeSet(nodes);
 
 		// Sort them by length
-		PriorityQueue<Edge> sortedEages = new PriorityQueue<Edge>(allEdges);
+		List<Edge> sortedEdges = new ArrayList<Edge>(allEdges);
 
-		// Take so long short eages while all nodes are visited
+		// Sort all edges by weight
+		Collections.sort(sortedEdges, new EdgeWeightComparator());
+
+		// Take so long short edges while all nodes are visited
 		HashSet<Node> spanningTreeNodes = new HashSet<Node>();
 		int edgeCount = nodes.size() - 1;
 
-		for (Edge currentEdge : sortedEages) {
+		for (Edge currentEdge : sortedEdges) {
 
-			// Skip eages where no new eages contains, it will build a circle
+			// Skip edges where no new edges contains, it will build a circle
 			if (spanningTreeNodes.contains(currentEdge.getFirstNode()) == false) {
 
 				this.getPath().addEdge(currentEdge);

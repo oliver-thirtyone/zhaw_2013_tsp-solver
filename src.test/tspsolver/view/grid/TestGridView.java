@@ -4,9 +4,11 @@ import java.awt.GridBagConstraints;
 
 import javax.swing.JFrame;
 
+import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.GridFactory;
 import tspsolver.model.grid.Node;
+import tspsolver.model.grid.Path;
 import tspsolver.util.LayoutManager;
 
 public class TestGridView extends JFrame {
@@ -17,12 +19,12 @@ public class TestGridView extends JFrame {
 
 	private final GridView gridView;
 
-	public TestGridView(Grid grid) {
+	public TestGridView(Grid grid, Path path) {
 		super("TestGridView");
 
 		this.layoutManager = new LayoutManager(this.getContentPane());
 
-		this.gridView = new GridView(grid);
+		this.gridView = new GridView(grid, path);
 
 		this.components();
 		this.pack();
@@ -40,6 +42,7 @@ public class TestGridView extends JFrame {
 
 	public static void main(String[] args) {
 		Grid grid = new Grid();
+		Path path = new Path();
 
 		Node nodeNorth = GridFactory.createNode(350, 25);
 		Node nodeEast = GridFactory.createNode(550, 250);
@@ -52,8 +55,12 @@ public class TestGridView extends JFrame {
 		grid.addNode(nodeWest);
 		grid.setStartingNode(nodeNorth);
 
-		TestGridView testGridView = new TestGridView(grid);
-		testGridView.setSize(450, 350);
+		// Make one edge non-accessible
+		Edge edge = GridFactory.getEdge(nodeNorth, nodeSouth);
+		edge.setAccessible(false);
+
+		TestGridView testGridView = new TestGridView(grid, path);
+		testGridView.setSize(800, 600);
 		testGridView.setLocationRelativeTo(null);
 		testGridView.setVisible(true);
 	}

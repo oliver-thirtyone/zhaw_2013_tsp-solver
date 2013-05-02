@@ -16,12 +16,14 @@ import javax.swing.JPanel;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
+import tspsolver.model.grid.Path;
 
 import com.kitfox.svg.Circle;
 import com.kitfox.svg.Group;
 import com.kitfox.svg.Line;
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.SVGDiagram;
+import com.kitfox.svg.SVGElementException;
 import com.kitfox.svg.SVGException;
 import com.kitfox.svg.animation.AnimationElement;
 import com.kitfox.svg.app.beans.SVGIcon;
@@ -35,6 +37,7 @@ public class GridView extends JPanel implements Observer {
 	private static final long serialVersionUID = -5210001067574218993L;
 
 	private final Grid grid;
+	private final Path path;
 
 	private final SVGDiagram svgDiagram;
 	private final SVGIcon svgIcon;
@@ -42,9 +45,9 @@ public class GridView extends JPanel implements Observer {
 	private final Map<Node, Circle> svgCircles;
 	private final Map<Edge, Line> svgLines;
 
-	public GridView(Grid grid) {
+	public GridView(Grid grid, Path path) {
 		this.grid = grid;
-		this.grid.addObserver(this);
+		this.path = path;
 
 		InputStream svgImage = this.getClass().getClassLoader().getResourceAsStream(GridView.DATA_MAP_SWITZERLAND);
 		URI svgURI = null;
@@ -57,11 +60,19 @@ public class GridView extends JPanel implements Observer {
 		}
 
 		this.svgDiagram = SVGCache.getSVGUniverse().getDiagram(svgURI);
+
 		this.svgIcon = new SVGIcon();
 		this.svgIcon.setSvgURI(svgURI);
+		this.svgIcon.setAntiAlias(true);
 
 		this.svgCircles = new HashMap<Node, Circle>();
 		this.svgLines = new HashMap<Edge, Line>();
+
+		// Observe the grid and the path
+		this.grid.addObserver(this);
+		this.path.addObserver(this);
+
+		this.update(this.grid, this.grid);
 	}
 
 	@Override
@@ -71,8 +82,6 @@ public class GridView extends JPanel implements Observer {
 		this.svgIcon.setPreferredSize(new Dimension(600, 385));
 		this.svgIcon.setScaleToFit(true);
 		this.svgIcon.paintIcon(this, graphics, 0, 0);
-
-		this.update(this.grid, this.grid);
 	}
 
 	@Override
@@ -84,6 +93,13 @@ public class GridView extends JPanel implements Observer {
 			this.svgCircles.remove(node);
 		}
 
+		// Remove the current lines
+		Edge[] currentEdges = this.svgLines.keySet().toArray(new Edge[this.svgLines.size()]);
+		for (Edge egde : currentEdges) {
+			this.destroyLine(egde);
+			this.svgLines.remove(egde);
+		}
+
 		// Create the new circles
 		for (Node node : this.grid.getNodes()) {
 			// Skip the nodes that already exist
@@ -93,7 +109,33 @@ public class GridView extends JPanel implements Observer {
 
 			Circle circle = this.createCircle(node);
 			this.svgCircles.put(node, circle);
+
+			// Create the new edges
+			for (Edge edge : node.getEdgeCollection()) {
+				// Skip the edges that already exist
+				if (this.svgLines.containsKey(edge)) {
+					continue;
+				}
+
+				Line line = this.createLine(edge);
+				this.svgLines.put(edge, line);
+			}
 		}
+
+		// Color the starting node
+		Circle startingCircle = this.svgCircles.get(this.grid.getStartingNode());
+		if (startingCircle != null) {
+			try {
+				startingCircle.addAttribute("fill", AnimationElement.AT_CSS, "#0000FF");
+			}
+			catch (SVGElementException exception) {
+				// TODO: uncomment
+				// exception.printStackTrace();
+			}
+		}
+
+		// Color the path
+		this.updatePath();
 
 		// Update the diagram
 		try {
@@ -102,6 +144,10 @@ public class GridView extends JPanel implements Observer {
 		catch (SVGException exception) {
 			exception.printStackTrace();
 		}
+	}
+
+	private void updatePath() {
+
 	}
 
 	private Circle createCircle(Node node) {
@@ -115,25 +161,68 @@ public class GridView extends JPanel implements Observer {
 
 			group.loaderAddChild(null, circle);
 		}
-		catch (SVGException e) {
-			e.printStackTrace();
+		catch (SVGException exception) {
+			// TODO: uncomment
+			// exception.printStackTrace();
 		}
 
 		return circle;
 	}
 
 	private Circle destroyCircle(Node node) {
-		Group group = (Group) this.svgDiagram.getElement(GridView.SVG_GROUP_NODES);
+		Group group = (Group) this.svgDiagram.getElement(GridView.SVG_GROUP_EDGES);
 		Circle circle = this.svgCircles.get(node);
 
 		try {
 			group.removeChild(circle);
 		}
 		catch (SVGException exception) {
-			exception.printStackTrace();
+			// TODO: uncomment
+			// exception.printStackTrace();
 		}
 
 		return circle;
+	}
+
+	private Line createLine(Edge edge) {
+		Group group = (Group) this.svgDiagram.getElement(GridView.SVG_GROUP_EDGES);
+		Line line = new Line();
+
+		try {
+			line.addAttribute("x1", AnimationElement.AT_XML, String.valueOf(edge.getFirstNode().getX()));
+			line.addAttribute("y1", AnimationElement.AT_XML, String.valueOf(edge.getFirstNode().getY()));
+			line.addAttribute("x2", AnimationElement.AT_XML, String.valueOf(edge.getSecondNode().getX()));
+			line.addAttribute("y2", AnimationElement.AT_XML, String.valueOf(edge.getSecondNode().getY()));
+
+			if (!edge.isAccessible()) {
+				line.addAttribute("stroke-dasharray", AnimationElement.AT_CSS, "2, 4");
+			}
+
+			// TODO: display non-accessible edges different
+
+			group.loaderAddChild(null, line);
+		}
+		catch (SVGException e) {
+			// TODO: uncomment
+			// exception.printStackTrace();
+		}
+
+		return line;
+	}
+
+	private Line destroyLine(Edge edge) {
+		Group group = (Group) this.svgDiagram.getElement(GridView.SVG_GROUP_NODES);
+		Line line = this.svgLines.get(edge);
+
+		try {
+			group.removeChild(line);
+		}
+		catch (SVGException exception) {
+			// TODO: uncomment
+			// exception.printStackTrace();
+		}
+
+		return line;
 	}
 
 }

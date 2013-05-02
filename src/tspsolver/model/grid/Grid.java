@@ -2,9 +2,14 @@ package tspsolver.model.grid;
 
 import java.util.HashSet;
 import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 
-public class Grid extends Observable {
+import tspsolver.model.grid.updates.NodeUpdate;
+import tspsolver.model.grid.updates.StartingNodeUpdate;
+import tspsolver.model.grid.updates.UpdateAction;
+
+public class Grid extends Observable implements Observer {
 
 	public static final boolean LINK_ADDED_NODE = true;
 
@@ -15,12 +20,18 @@ public class Grid extends Observable {
 		this.nodes = new HashSet<Node>();
 	}
 
+	@Override
+	public void update(Observable observable, Object argument) {
+		this.setChanged();
+		this.notifyObservers(argument);
+	}
+
 	public Set<Node> getNodes() {
-		return nodes;
+		return this.nodes;
 	}
 
 	public boolean containsNode(Node node) {
-		return nodes.contains(node);
+		return this.nodes.contains(node);
 	}
 
 	public synchronized Node addNode(Node node) {
@@ -34,10 +45,10 @@ public class Grid extends Observable {
 					n.addEdgeToNode(node);
 				}
 			}
+			node.addObserver(this);
 
 			this.nodes.add(node);
-			this.setChanged();
-			this.notifyObservers(this);
+			this.fireNodeUpdate(node, UpdateAction.ADD);
 		}
 
 		return node;
@@ -48,10 +59,10 @@ public class Grid extends Observable {
 			for (Node n : this.getNodes()) {
 				n.removeEdgeToNode(node);
 			}
+			node.deleteObserver(this);
 
 			this.nodes.remove(node);
-			this.setChanged();
-			this.notifyObservers();
+			this.fireNodeUpdate(node, UpdateAction.REMOVE);
 		}
 	}
 
@@ -62,14 +73,26 @@ public class Grid extends Observable {
 	}
 
 	public Node getStartingNode() {
-		return startingNode;
+		return this.startingNode;
 	}
 
 	public void setStartingNode(Node startingNode) {
 		this.startingNode = startingNode;
+		this.fireStartingNodeUpdate(startingNode, UpdateAction.MODIFY);
+	}
+
+	private void fireNodeUpdate(Node node, UpdateAction action) {
+		NodeUpdate update = new NodeUpdate(node, action);
 
 		this.setChanged();
-		this.notifyObservers(this);
+		this.notifyObservers(update);
+	}
+
+	private void fireStartingNodeUpdate(Node node, UpdateAction action) {
+		NodeUpdate update = new StartingNodeUpdate(node, action);
+
+		this.setChanged();
+		this.notifyObservers(update);
 	}
 
 }

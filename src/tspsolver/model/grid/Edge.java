@@ -2,7 +2,10 @@ package tspsolver.model.grid;
 
 import java.util.Observable;
 
-public class Edge extends Observable implements Comparable<Edge> {
+import tspsolver.model.grid.updates.EdgeUpdate;
+import tspsolver.model.grid.updates.UpdateAction;
+
+public class Edge extends Observable {
 
 	public final static boolean DEFAULT_ACCESS = true;
 
@@ -81,11 +84,6 @@ public class Edge extends Observable implements Comparable<Edge> {
 		return true;
 	}
 
-	@Override
-	public int compareTo(Edge edge) { // FIXME: compareTo is the wrong name
-		return new Double(this.weight).compareTo(new Double(edge.getWeight()));
-	}
-
 	public Node getFirstNode() {
 		return this.firstNode;
 	}
@@ -104,9 +102,7 @@ public class Edge extends Observable implements Comparable<Edge> {
 
 	public void setAccessible(boolean accessible) {
 		this.accessible = accessible;
-
-		this.setChanged();
-		this.notifyObservers(this);
+		this.fireEdgeUpdate(UpdateAction.MODIFY);
 	}
 
 	protected static double calcLinearDistance(Node firstNode, Node secondNode) {
@@ -124,6 +120,13 @@ public class Edge extends Observable implements Comparable<Edge> {
 		}
 
 		return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+	}
+
+	private void fireEdgeUpdate(UpdateAction action) {
+		EdgeUpdate update = new EdgeUpdate(this, action);
+
+		this.setChanged();
+		this.notifyObservers(update);
 	}
 
 }
