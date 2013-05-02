@@ -7,14 +7,16 @@ import java.util.Set;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
-
+import tspsolver.model.grid.Path;
 
 public class NearestNeighborHeuristik extends AStartAlgorithm {
 
 	private final Set<Node> nodesToVisit;
 
-	public NearestNeighborHeuristik(Grid grid) {
-		super(grid);
+	private Node currentNode;
+
+	public NearestNeighborHeuristik(Path path, Grid grid) {
+		super(path, grid);
 
 		this.nodesToVisit = new HashSet<Node>(this.getGrid().getNodes());
 
@@ -60,7 +62,7 @@ public class NearestNeighborHeuristik extends AStartAlgorithm {
 
 			if (shortestEdge != null) {
 				// Add the new edge to the path
-				this.getCurrentPath().addEdge(shortestEdge);
+				this.getPath().addEdge(shortestEdge);
 
 				// Set the new current node
 				if (shortestEdge.getFirstNode() == this.getCurrentNode()) {
@@ -76,7 +78,7 @@ public class NearestNeighborHeuristik extends AStartAlgorithm {
 			// Link the last node with the starting node
 			Edge lastEdge = this.getCurrentNode().getEdgeToNode(this.getGrid().getStartingNode());
 			if (lastEdge != null) {
-				this.getCurrentPath().addEdge(lastEdge);
+				this.getPath().addEdge(lastEdge);
 				this.setCurrentNode(this.getGrid().getStartingNode());
 
 				this.setFinishedSuccessful(true);
@@ -99,5 +101,13 @@ public class NearestNeighborHeuristik extends AStartAlgorithm {
 		this.nodesToVisit.clear();
 		this.nodesToVisit.addAll(this.getGrid().getNodes());
 		this.setCurrentNode(this.getGrid().getStartingNode());
+	}
+
+	public Node getCurrentNode() {
+		return this.currentNode;
+	}
+
+	protected void setCurrentNode(Node currentNode) {
+		this.currentNode = currentNode;
 	}
 }

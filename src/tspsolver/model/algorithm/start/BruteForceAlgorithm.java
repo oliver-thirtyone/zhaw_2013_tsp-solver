@@ -1,9 +1,9 @@
 package tspsolver.model.algorithm.start;
 
-import tspsolver.model.algorithm.Path;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
+import tspsolver.model.grid.Path;
 
 public class BruteForceAlgorithm extends AStartAlgorithm {
 
@@ -17,8 +17,8 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 	private int outerLoopIndex;
 	private int innerLoopIndex;
 
-	public BruteForceAlgorithm(Grid grid) {
-		super(grid);
+	public BruteForceAlgorithm(Path path, Grid grid) {
+		super(path, grid);
 
 		this.nodeCount = this.getGrid().getNodes().size();
 		this.nodes = this.getGrid().getNodes().toArray(new Node[this.nodeCount]);
@@ -58,9 +58,9 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 		}
 
 		// Add the lightest and the new path to the current path (for the GUI)
-		this.getCurrentPath().clearEdges();
-		this.getCurrentPath().addPath(this.currentLightestPath);
-		this.getCurrentPath().addPath(this.currentNewPath);
+		this.getPath().clearEdges();
+		this.getPath().addPath(this.currentLightestPath);
+		this.getPath().addPath(this.currentNewPath);
 
 		// Check if the new path is lighter
 		if (this.currentLightestPath.getWeight() == 0.0 || this.currentNewPath.getWeight() < this.currentLightestPath.getWeight()) {
@@ -84,8 +84,8 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 
 		// Finish the algorithm if we are done with the outer loop
 		if (this.outerLoopIndex >= this.nodeCount) {
-			this.getCurrentPath().clearEdges();
-			this.getCurrentPath().addPath(this.currentLightestPath);
+			this.getPath().clearEdges();
+			this.getPath().addPath(this.currentLightestPath);
 			this.setFinishedSuccessful(true);
 		}
 

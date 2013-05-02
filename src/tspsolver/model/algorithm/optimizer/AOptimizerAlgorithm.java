@@ -1,13 +1,21 @@
 package tspsolver.model.algorithm.optimizer;
 
-import java.util.LinkedList;
-
 import tspsolver.model.algorithm.Algorithm;
-import tspsolver.model.grid.Edge;
-
+import tspsolver.model.grid.Path;
 
 public abstract class AOptimizerAlgorithm extends Algorithm {
 
-	public abstract LinkedList<Edge> run(LinkedList<Edge> path);
+	public AOptimizerAlgorithm(Path path) {
+		super(path);
+	}
+
+	@Override
+	public final void validateArguments() {
+		boolean validArguments = true;
+
+		// TODO: further validations...
+
+		this.setValidArguments(validArguments);
+	}
 
 }

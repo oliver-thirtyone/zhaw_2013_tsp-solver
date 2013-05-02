@@ -5,16 +5,15 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import tspsolver.model.algorithm.Path;
-import tspsolver.model.algorithm.start.AStartAlgorithm;
-import tspsolver.model.algorithm.start.NearestNeighborHeuristik;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.GridFactory;
 import tspsolver.model.grid.Node;
+import tspsolver.model.grid.Path;
 
 public class NearestNeighborHeuristikTest {
 
+	private Path path;
 	private Grid grid;
 
 	private Node nodeNorth;
@@ -33,6 +32,7 @@ public class NearestNeighborHeuristikTest {
 
 	@Before
 	public void setUp() {
+		this.path = new Path();
 		this.grid = new Grid();
 
 		this.nodeNorth = GridFactory.createNode(0, 5);
@@ -53,13 +53,11 @@ public class NearestNeighborHeuristikTest {
 		this.edgeEastWest = GridFactory.getEdge(this.nodeEast, this.nodeWest);
 		this.edgeSouthWest = GridFactory.getEdge(this.nodeSouth, this.nodeWest);
 
-		this.algorithm = new NearestNeighborHeuristik(this.grid);
+		this.algorithm = new NearestNeighborHeuristik(this.path, this.grid);
 	}
 
 	@Test
 	public void test() throws InterruptedException {
-		Path currentPath = this.algorithm.getCurrentPath();
-
 		// Make sure that we can not take a step yet
 		Assert.assertFalse(this.algorithm.step());
 
@@ -70,28 +68,28 @@ public class NearestNeighborHeuristikTest {
 		// Take the first step
 		Assert.assertTrue(this.algorithm.step());
 		Assert.assertFalse(this.algorithm.hasFinishedSuccessful());
-		Assert.assertTrue(currentPath.containsEdge(this.edgeNorthEast));
+		Assert.assertTrue(this.path.containsEdge(this.edgeNorthEast));
 
 		// Take the second step
 		Assert.assertTrue(this.algorithm.step());
 		Assert.assertFalse(this.algorithm.hasFinishedSuccessful());
-		Assert.assertTrue(currentPath.containsEdge(this.edgeEastSouth));
+		Assert.assertTrue(this.path.containsEdge(this.edgeEastSouth));
 
 		// Take the third step
 		Assert.assertTrue(this.algorithm.step());
 		Assert.assertFalse(this.algorithm.hasFinishedSuccessful());
-		Assert.assertTrue(currentPath.containsEdge(this.edgeSouthWest));
+		Assert.assertTrue(this.path.containsEdge(this.edgeSouthWest));
 
 		// Take the fourth step
 		Assert.assertTrue(this.algorithm.step());
 		Assert.assertTrue(this.algorithm.hasFinishedSuccessful());
-		Assert.assertTrue(currentPath.containsEdge(this.edgeNorthWest));
+		Assert.assertTrue(this.path.containsEdge(this.edgeNorthWest));
 
 		// Make sure that we can not take an other step
 		Assert.assertFalse(this.algorithm.step());
 
 		// Check if these edges are not part of the path
-		Assert.assertFalse(currentPath.containsEdge(this.edgeNorthSouth));
-		Assert.assertFalse(currentPath.containsEdge(this.edgeEastWest));
+		Assert.assertFalse(this.path.containsEdge(this.edgeNorthSouth));
+		Assert.assertFalse(this.path.containsEdge(this.edgeEastWest));
 	}
 }

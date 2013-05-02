@@ -8,16 +8,15 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import tspsolver.model.algorithm.Path;
-import tspsolver.model.algorithm.start.AStartAlgorithm;
-import tspsolver.model.algorithm.start.RandomAlgorithm;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.GridFactory;
 import tspsolver.model.grid.Node;
+import tspsolver.model.grid.Path;
 
 public class RandomAlgorithmTest {
 
+	private Path path;
 	private Grid grid;
 
 	private Node nodeNorth;
@@ -31,6 +30,7 @@ public class RandomAlgorithmTest {
 
 	@Before
 	public void setUp() {
+		this.path = new Path();
 		this.grid = new Grid();
 
 		this.nodeNorth = GridFactory.createNode(0, 5);
@@ -50,13 +50,11 @@ public class RandomAlgorithmTest {
 		this.grid.addNode(nodeWest);
 		this.grid.setStartingNode(nodeNorth);
 
-		this.algorithm = new RandomAlgorithm(this.grid);
+		this.algorithm = new RandomAlgorithm(this.path, this.grid);
 	}
 
 	@Test
 	public void test() {
-		Path currentPath = this.algorithm.getCurrentPath();
-
 		// Make sure that we can not take a step yet
 		Assert.assertFalse(this.algorithm.step());
 
@@ -71,7 +69,7 @@ public class RandomAlgorithmTest {
 
 		// DEBUG OUTPUT
 		System.out.println("Path: ");
-		for (Edge edge : currentPath.getEdges()) {
+		for (Edge edge : this.path.getEdges()) {
 			Node n1 = edge.getFirstNode();
 			Node n2 = edge.getSecondNode();
 			System.out.println("(" + n1.getX() + "," + n1.getY() + ")" + " -> " + "(" + n2.getX() + "," + n2.getY() + ")");
@@ -79,6 +77,6 @@ public class RandomAlgorithmTest {
 		System.out.println();
 
 		// Check if we have four edges
-		Assert.assertEquals(4, currentPath.getNumberOfEdges());
+		Assert.assertEquals(4, this.path.getNumberOfEdges());
 	}
 }

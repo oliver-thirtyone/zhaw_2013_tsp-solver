@@ -3,13 +3,14 @@ package tspsolver.model.algorithm.start;
 import tspsolver.model.algorithm.Algorithm;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
+import tspsolver.model.grid.Path;
 
 public abstract class AStartAlgorithm extends Algorithm {
 
 	private final Grid grid;
 
-	public AStartAlgorithm(Grid grid) {
-		super();
+	public AStartAlgorithm(Path path, Grid grid) {
+		super(path);
 		this.grid = grid;
 	}
 

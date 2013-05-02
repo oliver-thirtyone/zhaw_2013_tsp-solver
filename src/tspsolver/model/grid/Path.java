@@ -1,10 +1,9 @@
-package tspsolver.model.algorithm;
+package tspsolver.model.grid;
 
 import java.util.HashSet;
 import java.util.Observable;
 import java.util.Set;
 
-import tspsolver.model.grid.Edge;
 
 
 public class Path extends Observable {

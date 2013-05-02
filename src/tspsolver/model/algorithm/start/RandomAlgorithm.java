@@ -10,15 +10,17 @@ import java.util.Set;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
-
+import tspsolver.model.grid.Path;
 
 public class RandomAlgorithm extends AStartAlgorithm {
 
 	private final SecureRandom random;
 	private final Set<Node> nodesToVisit;
 
-	public RandomAlgorithm(Grid grid) {
-		super(grid);
+	private Node currentNode;
+
+	public RandomAlgorithm(Path path, Grid grid) {
+		super(path, grid);
 
 		this.random = new SecureRandom();
 		this.nodesToVisit = new HashSet<Node>(this.getGrid().getNodes());
@@ -56,7 +58,7 @@ public class RandomAlgorithm extends AStartAlgorithm {
 
 			if (randomEdge != null) {
 				// Add the new edge to the path
-				this.getCurrentPath().addEdge(randomEdge);
+				this.getPath().addEdge(randomEdge);
 
 				// Set the new current node
 				if (randomEdge.getFirstNode() == this.getCurrentNode()) {
@@ -72,7 +74,7 @@ public class RandomAlgorithm extends AStartAlgorithm {
 			// Link the last node with the starting node
 			Edge lastEdge = this.getCurrentNode().getEdgeToNode(this.getGrid().getStartingNode());
 			if (lastEdge != null) {
-				this.getCurrentPath().addEdge(lastEdge);
+				this.getPath().addEdge(lastEdge);
 				this.setCurrentNode(this.getGrid().getStartingNode());
 
 				this.setFinishedSuccessful(true);
@@ -95,6 +97,14 @@ public class RandomAlgorithm extends AStartAlgorithm {
 		this.nodesToVisit.clear();
 		this.nodesToVisit.addAll(this.getGrid().getNodes());
 		this.setCurrentNode(this.getGrid().getStartingNode());
+	}
+
+	public Node getCurrentNode() {
+		return this.currentNode;
+	}
+
+	protected void setCurrentNode(Node currentNode) {
+		this.currentNode = currentNode;
 	}
 
 }

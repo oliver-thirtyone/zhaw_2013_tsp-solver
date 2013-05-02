@@ -5,16 +5,15 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import tspsolver.model.algorithm.Path;
-import tspsolver.model.algorithm.start.AStartAlgorithm;
-import tspsolver.model.algorithm.start.MinimumSpanningTreeHeuristik;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.GridFactory;
 import tspsolver.model.grid.Node;
+import tspsolver.model.grid.Path;
 
 public class MinimumSpanningTreeHeuristikTest {
 
+	private Path path;
 	private Grid grid;
 
 	private Node nodeNorth;
@@ -33,6 +32,7 @@ public class MinimumSpanningTreeHeuristikTest {
 
 	@Before
 	public void setUp() {
+		this.path = new Path();
 		this.grid = new Grid();
 
 		this.nodeNorth = GridFactory.createNode(3, 1);
@@ -53,13 +53,11 @@ public class MinimumSpanningTreeHeuristikTest {
 		this.edgeEastWest = GridFactory.getEdge(this.nodeEast, this.nodeWest);
 		this.edgeSouthWest = GridFactory.getEdge(this.nodeSouth, this.nodeWest);
 
-		this.algorithm = new MinimumSpanningTreeHeuristik(this.grid);
+		this.algorithm = new MinimumSpanningTreeHeuristik(this.path, this.grid);
 	}
 
 	@Test
 	public void test() {
-		Path currentPath = this.algorithm.getCurrentPath();
-
 		// Make sure that we can not take a step yet
 		Assert.assertFalse(this.algorithm.step());
 
@@ -73,16 +71,16 @@ public class MinimumSpanningTreeHeuristikTest {
 		} while (!this.algorithm.hasFinishedSuccessful());
 
 		// Check if we have four edges
-		Assert.assertEquals(4, currentPath.getNumberOfEdges());
+		Assert.assertEquals(4, this.path.getNumberOfEdges());
 
 		// Check if we went the right path
-		Assert.assertTrue(currentPath.containsEdge(this.edgeNorthEast));
-		Assert.assertTrue(currentPath.containsEdge(this.edgeEastSouth));
-		Assert.assertTrue(currentPath.containsEdge(this.edgeSouthWest));
-		Assert.assertTrue(currentPath.containsEdge(this.edgeNorthWest));
+		Assert.assertTrue(this.path.containsEdge(this.edgeNorthEast));
+		Assert.assertTrue(this.path.containsEdge(this.edgeEastSouth));
+		Assert.assertTrue(this.path.containsEdge(this.edgeSouthWest));
+		Assert.assertTrue(this.path.containsEdge(this.edgeNorthWest));
 
 		// Check if these edges are not part of the path
-		Assert.assertFalse(currentPath.containsEdge(this.edgeNorthSouth));
-		Assert.assertFalse(currentPath.containsEdge(this.edgeEastWest));
+		Assert.assertFalse(this.path.containsEdge(this.edgeNorthSouth));
+		Assert.assertFalse(this.path.containsEdge(this.edgeEastWest));
 	}
 }

@@ -1,22 +1,22 @@
 package tspsolver.model.algorithm;
 
-import tspsolver.model.grid.Node;
+import tspsolver.model.grid.Path;
 
 public abstract class Algorithm {
 
-	private final Path currentPath;
-	private Node currentNode;
+	private final Path path;
 
 	private boolean validArguments;
 	private boolean finishedSuccessful;
 
-	public Algorithm() {
-		this.currentPath = new Path();
-		this.currentNode = null;
+	public Algorithm(Path path) {
+		this.path = path;
 
 		this.validArguments = false;
 		this.finishedSuccessful = false;
 	}
+
+	public abstract void validateArguments();
 
 	public final boolean step() {
 		if (!this.hasValidArguments() || this.hasFinishedSuccessful()) {
@@ -28,18 +28,8 @@ public abstract class Algorithm {
 
 	protected abstract boolean doStep();
 
-	public abstract void validateArguments();
-
-	public Path getCurrentPath() {
-		return this.currentPath;
-	}
-
-	public Node getCurrentNode() {
-		return this.currentNode;
-	}
-
-	protected void setCurrentNode(Node currentNode) {
-		this.currentNode = currentNode;
+	public Path getPath() {
+		return this.path;
 	}
 
 	public boolean hasValidArguments() {
@@ -59,8 +49,7 @@ public abstract class Algorithm {
 	}
 
 	protected void reset() {
-		this.getCurrentPath().clearEdges();
-		this.setCurrentNode(null);
+		this.getPath().clearEdges();
 
 		this.setValidArguments(false);
 		this.setFinishedSuccessful(false);

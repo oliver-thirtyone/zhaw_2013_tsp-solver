@@ -7,13 +7,13 @@ import java.util.Set;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
-
+import tspsolver.model.grid.Path;
 
 public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 
 	// FIXME: Refactor this class !!!
-	public MinimumSpanningTreeHeuristik(Grid grid) {
-		super(grid);
+	public MinimumSpanningTreeHeuristik(Path path, Grid grid) {
+		super(path, grid);
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 
 		this.calcSpanningTree(nodes);
 
-		Set<Edge> minSpanningTree = new HashSet<Edge>(this.getCurrentPath().getEdges());
+		Set<Edge> minSpanningTree = new HashSet<Edge>(this.getPath().getEdges());
 
 		Set<Edge> path = new HashSet<Edge>();
 
@@ -54,7 +54,7 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 			// Skip eages where no new eages contains, it will build a circle
 			if (spanningTreeNodes.contains(currentEdge.getFirstNode()) == false) {
 
-				this.getCurrentPath().addEdge(currentEdge);
+				this.getPath().addEdge(currentEdge);
 
 				spanningTreeNodes.add(currentEdge.getFirstNode());
 
@@ -64,7 +64,7 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 				}
 			} else if (spanningTreeNodes.contains(currentEdge.getSecondNode()) == false) {
 
-				this.getCurrentPath().addEdge(currentEdge);
+				this.getPath().addEdge(currentEdge);
 
 				spanningTreeNodes.add(currentEdge.getSecondNode());
 			}
@@ -72,7 +72,7 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 			// TODO: step finished here
 
 			// Break if all nodes are connected
-			if (edgeCount <= this.getCurrentPath().getEdges().size()) {
+			if (edgeCount <= this.getPath().getEdges().size()) {
 				break;
 			}
 		}
@@ -97,9 +97,9 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 				subMinSpanningTree.remove(edge);
 
 				// Prepare the currentPath for the gui
-				this.getCurrentPath().clearEdges();
-				this.getCurrentPath().addEdges(path);
-				this.getCurrentPath().addEdges(subMinSpanningTree);
+				this.getPath().clearEdges();
+				this.getPath().addEdges(path);
+				this.getPath().addEdges(subMinSpanningTree);
 
 				// TODO: step finished here
 
@@ -118,9 +118,9 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 				subMinSpanningTree.remove(edge);
 
 				// Prepare the currentPath for the gui
-				this.getCurrentPath().clearEdges();
-				this.getCurrentPath().addEdges(path);
-				this.getCurrentPath().addEdges(subMinSpanningTree);
+				this.getPath().clearEdges();
+				this.getPath().addEdges(path);
+				this.getPath().addEdges(subMinSpanningTree);
 
 				// TODO: step finished here
 
