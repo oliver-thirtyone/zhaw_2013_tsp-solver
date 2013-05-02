@@ -37,7 +37,7 @@ public class Grid extends Observable {
 
 			this.nodes.add(node);
 			this.setChanged();
-			this.notifyObservers();
+			this.notifyObservers(this);
 		}
 
 		return node;
@@ -69,7 +69,7 @@ public class Grid extends Observable {
 		this.startingNode = startingNode;
 
 		this.setChanged();
-		this.notifyObservers();
+		this.notifyObservers(this);
 	}
 
 }

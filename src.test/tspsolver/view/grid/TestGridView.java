@@ -41,10 +41,10 @@ public class TestGridView extends JFrame {
 	public static void main(String[] args) {
 		Grid grid = new Grid();
 
-		Node nodeNorth = GridFactory.createNode(50, 5);
-		Node nodeEast = GridFactory.createNode(90, 50);
-		Node nodeSouth = GridFactory.createNode(50, 100);
-		Node nodeWest = GridFactory.createNode(5, 50);
+		Node nodeNorth = GridFactory.createNode(350, 25);
+		Node nodeEast = GridFactory.createNode(550, 250);
+		Node nodeSouth = GridFactory.createNode(350, 500);
+		Node nodeWest = GridFactory.createNode(125, 250);
 
 		grid.addNode(nodeNorth);
 		grid.addNode(nodeEast);
@@ -53,9 +53,8 @@ public class TestGridView extends JFrame {
 		grid.setStartingNode(nodeNorth);
 
 		TestGridView testGridView = new TestGridView(grid);
-		testGridView.setSize(300, 300);
+		testGridView.setSize(450, 350);
 		testGridView.setLocationRelativeTo(null);
 		testGridView.setVisible(true);
 	}
-
 }
