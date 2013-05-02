@@ -74,7 +74,8 @@ class DynamicIconPanel2 extends JPanel {
 
 			// Keep track of circles so we can remove them later
 			extraElements.add(circle);
-		} catch (SVGException e) {
+		}
+		catch (SVGException e) {
 			e.printStackTrace();
 		}
 
@@ -93,7 +94,8 @@ class DynamicIconPanel2 extends JPanel {
 
 		try {
 			group.removeChild(shapeElement);
-		} catch (SVGException e) {
+		}
+		catch (SVGException e) {
 			e.printStackTrace();
 		}
 
@@ -197,7 +199,8 @@ public class MyTest extends javax.swing.JFrame {
 			public void run() {
 				try {
 					new MyTest().setVisible(true);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

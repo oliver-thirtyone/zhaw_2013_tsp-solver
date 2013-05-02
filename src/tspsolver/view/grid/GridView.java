@@ -46,12 +46,13 @@ public class GridView extends JPanel implements Observer {
 		this.grid = grid;
 		this.grid.addObserver(this);
 
-		InputStream svgImage = this.getClass().getClassLoader().getResourceAsStream(DATA_MAP_SWITZERLAND);
+		InputStream svgImage = this.getClass().getClassLoader().getResourceAsStream(GridView.DATA_MAP_SWITZERLAND);
 		URI svgURI = null;
 		try {
-			svgURI = SVGCache.getSVGUniverse().loadSVG(svgImage, DATA_MAP_SWITZERLAND);
-		} catch (IOException exception) {
-			JOptionPane.showMessageDialog(null, "Unable to load svg image : " + DATA_MAP_SWITZERLAND, "Error loading svg image", JOptionPane.ERROR_MESSAGE);
+			svgURI = SVGCache.getSVGUniverse().loadSVG(svgImage, GridView.DATA_MAP_SWITZERLAND);
+		}
+		catch (IOException exception) {
+			JOptionPane.showMessageDialog(null, "Unable to load svg image : " + GridView.DATA_MAP_SWITZERLAND, "Error loading svg image", JOptionPane.ERROR_MESSAGE);
 			exception.printStackTrace();
 		}
 
@@ -67,11 +68,11 @@ public class GridView extends JPanel implements Observer {
 	public void paintComponent(Graphics graphics) {
 		super.paintComponent(graphics);
 
-		svgIcon.setPreferredSize(new Dimension(400, 257));
-		svgIcon.setScaleToFit(true);
-		svgIcon.paintIcon(this, graphics, 0, 0);
+		this.svgIcon.setPreferredSize(new Dimension(600, 385));
+		this.svgIcon.setScaleToFit(true);
+		this.svgIcon.paintIcon(this, graphics, 0, 0);
 
-		this.update(grid, grid);
+		this.update(this.grid, this.grid);
 	}
 
 	@Override
@@ -84,7 +85,7 @@ public class GridView extends JPanel implements Observer {
 		}
 
 		// Create the new circles
-		for (Node node : grid.getNodes()) {
+		for (Node node : this.grid.getNodes()) {
 			// Skip the nodes that already exist
 			if (this.svgCircles.containsKey(node)) {
 				continue;
@@ -97,13 +98,14 @@ public class GridView extends JPanel implements Observer {
 		// Update the diagram
 		try {
 			this.svgDiagram.updateTime(0.0);
-		} catch (SVGException exception) {
+		}
+		catch (SVGException exception) {
 			exception.printStackTrace();
 		}
 	}
 
 	private Circle createCircle(Node node) {
-		Group group = (Group) this.svgDiagram.getElement(SVG_GROUP_NODES);
+		Group group = (Group) this.svgDiagram.getElement(GridView.SVG_GROUP_NODES);
 		Circle circle = new Circle();
 
 		try {
@@ -112,7 +114,8 @@ public class GridView extends JPanel implements Observer {
 			circle.addAttribute("r", AnimationElement.AT_XML, "5");
 
 			group.loaderAddChild(null, circle);
-		} catch (SVGException e) {
+		}
+		catch (SVGException e) {
 			e.printStackTrace();
 		}
 
@@ -120,12 +123,13 @@ public class GridView extends JPanel implements Observer {
 	}
 
 	private Circle destroyCircle(Node node) {
-		Group group = (Group) this.svgDiagram.getElement(SVG_GROUP_NODES);
+		Group group = (Group) this.svgDiagram.getElement(GridView.SVG_GROUP_NODES);
 		Circle circle = this.svgCircles.get(node);
 
 		try {
 			group.removeChild(circle);
-		} catch (SVGException exception) {
+		}
+		catch (SVGException exception) {
 			exception.printStackTrace();
 		}
 

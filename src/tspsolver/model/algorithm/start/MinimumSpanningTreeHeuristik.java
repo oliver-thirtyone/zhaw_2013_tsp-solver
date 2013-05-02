@@ -62,7 +62,8 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 
 					spanningTreeNodes.add(currentEdge.getSecondNode());
 				}
-			} else if (spanningTreeNodes.contains(currentEdge.getSecondNode()) == false) {
+			}
+			else if (spanningTreeNodes.contains(currentEdge.getSecondNode()) == false) {
 
 				this.getPath().addEdge(currentEdge);
 
@@ -107,7 +108,8 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 				// handle the branches.
 				currentNode = this.doEulerianTrail(subMinSpanningTree, currentNode, path);
 
-			} else if (edge.getSecondNode() == startingNode) {
+			}
+			else if (edge.getSecondNode() == startingNode) {
 
 				// Connect the current node with the node from the new edge
 				path.add(currentNode.getEdgeToNode(edge.getFirstNode()));

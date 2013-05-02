@@ -77,7 +77,8 @@ public class Test extends javax.swing.JFrame {
 			public void run() {
 				try {
 					new Test().setVisible(true);
-				} catch (IOException e) {
+				}
+				catch (IOException e) {
 					e.printStackTrace();
 				}
 			}

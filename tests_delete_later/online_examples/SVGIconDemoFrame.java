@@ -77,10 +77,12 @@ class DynamicIconPanel extends JPanel {
 		try {
 			if (!circle.hasAttribute("stroke", AnimationElement.AT_CSS)) {
 				circle.addAttribute("stroke", AnimationElement.AT_CSS, "#" + colorStrn);
-			} else {
+			}
+			else {
 				circle.setAttribute("stroke", AnimationElement.AT_CSS, "#" + colorStrn);
 			}
-		} catch (SVGElementException e) {
+		}
+		catch (SVGElementException e) {
 			e.printStackTrace();
 		}
 	}
@@ -93,10 +95,12 @@ class DynamicIconPanel extends JPanel {
 		try {
 			if (!circle.hasAttribute("fill", AnimationElement.AT_CSS)) {
 				circle.addAttribute("fill", AnimationElement.AT_CSS, "#" + colorStrn);
-			} else {
+			}
+			else {
 				circle.setAttribute("fill", AnimationElement.AT_CSS, "#" + colorStrn);
 			}
-		} catch (SVGElementException e) {
+		}
+		catch (SVGElementException e) {
 			e.printStackTrace();
 		}
 	}
@@ -111,7 +115,8 @@ class DynamicIconPanel extends JPanel {
 
 		try {
 			textEle.rebuild();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -139,7 +144,8 @@ class DynamicIconPanel extends JPanel {
 
 			// Keep track of circles so we can remove them later
 			extraElements.add(circle);
-		} catch (SVGException e) {
+		}
+		catch (SVGException e) {
 			e.printStackTrace();
 		}
 
@@ -175,7 +181,8 @@ class DynamicIconPanel extends JPanel {
 
 			// Keep track of circles so we can remove them later
 			extraElements.add(text);
-		} catch (SVGException e) {
+		}
+		catch (SVGException e) {
 			e.printStackTrace();
 		}
 
@@ -194,7 +201,8 @@ class DynamicIconPanel extends JPanel {
 
 		try {
 			group.removeChild(shapeElement);
-		} catch (SVGException e) {
+		}
+		catch (SVGException e) {
 			e.printStackTrace();
 		}
 

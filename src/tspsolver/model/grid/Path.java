@@ -4,8 +4,6 @@ import java.util.HashSet;
 import java.util.Observable;
 import java.util.Set;
 
-
-
 public class Path extends Observable {
 
 	private final Set<Edge> edges;
@@ -49,7 +47,8 @@ public class Path extends Observable {
 			if (other.edges != null) {
 				return false;
 			}
-		} else if (!this.edges.equals(other.edges)) {
+		}
+		else if (!this.edges.equals(other.edges)) {
 			return false;
 		}
 
