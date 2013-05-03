@@ -49,17 +49,18 @@ public class TestGridView extends JFrame {
 		Node nodeSouth = GridFactory.createNode(350, 500);
 		Node nodeWest = GridFactory.createNode(125, 250);
 
+		TestGridView testGridView = new TestGridView(grid, path);
+
 		grid.addNode(nodeNorth);
 		grid.addNode(nodeEast);
 		grid.addNode(nodeSouth);
 		grid.addNode(nodeWest);
 		grid.setStartingNode(nodeNorth);
 
-		// Make one edge non-accessible
-		Edge edge = GridFactory.getEdge(nodeNorth, nodeSouth);
-		edge.setAccessible(false);
+		// Add an edge to the path
+		Edge edge = GridFactory.getEdge(nodeNorth, nodeEast);
+		path.addEdge(edge);
 
-		TestGridView testGridView = new TestGridView(grid, path);
 		testGridView.setSize(800, 600);
 		testGridView.setLocationRelativeTo(null);
 		testGridView.setVisible(true);

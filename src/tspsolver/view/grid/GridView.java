@@ -17,18 +17,15 @@ import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
 import tspsolver.model.grid.Path;
+import tspsolver.model.grid.updates.EdgeUpdate;
 import tspsolver.model.grid.updates.NodeUpdate;
+import tspsolver.model.grid.updates.PathUpdate;
 import tspsolver.model.grid.updates.StartingNodeUpdate;
 import tspsolver.model.grid.updates.UpdateAction;
 
-import com.kitfox.svg.Circle;
-import com.kitfox.svg.Group;
-import com.kitfox.svg.Line;
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.SVGDiagram;
-import com.kitfox.svg.SVGElementException;
 import com.kitfox.svg.SVGException;
-import com.kitfox.svg.animation.AnimationElement;
 import com.kitfox.svg.app.beans.SVGIcon;
 
 public class GridView extends JPanel implements Observer {
@@ -46,7 +43,7 @@ public class GridView extends JPanel implements Observer {
 	private final SVGIcon svgIcon;
 
 	private final Map<Node, NodeView> nodeViews;
-	private final Map<Edge, Line> svgLines;
+	private final Map<Edge, EdgeView> edgeViews;
 
 	public GridView(Grid grid, Path path) {
 		this.grid = grid;
@@ -69,13 +66,11 @@ public class GridView extends JPanel implements Observer {
 		this.svgIcon.setAntiAlias(true);
 
 		this.nodeViews = new HashMap<Node, NodeView>();
-		this.svgLines = new HashMap<Edge, Line>();
+		this.edgeViews = new HashMap<Edge, EdgeView>();
 
 		// Observe the grid and the path
 		this.grid.addObserver(this);
 		this.path.addObserver(this);
-
-		this.update(this.grid, this.grid);
 	}
 
 	protected Grid getGrid() {
@@ -101,7 +96,28 @@ public class GridView extends JPanel implements Observer {
 
 	@Override
 	public void update(Observable observable, Object argument) {
-		if (argument instanceof NodeUpdate) {
+		// Starting node updates
+		if (argument instanceof StartingNodeUpdate) {
+			NodeUpdate update = (StartingNodeUpdate) argument;
+			UpdateAction action = update.getAction();
+
+			Node node = update.getNode();
+			NodeView nodeView = this.nodeViews.get(node);
+
+			if (nodeView != null) {
+				switch (action) {
+					case ADD:
+						nodeView.colorCircle(NodeView.STARTING_NODE_COLOR);
+						break;
+					case REMOVE:
+						nodeView.colorCircle(NodeView.NORMAL_NODE_COLOR);
+						break;
+				}
+			}
+		}
+
+		// Node updates
+		else if (argument instanceof NodeUpdate) {
 			NodeUpdate update = (NodeUpdate) argument;
 			UpdateAction action = update.getAction();
 
@@ -110,89 +126,70 @@ public class GridView extends JPanel implements Observer {
 
 			switch (action) {
 				case ADD:
-					nodeView = new NodeView(node, this);
-					nodeView.createCircle();
-					this.nodeViews.put(node, nodeView);
+					if (!this.nodeViews.containsKey(node)) {
+						nodeView = new NodeView(node, this);
+						nodeView.createCircle();
+						this.nodeViews.put(node, nodeView);
+					}
 					break;
 				case REMOVE:
-					nodeView = this.nodeViews.get(node);
-					nodeView.deleteCircle();
-					this.nodeViews.remove(node);
+					if (this.nodeViews.containsKey(node)) {
+						nodeView = this.nodeViews.get(node);
+						nodeView.deleteCircle();
+						this.nodeViews.remove(node);
+					}
 					break;
 			}
 		}
-		else if (argument instanceof StartingNodeUpdate) {
-			NodeUpdate update = (StartingNodeUpdate) argument;
+
+		// Path updates
+		else if (argument instanceof PathUpdate) {
+			PathUpdate update = (PathUpdate) argument;
 			UpdateAction action = update.getAction();
 
-			Node node = update.getNode();
-			NodeView nodeView = this.nodeViews.get(node);
+			Edge edge = update.getEdge();
+			EdgeView edgeView = this.edgeViews.get(edge);
 
-			// If this node is not visible, we can not change its color
-			if (nodeView == null) {
-				break;
+			if (edgeView != null) {
+				switch (action) {
+					case ADD:
+						edgeView.colorLine(EdgeView.NEW_PATH_COLOR);
+						break;
+					case REMOVE:
+						edgeView.colorLine(EdgeView.OLD_PATH_COLOR);
+						break;
+					case MODIFY:
+						edgeView.colorLine(EdgeView.CURRENT_PATH_COLOR);
+						break;
+				}
 			}
+		}
+
+		// Edge updates
+		else if (argument instanceof EdgeUpdate) {
+			EdgeUpdate update = (EdgeUpdate) argument;
+			UpdateAction action = update.getAction();
+
+			Edge edge = update.getEdge();
+			EdgeView edgeView = null;
 
 			switch (action) {
 				case ADD:
-					nodeView.modifyCircle(NodeView.STARTING_NODE_COLOR);
+					if (!this.edgeViews.containsKey(edge)) {
+						edgeView = new EdgeView(edge, this);
+						edgeView.createLine();
+						this.edgeViews.put(edge, edgeView);
+					}
 					break;
 				case REMOVE:
-					nodeView.modifyCircle(NodeView.NORMAL_NODE_COLOR);
+					if (this.edgeViews.containsKey(edge)) {
+						edgeView = this.edgeViews.get(edge);
+						edgeView.deleteLine();
+						this.edgeViews.remove(edge);
+					}
 					break;
 			}
 		}
-
-		// Remove the current circles
-		Node[] currentNodes = this.svgCircles.keySet().toArray(new Node[this.svgCircles.size()]);
-		for (Node node : currentNodes) {
-			this.destroyCircle(node);
-			this.svgCircles.remove(node);
-		}
-
-		// Remove the current lines
-		Edge[] currentEdges = this.svgLines.keySet().toArray(new Edge[this.svgLines.size()]);
-		for (Edge egde : currentEdges) {
-			this.destroyLine(egde);
-			this.svgLines.remove(egde);
-		}
-
-		// Create the new circles
-		for (Node node : this.grid.getNodes()) {
-			// Skip the nodes that already exist
-			if (this.svgCircles.containsKey(node)) {
-				continue;
-			}
-
-			Circle circle = this.createCircle(node);
-			this.svgCircles.put(node, circle);
-
-			// Create the new edges
-			for (Edge edge : node.getEdgeCollection()) {
-				// Skip the edges that already exist
-				if (this.svgLines.containsKey(edge)) {
-					continue;
-				}
-
-				Line line = this.createLine(edge);
-				this.svgLines.put(edge, line);
-			}
-		}
-
-		// Color the starting node
-		Circle startingCircle = this.svgCircles.get(this.grid.getStartingNode());
-		if (startingCircle != null) {
-			try {
-				startingCircle.addAttribute("fill", AnimationElement.AT_CSS, "#0000FF");
-			}
-			catch (SVGElementException exception) {
-				// TODO: uncomment
-				// exception.printStackTrace();
-			}
-		}
-
-		// Color the path
-		this.updatePath();
 
 		// Update the diagram
 		try {
@@ -202,84 +199,4 @@ public class GridView extends JPanel implements Observer {
 			exception.printStackTrace();
 		}
 	}
-
-	private void updatePath() {
-
-	}
-
-	private Circle createCircle(Node node) {
-		Group group = (Group) this.svgDiagram.getElement(GridView.SVG_GROUP_NODES);
-		Circle circle = new Circle();
-
-		try {
-			circle.addAttribute("cx", AnimationElement.AT_XML, String.valueOf(node.getX()));
-			circle.addAttribute("cy", AnimationElement.AT_XML, String.valueOf(node.getY()));
-			circle.addAttribute("r", AnimationElement.AT_XML, "5");
-
-			group.loaderAddChild(null, circle);
-		}
-		catch (SVGException exception) {
-			// TODO: uncomment
-			// exception.printStackTrace();
-		}
-
-		return circle;
-	}
-
-	private Circle destroyCircle(Node node) {
-		Group group = (Group) this.svgDiagram.getElement(GridView.SVG_GROUP_EDGES);
-		Circle circle = this.svgCircles.get(node);
-
-		try {
-			group.removeChild(circle);
-		}
-		catch (SVGException exception) {
-			// TODO: uncomment
-			// exception.printStackTrace();
-		}
-
-		return circle;
-	}
-
-	private Line createLine(Edge edge) {
-		Group group = (Group) this.svgDiagram.getElement(GridView.SVG_GROUP_EDGES);
-		Line line = new Line();
-
-		try {
-			line.addAttribute("x1", AnimationElement.AT_XML, String.valueOf(edge.getFirstNode().getX()));
-			line.addAttribute("y1", AnimationElement.AT_XML, String.valueOf(edge.getFirstNode().getY()));
-			line.addAttribute("x2", AnimationElement.AT_XML, String.valueOf(edge.getSecondNode().getX()));
-			line.addAttribute("y2", AnimationElement.AT_XML, String.valueOf(edge.getSecondNode().getY()));
-
-			if (!edge.isAccessible()) {
-				line.addAttribute("stroke-dasharray", AnimationElement.AT_CSS, "2, 4");
-			}
-
-			// TODO: display non-accessible edges different
-
-			group.loaderAddChild(null, line);
-		}
-		catch (SVGException e) {
-			// TODO: uncomment
-			// exception.printStackTrace();
-		}
-
-		return line;
-	}
-
-	private Line destroyLine(Edge edge) {
-		Group group = (Group) this.svgDiagram.getElement(GridView.SVG_GROUP_NODES);
-		Line line = this.svgLines.get(edge);
-
-		try {
-			group.removeChild(line);
-		}
-		catch (SVGException exception) {
-			// TODO: uncomment
-			// exception.printStackTrace();
-		}
-
-		return line;
-	}
-
 }

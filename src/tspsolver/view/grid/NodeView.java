@@ -10,8 +10,8 @@ import com.kitfox.svg.animation.AnimationElement;
 public class NodeView {
 
 	public static final int CIRCLE_RADIUS = 5;
-	public static final String STARTING_NODE_COLOR = "#0000ff";
 	public static final String NORMAL_NODE_COLOR = "#000000";
+	public static final String STARTING_NODE_COLOR = "#0000ff";
 
 	private final Node node;
 
@@ -47,9 +47,14 @@ public class NodeView {
 		}
 	}
 
-	protected void modifyCircle(String color) {
+	protected void colorCircle(String color) {
 		try {
-			this.svgCircle.setAttribute("fill", AnimationElement.AT_CSS, color);
+			if (this.svgCircle.hasAttribute("fill", AnimationElement.AT_CSS)) {
+				this.svgCircle.setAttribute("fill", AnimationElement.AT_CSS, color);
+			}
+			else {
+				this.svgCircle.addAttribute("fill", AnimationElement.AT_CSS, color);
+			}
 		}
 		catch (SVGException exception) {
 			exception.printStackTrace();
