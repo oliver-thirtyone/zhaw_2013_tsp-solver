@@ -10,7 +10,7 @@ import java.util.Set;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
-import tspsolver.model.grid.Path;
+import tspsolver.model.path.Path;
 
 public class RandomAlgorithm extends AStartAlgorithm {
 
@@ -58,7 +58,7 @@ public class RandomAlgorithm extends AStartAlgorithm {
 
 			if (randomEdge != null) {
 				// Add the new edge to the path
-				this.getPath().addEdge(randomEdge);
+				this.getPathUpdater().addEdge(randomEdge);
 
 				// Set the new current node
 				if (randomEdge.getFirstNode() == this.getCurrentNode()) {
@@ -77,7 +77,7 @@ public class RandomAlgorithm extends AStartAlgorithm {
 			// Link the last node with the starting node
 			Edge lastEdge = this.getCurrentNode().getEdgeToNode(this.getGrid().getStartingNode());
 			if (lastEdge != null) {
-				this.getPath().addEdge(lastEdge);
+				this.getPathUpdater().addEdge(lastEdge);
 				this.setCurrentNode(this.getGrid().getStartingNode());
 
 				this.setFinishedSuccessful(true);
@@ -91,6 +91,7 @@ public class RandomAlgorithm extends AStartAlgorithm {
 			}
 		}
 
+		this.getPathUpdater().updatePath();
 		return successfulStep;
 	}
 

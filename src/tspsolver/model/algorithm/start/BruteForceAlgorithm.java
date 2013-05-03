@@ -3,7 +3,8 @@ package tspsolver.model.algorithm.start;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
-import tspsolver.model.grid.Path;
+import tspsolver.model.path.Path;
+import tspsolver.model.path.PathUpdater;
 
 public class BruteForceAlgorithm extends AStartAlgorithm {
 
@@ -12,7 +13,10 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 	private final int[] nodeIndexes;
 
 	private final Path currentLightestPath;
+	private final PathUpdater currentLightestPathUpdater;
+
 	private final Path currentNewPath;
+	private final PathUpdater currentNewPathUpdater;
 
 	private int outerLoopIndex;
 	private int innerLoopIndex;
@@ -25,7 +29,10 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 		this.nodeIndexes = new int[this.nodeCount];
 
 		this.currentLightestPath = new Path();
+		this.currentLightestPathUpdater = new PathUpdater(this.currentLightestPath);
+
 		this.currentNewPath = new Path();
+		this.currentNewPathUpdater = new PathUpdater(this.currentNewPath);
 
 		this.reset();
 	}
@@ -40,7 +47,7 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 		this.nodeIndexes[this.innerLoopIndex] = temp;
 
 		// Create the new path
-		this.currentNewPath.clearEdges();
+		this.currentNewPathUpdater.clearWholePath();
 		for (int i = 1; i <= this.nodeCount; i++) {
 			int firstIndex = this.nodeIndexes[i - 1];
 			int secondIndex = (i == this.nodeCount) ? this.nodeIndexes[0] : this.nodeIndexes[i];
@@ -54,18 +61,20 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 				return false;
 			}
 
-			this.currentNewPath.addEdge(edge);
+			this.currentNewPathUpdater.addEdge(edge);
 		}
+		this.currentNewPathUpdater.updatePath();
 
 		// Add the lightest and the new path to the current path (for the GUI)
-		this.getPath().clearEdges();
-		this.getPath().addPath(this.currentLightestPath);
-		this.getPath().addPath(this.currentNewPath);
+		this.getPathUpdater().clearWholePath();
+		this.getPathUpdater().addPath(this.currentLightestPath);
+		this.getPathUpdater().addPath(this.currentNewPath);
 
 		// Check if the new path is lighter
 		if (this.currentLightestPath.getWeight() == 0.0 || this.currentNewPath.getWeight() < this.currentLightestPath.getWeight()) {
-			this.currentLightestPath.clearEdges();
-			this.currentLightestPath.addPath(this.currentNewPath);
+			this.currentLightestPathUpdater.clearWholePath();
+			this.currentLightestPathUpdater.addPath(this.currentNewPath);
+			this.currentLightestPathUpdater.updatePath();
 		}
 
 		// Increase the inner loop index
@@ -84,11 +93,12 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 
 		// Finish the algorithm if we are done with the outer loop
 		if (this.outerLoopIndex >= this.nodeCount) {
-			this.getPath().clearEdges();
-			this.getPath().addPath(this.currentLightestPath);
+			this.getPathUpdater().clearWholePath();
+			this.getPathUpdater().addPath(this.currentLightestPath);
 			this.setFinishedSuccessful(true);
 		}
 
+		this.getPathUpdater().updatePath();
 		return successfulStep;
 	}
 
@@ -96,8 +106,11 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 	protected void reset() {
 		super.reset();
 
-		this.currentLightestPath.clearEdges();
-		this.currentNewPath.clearEdges();
+		this.currentLightestPathUpdater.clearWholePath();
+		this.currentLightestPathUpdater.updatePath();
+
+		this.currentNewPathUpdater.clearWholePath();
+		this.currentNewPathUpdater.clearWholePath();
 
 		this.outerLoopIndex = 0;
 		this.innerLoopIndex = 0;

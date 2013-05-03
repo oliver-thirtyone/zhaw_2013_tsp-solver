@@ -47,7 +47,7 @@ public class NodeView {
 		}
 	}
 
-	protected void colorCircle(String color) {
+	protected void updateCircle(String color) {
 		try {
 			if (this.svgCircle.hasAttribute("fill", AnimationElement.AT_CSS)) {
 				this.svgCircle.setAttribute("fill", AnimationElement.AT_CSS, color);

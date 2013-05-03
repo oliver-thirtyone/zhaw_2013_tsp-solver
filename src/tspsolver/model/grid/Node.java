@@ -134,7 +134,7 @@ public class Node extends Observable implements Observer {
 		edge.addObserver(this);
 
 		this.edges.put(toNode, edge);
-		this.fireEdgeUpdate(edge, UpdateAction.ADD);
+		this.fireEdgeUpdate(edge, UpdateAction.ADD_EDGE);
 	}
 
 	private void removeEdge(Node toNode) {
@@ -142,7 +142,7 @@ public class Node extends Observable implements Observer {
 		edge.deleteObserver(this);
 
 		this.edges.remove(toNode);
-		this.fireEdgeUpdate(edge, UpdateAction.REMOVE);
+		this.fireEdgeUpdate(edge, UpdateAction.REMOVE_EDGE);
 	}
 
 	private void fireEdgeUpdate(Edge edge, UpdateAction action) {

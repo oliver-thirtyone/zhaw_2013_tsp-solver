@@ -1,9 +1,10 @@
-package tspsolver.model.grid;
+package tspsolver.model.path;
 
 import java.util.HashSet;
 import java.util.Observable;
 import java.util.Set;
 
+import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.updates.PathUpdate;
 import tspsolver.model.grid.updates.UpdateAction;
 
@@ -70,49 +71,6 @@ public class Path extends Observable {
 		return this.edges.contains(edge);
 	}
 
-	public synchronized void addPath(Path path) {
-		this.addEdges(path.getEdges());
-	}
-
-	public synchronized void addEdges(Set<Edge> edges) {
-		for (Edge edge : edges) {
-			this.addEdge(edge);
-		}
-	}
-
-	public synchronized void addEdge(Edge edge) {
-		if (this.edges.add(edge)) {
-			this.weight += edge.getWeight();
-
-			this.firePathUpdate(edge, UpdateAction.ADD);
-		}
-	}
-
-	public synchronized void removePath(Path path) {
-		this.removeEdges(path.getEdges());
-	}
-
-	public synchronized void removeEdges(Set<Edge> edges) {
-		for (Edge edge : edges) {
-			this.removeEdge(edge);
-		}
-	}
-
-	public synchronized void removeEdge(Edge edge) {
-		if (this.edges.remove(edge)) {
-			this.weight -= edge.getWeight();
-
-			this.firePathUpdate(edge, UpdateAction.REMOVE);
-		}
-	}
-
-	public synchronized void clearEdges() {
-		Edge[] edgesToClear = this.edges.toArray(new Edge[this.edges.size()]);
-		for (Edge edge : edgesToClear) {
-			this.removeEdge(edge);
-		}
-	}
-
 	public double getWeight() {
 		return this.weight;
 	}
@@ -121,7 +79,19 @@ public class Path extends Observable {
 		return this.edges.size();
 	}
 
-	private void firePathUpdate(Edge edge, UpdateAction action) {
+	protected synchronized void addEdge(Edge edge) {
+		if (this.edges.add(edge)) {
+			this.weight += edge.getWeight();
+		}
+	}
+
+	protected synchronized void removeEdge(Edge edge) {
+		if (this.edges.remove(edge)) {
+			this.weight -= edge.getWeight();
+		}
+	}
+
+	protected void firePathUpdate(Edge edge, UpdateAction action) {
 		PathUpdate update = new PathUpdate(edge, action);
 
 		this.setChanged();

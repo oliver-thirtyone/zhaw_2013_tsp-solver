@@ -11,7 +11,7 @@ import org.junit.Test;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.GridFactory;
 import tspsolver.model.grid.Node;
-import tspsolver.model.grid.Path;
+import tspsolver.model.path.Path;
 
 public class RandomAlgorithmTest {
 

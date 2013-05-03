@@ -1,6 +1,6 @@
 package tspsolver.model.algorithm.optimizer;
 
-import tspsolver.model.grid.Path;
+import tspsolver.model.path.Path;
 
 public class LinKernighanHeuristik extends AOptimizerAlgorithm {
 

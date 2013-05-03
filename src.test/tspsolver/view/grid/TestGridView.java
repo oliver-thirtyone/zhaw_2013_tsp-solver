@@ -4,11 +4,11 @@ import java.awt.GridBagConstraints;
 
 import javax.swing.JFrame;
 
-import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.GridFactory;
 import tspsolver.model.grid.Node;
-import tspsolver.model.grid.Path;
+import tspsolver.model.path.Path;
+import tspsolver.model.path.PathUpdater;
 import tspsolver.util.LayoutManager;
 
 public class TestGridView extends JFrame {
@@ -40,9 +40,10 @@ public class TestGridView extends JFrame {
 		this.layoutManager.setX(0).setY(0).addComponent(this.gridView);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		Grid grid = new Grid();
 		Path path = new Path();
+		PathUpdater pathUpdater = new PathUpdater(path);
 
 		Node nodeNorth = GridFactory.createNode(350, 25);
 		Node nodeEast = GridFactory.createNode(550, 250);
@@ -57,12 +58,29 @@ public class TestGridView extends JFrame {
 		grid.addNode(nodeWest);
 		grid.setStartingNode(nodeNorth);
 
-		// Add an edge to the path
-		Edge edge = GridFactory.getEdge(nodeNorth, nodeEast);
-		path.addEdge(edge);
-
 		testGridView.setSize(800, 600);
 		testGridView.setLocationRelativeTo(null);
 		testGridView.setVisible(true);
+
+		// Add an edge to the path
+		pathUpdater.addEdge(GridFactory.getEdge(nodeNorth, nodeEast));
+		pathUpdater.updatePath();
+
+		// Sleep two seconds
+		Thread.sleep(2000);
+
+		// Add two edges to the path
+		pathUpdater.addEdge(GridFactory.getEdge(nodeEast, nodeSouth));
+		pathUpdater.addEdge(GridFactory.getEdge(nodeSouth, nodeNorth));
+		pathUpdater.updatePath();
+
+		// Sleep two seconds
+		Thread.sleep(2000);
+
+		// Complete the path
+		pathUpdater.removeEdge(GridFactory.getEdge(nodeSouth, nodeNorth));
+		pathUpdater.addEdge(GridFactory.getEdge(nodeSouth, nodeWest));
+		pathUpdater.addEdge(GridFactory.getEdge(nodeWest, nodeNorth));
+		pathUpdater.updatePath();
 	}
 }

@@ -1,16 +1,17 @@
 package tspsolver.model.algorithm;
 
-import tspsolver.model.grid.Path;
+import tspsolver.model.path.Path;
+import tspsolver.model.path.PathUpdater;
 
 public abstract class Algorithm {
 
-	private final Path path;
+	private final PathUpdater pathUpdater;
 
 	private boolean validArguments;
 	private boolean finishedSuccessful;
 
 	public Algorithm(Path path) {
-		this.path = path;
+		this.pathUpdater = new PathUpdater(path);
 
 		this.validArguments = false;
 		this.finishedSuccessful = false;
@@ -28,8 +29,8 @@ public abstract class Algorithm {
 
 	protected abstract boolean doStep();
 
-	public Path getPath() {
-		return this.path;
+	public PathUpdater getPathUpdater() {
+		return this.pathUpdater;
 	}
 
 	public boolean hasValidArguments() {
@@ -49,7 +50,7 @@ public abstract class Algorithm {
 	}
 
 	protected void reset() {
-		this.getPath().clearEdges();
+		this.getPathUpdater().clearWholePath();
 
 		this.setValidArguments(false);
 		this.setFinishedSuccessful(false);

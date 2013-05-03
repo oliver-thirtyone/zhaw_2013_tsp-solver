@@ -16,12 +16,12 @@ import javax.swing.JPanel;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
-import tspsolver.model.grid.Path;
 import tspsolver.model.grid.updates.EdgeUpdate;
 import tspsolver.model.grid.updates.NodeUpdate;
 import tspsolver.model.grid.updates.PathUpdate;
 import tspsolver.model.grid.updates.StartingNodeUpdate;
 import tspsolver.model.grid.updates.UpdateAction;
+import tspsolver.model.path.Path;
 
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.SVGDiagram;
@@ -106,11 +106,11 @@ public class GridView extends JPanel implements Observer {
 
 			if (nodeView != null) {
 				switch (action) {
-					case ADD:
-						nodeView.colorCircle(NodeView.STARTING_NODE_COLOR);
+					case ADD_STARTING_NODE:
+						nodeView.updateCircle(NodeView.STARTING_NODE_COLOR);
 						break;
-					case REMOVE:
-						nodeView.colorCircle(NodeView.NORMAL_NODE_COLOR);
+					case REMOVE_STARTING_NODE:
+						nodeView.updateCircle(NodeView.NORMAL_NODE_COLOR);
 						break;
 				}
 			}
@@ -125,14 +125,14 @@ public class GridView extends JPanel implements Observer {
 			NodeView nodeView = null;
 
 			switch (action) {
-				case ADD:
+				case ADD_NODE:
 					if (!this.nodeViews.containsKey(node)) {
 						nodeView = new NodeView(node, this);
 						nodeView.createCircle();
 						this.nodeViews.put(node, nodeView);
 					}
 					break;
-				case REMOVE:
+				case REMOVE_NODE:
 					if (this.nodeViews.containsKey(node)) {
 						nodeView = this.nodeViews.get(node);
 						nodeView.deleteCircle();
@@ -152,14 +152,17 @@ public class GridView extends JPanel implements Observer {
 
 			if (edgeView != null) {
 				switch (action) {
-					case ADD:
-						edgeView.colorLine(EdgeView.NEW_PATH_COLOR);
+					case PATH_ELEMENT:
+						edgeView.updateLine(EdgeView.PATH_COLOR, false);
 						break;
-					case REMOVE:
-						edgeView.colorLine(EdgeView.OLD_PATH_COLOR);
+					case NEW_PATH_ELEMENT:
+						edgeView.updateLine(EdgeView.NEW_PATH_COLOR, false);
 						break;
-					case MODIFY:
-						edgeView.colorLine(EdgeView.CURRENT_PATH_COLOR);
+					case OLD_PATH_ELEMENT:
+						edgeView.updateLine(EdgeView.OLD_PATH_COLOR, true);
+						break;
+					case NON_PATH_ELEMENT:
+						edgeView.updateLine(EdgeView.EDGE_COLOR, true);
 						break;
 				}
 			}
@@ -174,14 +177,14 @@ public class GridView extends JPanel implements Observer {
 			EdgeView edgeView = null;
 
 			switch (action) {
-				case ADD:
+				case ADD_EDGE:
 					if (!this.edgeViews.containsKey(edge)) {
 						edgeView = new EdgeView(edge, this);
 						edgeView.createLine();
 						this.edgeViews.put(edge, edgeView);
 					}
 					break;
-				case REMOVE:
+				case REMOVE_EDGE:
 					if (this.edgeViews.containsKey(edge)) {
 						edgeView = this.edgeViews.get(edge);
 						edgeView.deleteLine();
@@ -194,6 +197,7 @@ public class GridView extends JPanel implements Observer {
 		// Update the diagram
 		try {
 			this.svgDiagram.updateTime(0.0);
+			this.repaint();
 		}
 		catch (SVGException exception) {
 			exception.printStackTrace();

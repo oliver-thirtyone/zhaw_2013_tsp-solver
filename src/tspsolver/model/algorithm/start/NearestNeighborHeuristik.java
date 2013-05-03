@@ -7,7 +7,7 @@ import java.util.Set;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
-import tspsolver.model.grid.Path;
+import tspsolver.model.path.Path;
 
 public class NearestNeighborHeuristik extends AStartAlgorithm {
 
@@ -62,7 +62,7 @@ public class NearestNeighborHeuristik extends AStartAlgorithm {
 
 			if (shortestEdge != null) {
 				// Add the new edge to the path
-				this.getPath().addEdge(shortestEdge);
+				this.getPathUpdater().addEdge(shortestEdge);
 
 				// Set the new current node
 				if (shortestEdge.getFirstNode() == this.getCurrentNode()) {
@@ -81,7 +81,7 @@ public class NearestNeighborHeuristik extends AStartAlgorithm {
 			// Link the last node with the starting node
 			Edge lastEdge = this.getCurrentNode().getEdgeToNode(this.getGrid().getStartingNode());
 			if (lastEdge != null) {
-				this.getPath().addEdge(lastEdge);
+				this.getPathUpdater().addEdge(lastEdge);
 				this.setCurrentNode(this.getGrid().getStartingNode());
 
 				this.setFinishedSuccessful(true);
@@ -95,6 +95,7 @@ public class NearestNeighborHeuristik extends AStartAlgorithm {
 			}
 		}
 
+		this.getPathUpdater().updatePath();
 		return successfulStep;
 	}
 

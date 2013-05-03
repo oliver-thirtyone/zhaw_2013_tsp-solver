@@ -9,11 +9,11 @@ import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.GridFactory;
 import tspsolver.model.grid.Node;
-import tspsolver.model.grid.Path;
+import tspsolver.model.path.Path;
+import tspsolver.model.path.PathUpdater;
 
 public class LinKernighanHeuristikTest {
 
-	private Path path;
 	private Grid grid;
 
 	private Node nodeNorth;
@@ -28,11 +28,13 @@ public class LinKernighanHeuristikTest {
 	private Edge edgeEastWest;
 	private Edge edgeSouthWest;
 
+	private Path path;
+	private PathUpdater pathUpdater;
+
 	private AOptimizerAlgorithm algorithm;
 
 	@Before
 	public void setUp() {
-		this.path = new Path();
 		this.grid = new Grid();
 
 		this.nodeNorth = GridFactory.createNode(3, 1);
@@ -44,7 +46,7 @@ public class LinKernighanHeuristikTest {
 		this.grid.addNode(this.nodeEast);
 		this.grid.addNode(this.nodeSouth);
 		this.grid.addNode(this.nodeWest);
-		this.grid.setStartingNode(nodeNorth);
+		this.grid.setStartingNode(this.nodeNorth);
 
 		this.edgeNorthEast = GridFactory.getEdge(this.nodeNorth, this.nodeEast);
 		this.edgeNorthSouth = GridFactory.getEdge(this.nodeNorth, this.nodeSouth);
@@ -53,16 +55,20 @@ public class LinKernighanHeuristikTest {
 		this.edgeEastWest = GridFactory.getEdge(this.nodeEast, this.nodeWest);
 		this.edgeSouthWest = GridFactory.getEdge(this.nodeSouth, this.nodeWest);
 
+		this.path = new Path();
+		this.pathUpdater = new PathUpdater(this.path);
+
 		this.algorithm = new LinKernighanHeuristik(this.path);
 	}
 
 	@Test
 	public void test() {
 		// Create a valid path that is too heavy
-		this.path.addEdge(edgeNorthSouth);
-		this.path.addEdge(edgeSouthWest);
-		this.path.addEdge(edgeEastWest);
-		this.path.addEdge(edgeNorthEast);
+		this.pathUpdater.addEdge(this.edgeNorthSouth);
+		this.pathUpdater.addEdge(this.edgeSouthWest);
+		this.pathUpdater.addEdge(this.edgeEastWest);
+		this.pathUpdater.addEdge(this.edgeNorthEast);
+		this.pathUpdater.updatePath();
 
 		// Make sure that we can not take a step yet
 		Assert.assertFalse(this.algorithm.step());

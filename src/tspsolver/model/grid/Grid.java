@@ -48,7 +48,7 @@ public class Grid extends Observable implements Observer {
 			node.addObserver(this);
 
 			this.nodes.add(node);
-			this.fireNodeUpdate(node, UpdateAction.ADD);
+			this.fireNodeUpdate(node, UpdateAction.ADD_NODE);
 		}
 
 		return node;
@@ -62,7 +62,7 @@ public class Grid extends Observable implements Observer {
 			node.deleteObserver(this);
 
 			this.nodes.remove(node);
-			this.fireNodeUpdate(node, UpdateAction.REMOVE);
+			this.fireNodeUpdate(node, UpdateAction.REMOVE_NODE);
 		}
 	}
 
@@ -78,11 +78,14 @@ public class Grid extends Observable implements Observer {
 
 	public void setStartingNode(Node startingNode) {
 		if (this.startingNode != null) {
-			this.fireStartingNodeUpdate(this.startingNode, UpdateAction.REMOVE);
+			this.fireStartingNodeUpdate(this.startingNode, UpdateAction.REMOVE_STARTING_NODE);
 		}
 
 		this.startingNode = startingNode;
-		this.fireStartingNodeUpdate(this.startingNode, UpdateAction.ADD);
+
+		if (this.startingNode != null) {
+			this.fireStartingNodeUpdate(this.startingNode, UpdateAction.ADD_STARTING_NODE);
+		}
 	}
 
 	private void fireNodeUpdate(Node node, UpdateAction action) {

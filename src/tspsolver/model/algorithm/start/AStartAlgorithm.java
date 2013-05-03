@@ -3,7 +3,7 @@ package tspsolver.model.algorithm.start;
 import tspsolver.model.algorithm.Algorithm;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
-import tspsolver.model.grid.Path;
+import tspsolver.model.path.Path;
 
 public abstract class AStartAlgorithm extends Algorithm {
 

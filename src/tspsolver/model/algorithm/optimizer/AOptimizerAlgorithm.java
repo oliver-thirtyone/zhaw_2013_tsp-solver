@@ -1,7 +1,7 @@
 package tspsolver.model.algorithm.optimizer;
 
 import tspsolver.model.algorithm.Algorithm;
-import tspsolver.model.grid.Path;
+import tspsolver.model.path.Path;
 
 public abstract class AOptimizerAlgorithm extends Algorithm {
 
