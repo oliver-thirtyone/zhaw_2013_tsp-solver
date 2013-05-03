@@ -34,7 +34,7 @@ public class NearestNeighborHeuristik extends AStartAlgorithm {
 			this.nodesToVisit.remove(this.getCurrentNode());
 
 			// Get all available edges from the current node
-			Collection<Edge> edges = this.getCurrentNode().getEdgeCollection();
+			Collection<Edge> edges = this.getCurrentNode().getEdges();
 
 			// Get the shortest edge to a node that we still have to visit
 			for (Edge edge : edges) {

@@ -150,7 +150,7 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 		Set<Edge> allEdges = new HashSet<Edge>();
 
 		for (Node node : nodes) {
-			allEdges.addAll(node.getEdgeCollection());
+			allEdges.addAll(node.getEdges());
 		}
 
 		return allEdges;

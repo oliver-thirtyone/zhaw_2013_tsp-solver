@@ -38,8 +38,8 @@ public class EdgeTest {
 
 	@Test
 	public void testNodeEdges() {
-		Assert.assertEquals(1, this.firstNode.getEdgeCollection().size());
-		Assert.assertEquals(1, this.secondNode.getEdgeCollection().size());
+		Assert.assertEquals(1, this.firstNode.getEdges().size());
+		Assert.assertEquals(1, this.secondNode.getEdges().size());
 	}
 
 }

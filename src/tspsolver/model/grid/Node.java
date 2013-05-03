@@ -75,11 +75,7 @@ public class Node extends Observable implements Observer {
 		return this.y;
 	}
 
-	public Map<Node, Edge> getEdges() {
-		return this.edges;
-	}
-
-	public Collection<Edge> getEdgeCollection() {
+	public Collection<Edge> getEdges() {
 		return this.edges.values();
 	}
 
@@ -92,7 +88,7 @@ public class Node extends Observable implements Observer {
 	}
 
 	public Edge getEdgeToNode(Node node) {
-		return this.getEdges().get(node);
+		return this.edges.get(node);
 	}
 
 	protected Edge addEdgeToNode(Node node) {
@@ -129,7 +125,7 @@ public class Node extends Observable implements Observer {
 	}
 
 	protected synchronized void clearEdges() {
-		for (Node node : this.getEdges().keySet()) {
+		for (Node node : this.edges.keySet()) {
 			this.removeEdgeToNode(node);
 		}
 	}
