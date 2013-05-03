@@ -2,7 +2,6 @@ package tspsolver.model.grid;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
@@ -84,63 +83,25 @@ public class Node extends Observable implements Observer {
 		return this.edges.values();
 	}
 
-	public Collection<Edge> getAccessibleEdgeCollection() {
-		Collection<Edge> accessibleEdges = new HashSet<Edge>();
-
-		for (Edge edge : this.getEdgeCollection()) {
-			if (edge.isAccessible()) {
-				accessibleEdges.add(edge);
-			}
-		}
-
-		return accessibleEdges;
-	}
-
 	public int getNumberOfEdges() {
 		return this.edges.size();
 	}
 
 	public boolean hasEdgeToNode(Node node) {
-		return this.hasEdgeToNode(node, Edge.DEFAULT_ACCESS);
-	}
-
-	public boolean hasEdgeToNode(Node node, boolean accessible) {
-		Edge edge = this.getEdgeToNode(node, accessible);
-		return edge != null;
+		return this.edges.containsKey(node);
 	}
 
 	public Edge getEdgeToNode(Node node) {
-		return this.getEdgeToNode(node, Edge.DEFAULT_ACCESS);
-	}
-
-	public Edge getEdgeToNode(Node node, boolean accessible) {
-		Edge edge = this.getEdges().get(node);
-
-		// Return null if the edge must be accessible but isn't
-		if (edge != null && accessible && !edge.isAccessible()) {
-			edge = null;
-		}
-
-		return edge;
+		return this.getEdges().get(node);
 	}
 
 	protected Edge addEdgeToNode(Node node) {
-		boolean accessible = Edge.DEFAULT_ACCESS;
-		return this.addEdgeToNode(node, accessible);
-	}
-
-	protected Edge addEdgeToNode(Node node, double weight) {
-		boolean accessible = Edge.DEFAULT_ACCESS;
-		return this.addEdgeToNode(node, weight, accessible);
-	}
-
-	protected Edge addEdgeToNode(Node node, boolean accessible) {
 		double weight = Edge.calcLinearDistance(this, node);
-		return this.addEdgeToNode(node, weight, accessible);
+		return this.addEdgeToNode(node, weight);
 	}
 
-	protected synchronized Edge addEdgeToNode(Node node, double weight, boolean accessible) {
-		Edge edge = new Edge(this, node, weight, accessible);
+	protected synchronized Edge addEdgeToNode(Node node, double weight) {
+		Edge edge = new Edge(this, node, weight);
 
 		// Add the edge to this node
 		if (!this.hasEdgeToNode(node)) {

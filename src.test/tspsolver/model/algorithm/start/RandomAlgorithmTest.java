@@ -8,7 +8,6 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.GridFactory;
 import tspsolver.model.grid.Node;
@@ -44,11 +43,11 @@ public class RandomAlgorithmTest {
 		this.nodes.add(this.nodeSouth);
 		this.nodes.add(this.nodeWest);
 
-		this.grid.addNode(nodeNorth);
-		this.grid.addNode(nodeEast);
-		this.grid.addNode(nodeSouth);
-		this.grid.addNode(nodeWest);
-		this.grid.setStartingNode(nodeNorth);
+		this.grid.addNode(this.nodeNorth);
+		this.grid.addNode(this.nodeEast);
+		this.grid.addNode(this.nodeSouth);
+		this.grid.addNode(this.nodeWest);
+		this.grid.setStartingNode(this.nodeNorth);
 
 		this.algorithm = new RandomAlgorithm(this.path, this.grid);
 	}
@@ -68,13 +67,13 @@ public class RandomAlgorithmTest {
 		} while (!this.algorithm.hasFinishedSuccessful());
 
 		// DEBUG OUTPUT
-		System.out.println("Path: ");
-		for (Edge edge : this.path.getEdges()) {
-			Node n1 = edge.getFirstNode();
-			Node n2 = edge.getSecondNode();
-			System.out.println("(" + n1.getX() + "," + n1.getY() + ")" + " -> " + "(" + n2.getX() + "," + n2.getY() + ")");
-		}
-		System.out.println();
+		// System.out.println("Path: ");
+		// for (Edge edge : this.path.getEdges()) {
+		// Node n1 = edge.getFirstNode();
+		// Node n2 = edge.getSecondNode();
+		// System.out.println("(" + n1.getX() + "," + n1.getY() + ")" + " -> " + "(" + n2.getX() + "," + n2.getY() + ")");
+		// }
+		// System.out.println();
 
 		// Check if we have four edges
 		Assert.assertEquals(4, this.path.getNumberOfEdges());

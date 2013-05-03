@@ -39,7 +39,7 @@ public class RandomAlgorithm extends AStartAlgorithm {
 			this.nodesToVisit.remove(this.getCurrentNode());
 
 			// Get all available edges from the current node
-			Collection<Edge> edges = this.getCurrentNode().getAccessibleEdgeCollection();
+			Collection<Edge> edges = this.getCurrentNode().getEdgeCollection();
 
 			// Get the a random edge to a node that we still have to visit
 			List<Edge> possibleEdges = new ArrayList<Edge>(edges);

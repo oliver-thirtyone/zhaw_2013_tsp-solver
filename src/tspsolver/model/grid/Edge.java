@@ -2,20 +2,13 @@ package tspsolver.model.grid;
 
 import java.util.Observable;
 
-import tspsolver.model.grid.updates.EdgeUpdate;
-import tspsolver.model.grid.updates.UpdateAction;
-
 public class Edge extends Observable {
-
-	public final static boolean DEFAULT_ACCESS = true;
 
 	private final Node firstNode;
 	private final Node secondNode;
 	private final double weight;
 
-	private boolean accessible;
-
-	protected Edge(Node firstNode, Node secondNode, double weight, boolean accessible) throws IllegalArgumentException {
+	protected Edge(Node firstNode, Node secondNode, double weight) throws IllegalArgumentException {
 		if (firstNode.equals(secondNode)) {
 			throw new IllegalArgumentException("The nodes must not be equal");
 		}
@@ -23,7 +16,6 @@ public class Edge extends Observable {
 		this.firstNode = firstNode;
 		this.secondNode = secondNode;
 		this.weight = weight;
-		this.accessible = accessible;
 	}
 
 	@Override
@@ -31,7 +23,6 @@ public class Edge extends Observable {
 		final int prime = 31;
 		int result = 1;
 
-		result = prime * result + (this.accessible ? 1231 : 1237);
 		result = prime * result + ((this.firstNode == null) ? 0 : this.firstNode.hashCode());
 		result = prime * result + ((this.secondNode == null) ? 0 : this.secondNode.hashCode());
 
@@ -54,10 +45,6 @@ public class Edge extends Observable {
 		}
 
 		Edge other = (Edge) obj;
-
-		if (this.accessible != other.accessible) {
-			return false;
-		}
 
 		if (this.firstNode == null) {
 			if (other.firstNode != null) {
@@ -96,15 +83,6 @@ public class Edge extends Observable {
 		return this.weight;
 	}
 
-	public boolean isAccessible() {
-		return this.accessible;
-	}
-
-	public void setAccessible(boolean accessible) {
-		this.accessible = accessible;
-		this.fireEdgeUpdate(UpdateAction.MODIFY);
-	}
-
 	protected static double calcLinearDistance(Node firstNode, Node secondNode) {
 		int deltaX = secondNode.getX() - firstNode.getX();
 		int deltaY = secondNode.getY() - firstNode.getY();
@@ -120,13 +98,6 @@ public class Edge extends Observable {
 		}
 
 		return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
-	}
-
-	private void fireEdgeUpdate(UpdateAction action) {
-		EdgeUpdate update = new EdgeUpdate(this, action);
-
-		this.setChanged();
-		this.notifyObservers(update);
 	}
 
 }
