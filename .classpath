@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" output="bin.test" path="src.test"/>
-	<classpathentry kind="src" path="tests_delete_later"/>
-	<classpathentry kind="src" path="data"/>
+	<classpathentry kind="src" output="tests_delete_later" path="tests_delete_later"/>
+	<classpathentry kind="src" output="data" path="data"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/svgSalamander_2013-03-23.jar"/>
