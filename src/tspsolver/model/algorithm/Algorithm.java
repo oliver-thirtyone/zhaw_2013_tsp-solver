@@ -49,7 +49,7 @@ public abstract class Algorithm {
 		this.finishedSuccessful = finishedSuccessful;
 	}
 
-	protected void reset() {
+	public void reset() {
 		this.getPathUpdater().clearWholePath();
 
 		this.setValidArguments(false);

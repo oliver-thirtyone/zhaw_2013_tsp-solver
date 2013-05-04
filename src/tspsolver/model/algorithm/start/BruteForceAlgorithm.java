@@ -103,7 +103,7 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 	}
 
 	@Override
-	protected void reset() {
+	public void reset() {
 		super.reset();
 
 		this.currentLightestPathUpdater.clearWholePath();

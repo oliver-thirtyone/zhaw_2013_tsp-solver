@@ -1,6 +1,8 @@
-package tspsolver.model.algorithm;
+package tspsolver.controller;
 
 import java.util.Observable;
+
+import tspsolver.model.algorithm.Algorithm;
 
 public class Runner extends Observable implements Runnable {
 

@@ -1,4 +1,4 @@
-package tspsolver.model.algorithm;
+package tspsolver.controller;
 
 public enum RunnerState {
 
