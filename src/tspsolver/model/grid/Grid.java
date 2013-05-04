@@ -5,16 +5,14 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
-import tspsolver.model.grid.updates.NodeUpdate;
-import tspsolver.model.grid.updates.StartingNodeUpdate;
-import tspsolver.model.grid.updates.UpdateAction;
+import tspsolver.model.updates.NodeUpdate;
+import tspsolver.model.updates.UpdateAction;
 
 public class Grid extends Observable implements Observer {
 
 	public static final boolean LINK_ADDED_NODE = true;
 
 	private final Set<Node> nodes;
-	private Node startingNode;
 
 	public Grid() {
 		this.nodes = new HashSet<Node>();
@@ -72,31 +70,8 @@ public class Grid extends Observable implements Observer {
 		}
 	}
 
-	public Node getStartingNode() {
-		return this.startingNode;
-	}
-
-	public void setStartingNode(Node startingNode) {
-		if (this.startingNode != null) {
-			this.fireStartingNodeUpdate(this.startingNode, UpdateAction.REMOVE_STARTING_NODE);
-		}
-
-		this.startingNode = startingNode;
-
-		if (this.startingNode != null) {
-			this.fireStartingNodeUpdate(this.startingNode, UpdateAction.ADD_STARTING_NODE);
-		}
-	}
-
 	private void fireNodeUpdate(Node node, UpdateAction action) {
 		NodeUpdate update = new NodeUpdate(node, action);
-
-		this.setChanged();
-		this.notifyObservers(update);
-	}
-
-	private void fireStartingNodeUpdate(Node node, UpdateAction action) {
-		NodeUpdate update = new StartingNodeUpdate(node, action);
 
 		this.setChanged();
 		this.notifyObservers(update);

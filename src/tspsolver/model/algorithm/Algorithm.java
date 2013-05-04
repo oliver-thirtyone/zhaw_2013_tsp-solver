@@ -1,6 +1,6 @@
 package tspsolver.model.algorithm;
 
-import tspsolver.model.path.Path;
+import tspsolver.model.Scenario;
 import tspsolver.model.path.PathUpdater;
 
 public abstract class Algorithm {
@@ -10,8 +10,8 @@ public abstract class Algorithm {
 	private boolean validArguments;
 	private boolean finishedSuccessful;
 
-	public Algorithm(Path path) {
-		this.pathUpdater = new PathUpdater(path);
+	public Algorithm(Scenario scenario) {
+		this.pathUpdater = new PathUpdater(scenario.getPath());
 
 		this.validArguments = false;
 		this.finishedSuccessful = false;

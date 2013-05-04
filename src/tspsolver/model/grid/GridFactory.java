@@ -6,8 +6,8 @@ public abstract class GridFactory {
 		return new Node(x, y);
 	}
 
-	public static void hasEdge(Node firstNode, Node secondNode) {
-		firstNode.hasEdgeToNode(secondNode);
+	public static boolean hasEdge(Node firstNode, Node secondNode) {
+		return firstNode.hasEdgeToNode(secondNode);
 	}
 
 	public static Edge getEdge(Node firstNode, Node secondNode) {

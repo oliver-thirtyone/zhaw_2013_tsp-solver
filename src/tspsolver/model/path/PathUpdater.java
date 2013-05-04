@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import tspsolver.model.grid.Edge;
-import tspsolver.model.grid.updates.UpdateAction;
+import tspsolver.model.updates.UpdateAction;
 
 public class PathUpdater {
 

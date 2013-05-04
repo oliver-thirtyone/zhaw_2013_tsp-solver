@@ -1,7 +1,7 @@
 package tspsolver.model.algorithm.start;
 
+import tspsolver.model.Scenario;
 import tspsolver.model.grid.Edge;
-import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
 import tspsolver.model.path.Path;
 import tspsolver.model.path.PathUpdater;
@@ -21,8 +21,8 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 	private int outerLoopIndex;
 	private int innerLoopIndex;
 
-	public BruteForceAlgorithm(Path path, Grid grid) {
-		super(path, grid);
+	public BruteForceAlgorithm(Scenario scenario) {
+		super(scenario);
 
 		this.nodeCount = this.getGrid().getNodes().size();
 		this.nodes = this.getGrid().getNodes().toArray(new Node[this.nodeCount]);

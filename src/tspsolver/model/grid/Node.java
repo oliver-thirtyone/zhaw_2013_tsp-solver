@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
-import tspsolver.model.grid.updates.EdgeUpdate;
-import tspsolver.model.grid.updates.UpdateAction;
+import tspsolver.model.updates.EdgeUpdate;
+import tspsolver.model.updates.UpdateAction;
 
 public class Node extends Observable implements Observer {
 

@@ -6,11 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import tspsolver.model.Scenario;
 import tspsolver.model.grid.Edge;
-import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
 import tspsolver.model.grid.comparators.EdgeWeightComparator;
-import tspsolver.model.path.Path;
 
 public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 
@@ -18,14 +17,14 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 	// Zirkel-Bildung zu schlecht berechnet. z.B: Wenn bei einem Quadrat die obere und die untere Kante verbunden wurden haben wir ein Problem...
 
 	// FIXME: Refactor this class !!!
-	public MinimumSpanningTreeHeuristik(Path path, Grid grid) {
-		super(path, grid);
+	public MinimumSpanningTreeHeuristik(Scenario scenario) {
+		super(scenario);
 	}
 
 	@Override
 	public boolean doStep() {
 		Set<Node> nodes = this.getGrid().getNodes();
-		Node startingNode = this.getGrid().getStartingNode();
+		Node startingNode = this.getStartingNode();
 
 		this.calcSpanningTree(nodes);
 
@@ -71,8 +70,7 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 
 					spanningTreeNodes.add(currentEdge.getSecondNode());
 				}
-			}
-			else if (spanningTreeNodes.contains(currentEdge.getSecondNode()) == false) {
+			} else if (spanningTreeNodes.contains(currentEdge.getSecondNode()) == false) {
 
 				this.getPathUpdater().addEdge(currentEdge);
 
@@ -119,8 +117,7 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 				// handle the branches.
 				currentNode = this.doEulerianTrail(subMinSpanningTree, currentNode, path);
 
-			}
-			else if (edge.getSecondNode() == startingNode) {
+			} else if (edge.getSecondNode() == startingNode) {
 
 				// Connect the current node with the node from the new edge
 				path.add(currentNode.getEdgeToNode(edge.getFirstNode()));

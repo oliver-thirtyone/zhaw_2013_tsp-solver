@@ -5,6 +5,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import tspsolver.model.Scenario;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.GridFactory;
@@ -13,8 +14,9 @@ import tspsolver.model.path.Path;
 
 public class NearestNeighborHeuristikTest {
 
-	private Path path;
+	private Scenario scenario;
 	private Grid grid;
+	private Path path;
 
 	private Node nodeNorth;
 	private Node nodeEast;
@@ -32,8 +34,9 @@ public class NearestNeighborHeuristikTest {
 
 	@Before
 	public void setUp() {
-		this.path = new Path();
-		this.grid = new Grid();
+		this.scenario = new Scenario();
+		this.grid = scenario.getGrid();
+		this.path = scenario.getPath();
 
 		this.nodeNorth = GridFactory.createNode(0, 5);
 		this.nodeEast = GridFactory.createNode(4, 0); // Nearest node to the node in the north
@@ -44,7 +47,7 @@ public class NearestNeighborHeuristikTest {
 		this.grid.addNode(this.nodeEast);
 		this.grid.addNode(this.nodeSouth);
 		this.grid.addNode(this.nodeWest);
-		this.grid.setStartingNode(nodeNorth);
+		this.scenario.setStartingNode(nodeNorth);
 
 		this.edgeNorthEast = GridFactory.getEdge(this.nodeNorth, this.nodeEast);
 		this.edgeNorthSouth = GridFactory.getEdge(this.nodeNorth, this.nodeSouth);
@@ -53,7 +56,7 @@ public class NearestNeighborHeuristikTest {
 		this.edgeEastWest = GridFactory.getEdge(this.nodeEast, this.nodeWest);
 		this.edgeSouthWest = GridFactory.getEdge(this.nodeSouth, this.nodeWest);
 
-		this.algorithm = new NearestNeighborHeuristik(this.path, this.grid);
+		this.algorithm = new NearestNeighborHeuristik(this.scenario);
 	}
 
 	@Test

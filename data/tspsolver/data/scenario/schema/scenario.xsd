@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="scenario">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="node" minOccurs="3" maxOccurs="unbounded" />
+				<xs:element name="add-edge" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element name="remove-edge" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element name="starting-node" minOccurs="1" maxOccurs="1" />
+			</xs:sequence>
+
+			<xs:attribute name="name" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="node">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="x" type="xs:int" use="required" />
+			<xs:attribute name="y" type="xs:int" use="required" />
+			<xs:attribute name="link" type="xs:boolean" use="optional"
+				default="true" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="add-edge">
+		<xs:complexType>
+			<xs:attribute name="node1" type="xs:string" use="required" />
+			<xs:attribute name="node2" type="xs:string" use="required" />
+			<xs:attribute name="weight" type="xs:double" use="optional"
+				default="9999.99" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="remove-edge">
+		<xs:complexType>
+			<xs:attribute name="node1" type="xs:string" use="required" />
+			<xs:attribute name="node2" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="starting-node">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

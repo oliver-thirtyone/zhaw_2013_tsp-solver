@@ -5,6 +5,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import tspsolver.model.Scenario;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.GridFactory;
@@ -14,7 +15,9 @@ import tspsolver.model.path.PathUpdater;
 
 public class LinKernighanHeuristikTest {
 
+	private Scenario scenario;
 	private Grid grid;
+	private Path path;
 
 	private Node nodeNorth;
 	private Node nodeEast;
@@ -28,14 +31,13 @@ public class LinKernighanHeuristikTest {
 	private Edge edgeEastWest;
 	private Edge edgeSouthWest;
 
-	private Path path;
-	private PathUpdater pathUpdater;
-
 	private AOptimizerAlgorithm algorithm;
 
 	@Before
 	public void setUp() {
-		this.grid = new Grid();
+		this.scenario = new Scenario();
+		this.grid = scenario.getGrid();
+		this.path = scenario.getPath();
 
 		this.nodeNorth = GridFactory.createNode(3, 1);
 		this.nodeEast = GridFactory.createNode(4, 2);
@@ -46,7 +48,7 @@ public class LinKernighanHeuristikTest {
 		this.grid.addNode(this.nodeEast);
 		this.grid.addNode(this.nodeSouth);
 		this.grid.addNode(this.nodeWest);
-		this.grid.setStartingNode(this.nodeNorth);
+		this.scenario.setStartingNode(this.nodeNorth);
 
 		this.edgeNorthEast = GridFactory.getEdge(this.nodeNorth, this.nodeEast);
 		this.edgeNorthSouth = GridFactory.getEdge(this.nodeNorth, this.nodeSouth);
@@ -55,20 +57,18 @@ public class LinKernighanHeuristikTest {
 		this.edgeEastWest = GridFactory.getEdge(this.nodeEast, this.nodeWest);
 		this.edgeSouthWest = GridFactory.getEdge(this.nodeSouth, this.nodeWest);
 
-		this.path = new Path();
-		this.pathUpdater = new PathUpdater(this.path);
-
-		this.algorithm = new LinKernighanHeuristik(this.path);
+		this.algorithm = new LinKernighanHeuristik(this.scenario);
 	}
 
 	@Test
 	public void test() {
 		// Create a valid path that is too heavy
-		this.pathUpdater.addEdge(this.edgeNorthSouth);
-		this.pathUpdater.addEdge(this.edgeSouthWest);
-		this.pathUpdater.addEdge(this.edgeEastWest);
-		this.pathUpdater.addEdge(this.edgeNorthEast);
-		this.pathUpdater.updatePath();
+		PathUpdater pathUpdater = new PathUpdater(this.path);
+		pathUpdater.addEdge(this.edgeNorthSouth);
+		pathUpdater.addEdge(this.edgeSouthWest);
+		pathUpdater.addEdge(this.edgeEastWest);
+		pathUpdater.addEdge(this.edgeNorthEast);
+		pathUpdater.updatePath();
 
 		// Make sure that we can not take a step yet
 		Assert.assertFalse(this.algorithm.step());

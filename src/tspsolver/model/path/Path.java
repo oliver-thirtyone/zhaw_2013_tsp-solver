@@ -5,8 +5,8 @@ import java.util.Observable;
 import java.util.Set;
 
 import tspsolver.model.grid.Edge;
-import tspsolver.model.grid.updates.PathUpdate;
-import tspsolver.model.grid.updates.UpdateAction;
+import tspsolver.model.updates.PathUpdate;
+import tspsolver.model.updates.UpdateAction;
 
 public class Path extends Observable {
 

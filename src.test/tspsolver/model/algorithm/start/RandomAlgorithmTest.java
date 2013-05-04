@@ -8,6 +8,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import tspsolver.model.Scenario;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.GridFactory;
 import tspsolver.model.grid.Node;
@@ -15,8 +16,9 @@ import tspsolver.model.path.Path;
 
 public class RandomAlgorithmTest {
 
-	private Path path;
+	private Scenario scenario;
 	private Grid grid;
+	private Path path;
 
 	private Node nodeNorth;
 	private Node nodeEast;
@@ -29,8 +31,9 @@ public class RandomAlgorithmTest {
 
 	@Before
 	public void setUp() {
-		this.path = new Path();
-		this.grid = new Grid();
+		this.scenario = new Scenario();
+		this.grid = scenario.getGrid();
+		this.path = scenario.getPath();
 
 		this.nodeNorth = GridFactory.createNode(0, 5);
 		this.nodeEast = GridFactory.createNode(5, 0);
@@ -47,9 +50,9 @@ public class RandomAlgorithmTest {
 		this.grid.addNode(this.nodeEast);
 		this.grid.addNode(this.nodeSouth);
 		this.grid.addNode(this.nodeWest);
-		this.grid.setStartingNode(this.nodeNorth);
+		this.scenario.setStartingNode(this.nodeNorth);
 
-		this.algorithm = new RandomAlgorithm(this.path, this.grid);
+		this.algorithm = new RandomAlgorithm(this.scenario);
 	}
 
 	@Test

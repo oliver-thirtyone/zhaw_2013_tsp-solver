@@ -1,12 +1,12 @@
 package tspsolver.model.algorithm.optimizer;
 
+import tspsolver.model.Scenario;
 import tspsolver.model.algorithm.Algorithm;
-import tspsolver.model.path.Path;
 
 public abstract class AOptimizerAlgorithm extends Algorithm {
 
-	public AOptimizerAlgorithm(Path path) {
-		super(path);
+	public AOptimizerAlgorithm(Scenario scenario) {
+		super(scenario);
 	}
 
 	@Override

@@ -13,15 +13,14 @@ import java.util.Observer;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import tspsolver.model.Scenario;
 import tspsolver.model.grid.Edge;
-import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
-import tspsolver.model.grid.updates.EdgeUpdate;
-import tspsolver.model.grid.updates.NodeUpdate;
-import tspsolver.model.grid.updates.PathUpdate;
-import tspsolver.model.grid.updates.StartingNodeUpdate;
-import tspsolver.model.grid.updates.UpdateAction;
-import tspsolver.model.path.Path;
+import tspsolver.model.updates.EdgeUpdate;
+import tspsolver.model.updates.NodeUpdate;
+import tspsolver.model.updates.PathUpdate;
+import tspsolver.model.updates.StartingNodeUpdate;
+import tspsolver.model.updates.UpdateAction;
 
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.SVGDiagram;
@@ -30,14 +29,11 @@ import com.kitfox.svg.app.beans.SVGIcon;
 
 public class GridView extends JPanel implements Observer {
 
-	public static final String DATA_MAP_SWITZERLAND = "map/switzerland_simple.svg";
+	public static final String DATA_MAP_SWITZERLAND = "tspsolver/data/map/switzerland_simple.svg";
 	public static final String SVG_GROUP_NODES = "tspsolver.nodes";
 	public static final String SVG_GROUP_EDGES = "tspsolver.edges";
 
 	private static final long serialVersionUID = -5210001067574218993L;
-
-	private final Grid grid;
-	private final Path path;
 
 	private final SVGDiagram svgDiagram;
 	private final SVGIcon svgIcon;
@@ -45,17 +41,13 @@ public class GridView extends JPanel implements Observer {
 	private final Map<Node, NodeView> nodeViews;
 	private final Map<Edge, EdgeView> edgeViews;
 
-	public GridView(Grid grid, Path path) {
-		this.grid = grid;
-		this.path = path;
-
-		InputStream svgImage = this.getClass().getClassLoader().getResourceAsStream(GridView.DATA_MAP_SWITZERLAND);
+	public GridView(Scenario scenario) {
+		InputStream svgImage = ClassLoader.getSystemResourceAsStream(GridView.DATA_MAP_SWITZERLAND);
 		URI svgURI = null;
 		try {
 			svgURI = SVGCache.getSVGUniverse().loadSVG(svgImage, GridView.DATA_MAP_SWITZERLAND);
-		}
-		catch (IOException exception) {
-			JOptionPane.showMessageDialog(null, "Unable to load svg image : " + GridView.DATA_MAP_SWITZERLAND, "Error loading svg image", JOptionPane.ERROR_MESSAGE);
+		} catch (IOException exception) {
+			JOptionPane.showMessageDialog(null, "Unable to load svg image: " + GridView.DATA_MAP_SWITZERLAND, "Error loading svg image", JOptionPane.ERROR_MESSAGE);
 			exception.printStackTrace();
 		}
 
@@ -68,17 +60,8 @@ public class GridView extends JPanel implements Observer {
 		this.nodeViews = new HashMap<Node, NodeView>();
 		this.edgeViews = new HashMap<Edge, EdgeView>();
 
-		// Observe the grid and the path
-		this.grid.addObserver(this);
-		this.path.addObserver(this);
-	}
-
-	protected Grid getGrid() {
-		return this.grid;
-	}
-
-	protected Path getPath() {
-		return this.path;
+		// Observe the scenario
+		scenario.addObserver(this);
 	}
 
 	protected SVGDiagram getSVGDiagram() {
@@ -106,12 +89,14 @@ public class GridView extends JPanel implements Observer {
 
 			if (nodeView != null) {
 				switch (action) {
-					case ADD_STARTING_NODE:
-						nodeView.updateCircle(NodeView.STARTING_NODE_COLOR);
-						break;
-					case REMOVE_STARTING_NODE:
-						nodeView.updateCircle(NodeView.NORMAL_NODE_COLOR);
-						break;
+				case ADD_STARTING_NODE:
+					nodeView.updateCircle(NodeView.STARTING_NODE_COLOR);
+					break;
+				case REMOVE_STARTING_NODE:
+					nodeView.updateCircle(NodeView.NORMAL_NODE_COLOR);
+					break;
+				default:
+					break;
 				}
 			}
 		}
@@ -125,20 +110,22 @@ public class GridView extends JPanel implements Observer {
 			NodeView nodeView = null;
 
 			switch (action) {
-				case ADD_NODE:
-					if (!this.nodeViews.containsKey(node)) {
-						nodeView = new NodeView(node, this);
-						nodeView.createCircle();
-						this.nodeViews.put(node, nodeView);
-					}
-					break;
-				case REMOVE_NODE:
-					if (this.nodeViews.containsKey(node)) {
-						nodeView = this.nodeViews.get(node);
-						nodeView.deleteCircle();
-						this.nodeViews.remove(node);
-					}
-					break;
+			case ADD_NODE:
+				if (!this.nodeViews.containsKey(node)) {
+					nodeView = new NodeView(node, this);
+					nodeView.createCircle();
+					this.nodeViews.put(node, nodeView);
+				}
+				break;
+			case REMOVE_NODE:
+				if (this.nodeViews.containsKey(node)) {
+					nodeView = this.nodeViews.get(node);
+					nodeView.deleteCircle();
+					this.nodeViews.remove(node);
+				}
+				break;
+			default:
+				break;
 			}
 		}
 
@@ -152,18 +139,20 @@ public class GridView extends JPanel implements Observer {
 
 			if (edgeView != null) {
 				switch (action) {
-					case PATH_ELEMENT:
-						edgeView.updateLine(EdgeView.PATH_COLOR, false);
-						break;
-					case NEW_PATH_ELEMENT:
-						edgeView.updateLine(EdgeView.NEW_PATH_COLOR, false);
-						break;
-					case OLD_PATH_ELEMENT:
-						edgeView.updateLine(EdgeView.OLD_PATH_COLOR, true);
-						break;
-					case NON_PATH_ELEMENT:
-						edgeView.updateLine(EdgeView.EDGE_COLOR, true);
-						break;
+				case PATH_ELEMENT:
+					edgeView.updateLine(EdgeView.PATH_COLOR, false);
+					break;
+				case NEW_PATH_ELEMENT:
+					edgeView.updateLine(EdgeView.NEW_PATH_COLOR, false);
+					break;
+				case OLD_PATH_ELEMENT:
+					edgeView.updateLine(EdgeView.OLD_PATH_COLOR, true);
+					break;
+				case NON_PATH_ELEMENT:
+					edgeView.updateLine(EdgeView.EDGE_COLOR, true);
+					break;
+				default:
+					break;
 				}
 			}
 		}
@@ -177,20 +166,22 @@ public class GridView extends JPanel implements Observer {
 			EdgeView edgeView = null;
 
 			switch (action) {
-				case ADD_EDGE:
-					if (!this.edgeViews.containsKey(edge)) {
-						edgeView = new EdgeView(edge, this);
-						edgeView.createLine();
-						this.edgeViews.put(edge, edgeView);
-					}
-					break;
-				case REMOVE_EDGE:
-					if (this.edgeViews.containsKey(edge)) {
-						edgeView = this.edgeViews.get(edge);
-						edgeView.deleteLine();
-						this.edgeViews.remove(edge);
-					}
-					break;
+			case ADD_EDGE:
+				if (!this.edgeViews.containsKey(edge)) {
+					edgeView = new EdgeView(edge, this);
+					edgeView.createLine();
+					this.edgeViews.put(edge, edgeView);
+				}
+				break;
+			case REMOVE_EDGE:
+				if (this.edgeViews.containsKey(edge)) {
+					edgeView = this.edgeViews.get(edge);
+					edgeView.deleteLine();
+					this.edgeViews.remove(edge);
+				}
+				break;
+			default:
+				break;
 			}
 		}
 
@@ -198,8 +189,7 @@ public class GridView extends JPanel implements Observer {
 		try {
 			this.svgDiagram.updateTime(0.0);
 			this.repaint();
-		}
-		catch (SVGException exception) {
+		} catch (SVGException exception) {
 			exception.printStackTrace();
 		}
 	}

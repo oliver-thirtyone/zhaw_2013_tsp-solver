@@ -1,4 +1,4 @@
-package tspsolver.model.grid.updates;
+package tspsolver.model.updates;
 
 import tspsolver.model.grid.Edge;
 

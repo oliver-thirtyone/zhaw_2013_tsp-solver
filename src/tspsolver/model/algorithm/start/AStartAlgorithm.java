@@ -1,29 +1,32 @@
 package tspsolver.model.algorithm.start;
 
+import tspsolver.model.Scenario;
 import tspsolver.model.algorithm.Algorithm;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
-import tspsolver.model.path.Path;
 
 public abstract class AStartAlgorithm extends Algorithm {
 
 	private final Grid grid;
+	private final Node startingNode;
 
-	public AStartAlgorithm(Path path, Grid grid) {
-		super(path);
-		this.grid = grid;
+	public AStartAlgorithm(Scenario scenario) {
+		super(scenario);
+
+		this.grid = scenario.getGrid();
+		this.startingNode = scenario.getStartingNode();
 	}
 
 	@Override
 	public final void validateArguments() {
 		boolean validArguments = true;
 
-		if (this.getGrid().getStartingNode() == null) {
+		if (this.getStartingNode() == null) {
 			System.err.println("The starting node cannot be null");
 			validArguments = false;
 		}
 
-		if (!this.getGrid().getNodes().contains(this.getGrid().getStartingNode())) {
+		if (!this.getGrid().getNodes().contains(this.getStartingNode())) {
 			System.err.println("The starting node must be in the node set");
 			validArguments = false;
 		}
@@ -35,7 +38,7 @@ public abstract class AStartAlgorithm extends Algorithm {
 
 		for (Node node : this.getGrid().getNodes()) {
 			if (node.getNumberOfEdges() < 2) {
-				System.err.println("Each node needs at least two accessible edges");
+				System.err.println("Each node needs at least two edges");
 				validArguments = false;
 				break;
 			}
@@ -48,6 +51,10 @@ public abstract class AStartAlgorithm extends Algorithm {
 
 	public Grid getGrid() {
 		return this.grid;
+	}
+
+	public Node getStartingNode() {
+		return startingNode;
 	}
 
 }

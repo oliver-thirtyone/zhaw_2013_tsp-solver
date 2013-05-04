@@ -1,15 +1,18 @@
 package tspsolver.view.grid;
 
 import java.awt.GridBagConstraints;
+import java.io.InputStream;
 
 import javax.swing.JFrame;
 
-import tspsolver.model.grid.Grid;
-import tspsolver.model.grid.GridFactory;
-import tspsolver.model.grid.Node;
-import tspsolver.model.path.Path;
-import tspsolver.model.path.PathUpdater;
+import tspsolver.controller.Runner;
+import tspsolver.controller.scenario.XMLScenarioLoader;
+import tspsolver.model.Scenario;
+import tspsolver.model.algorithm.Algorithm;
+import tspsolver.model.algorithm.start.NearestNeighborHeuristik;
 import tspsolver.util.LayoutManager;
+
+import com.sun.org.apache.bcel.internal.util.ClassLoader;
 
 public class TestGridView extends JFrame {
 
@@ -19,12 +22,12 @@ public class TestGridView extends JFrame {
 
 	private final GridView gridView;
 
-	public TestGridView(Grid grid, Path path) {
+	public TestGridView(Scenario scenario) {
 		super("TestGridView");
 
 		this.layoutManager = new LayoutManager(this.getContentPane());
 
-		this.gridView = new GridView(grid, path);
+		this.gridView = new GridView(scenario);
 
 		this.components();
 		this.pack();
@@ -40,47 +43,23 @@ public class TestGridView extends JFrame {
 		this.layoutManager.setX(0).setY(0).addComponent(this.gridView);
 	}
 
-	public static void main(String[] args) throws InterruptedException {
-		Grid grid = new Grid();
-		Path path = new Path();
-		PathUpdater pathUpdater = new PathUpdater(path);
+	public static void main(String[] args) throws Exception {
+		Scenario scenario = new Scenario();
 
-		Node nodeNorth = GridFactory.createNode(350, 25);
-		Node nodeEast = GridFactory.createNode(550, 250);
-		Node nodeSouth = GridFactory.createNode(350, 500);
-		Node nodeWest = GridFactory.createNode(125, 250);
-
-		TestGridView testGridView = new TestGridView(grid, path);
-
-		grid.addNode(nodeNorth);
-		grid.addNode(nodeEast);
-		grid.addNode(nodeSouth);
-		grid.addNode(nodeWest);
-		grid.setStartingNode(nodeNorth);
-
+		TestGridView testGridView = new TestGridView(scenario);
 		testGridView.setSize(800, 600);
 		testGridView.setLocationRelativeTo(null);
 		testGridView.setVisible(true);
 
-		// Add an edge to the path
-		pathUpdater.addEdge(GridFactory.getEdge(nodeNorth, nodeEast));
-		pathUpdater.updatePath();
+		// Load a scenario
+		XMLScenarioLoader scenarioLoader = new XMLScenarioLoader();
+		InputStream inputStream = ClassLoader.getSystemResourceAsStream("tspsolver/data/scenario/test_north_south_east_west.xml");
+		scenarioLoader.loadScenario(inputStream, scenario);
 
-		// Sleep two seconds
-		Thread.sleep(2000);
-
-		// Add two edges to the path
-		pathUpdater.addEdge(GridFactory.getEdge(nodeEast, nodeSouth));
-		pathUpdater.addEdge(GridFactory.getEdge(nodeSouth, nodeNorth));
-		pathUpdater.updatePath();
-
-		// Sleep two seconds
-		Thread.sleep(2000);
-
-		// Complete the path
-		pathUpdater.removeEdge(GridFactory.getEdge(nodeSouth, nodeNorth));
-		pathUpdater.addEdge(GridFactory.getEdge(nodeSouth, nodeWest));
-		pathUpdater.addEdge(GridFactory.getEdge(nodeWest, nodeNorth));
-		pathUpdater.updatePath();
+		// Run an algorithm
+		Algorithm algorithm = new NearestNeighborHeuristik(scenario);
+		Runner runner = new Runner(algorithm);
+		runner.initialize(2000); // Initialize the runner with a "2 seconds"-step delay
+		runner.start();
 	}
 }

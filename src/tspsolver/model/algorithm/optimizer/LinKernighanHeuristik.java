@@ -1,11 +1,11 @@
 package tspsolver.model.algorithm.optimizer;
 
-import tspsolver.model.path.Path;
+import tspsolver.model.Scenario;
 
 public class LinKernighanHeuristik extends AOptimizerAlgorithm {
 
-	public LinKernighanHeuristik(Path path) {
-		super(path);
+	public LinKernighanHeuristik(Scenario scenario) {
+		super(scenario);
 	}
 
 	@Override
