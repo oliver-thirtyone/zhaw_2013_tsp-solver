@@ -62,6 +62,19 @@ public class Node extends Observable implements Observer {
 	}
 
 	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+
+		builder.append("(");
+		builder.append(this.getX());
+		builder.append(", ");
+		builder.append(this.getY());
+		builder.append(")");
+
+		return builder.toString();
+	}
+
+	@Override
 	public void update(Observable observable, Object argument) {
 		this.setChanged();
 		this.notifyObservers(argument);

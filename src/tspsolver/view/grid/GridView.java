@@ -36,6 +36,7 @@ public class GridView extends JPanel implements Observer {
 
 	private static final long serialVersionUID = -5210001067574218993L;
 
+	private final Scenario scenario;
 	private final SVGDiagram svgDiagram;
 	private final SVGIcon svgIcon;
 
@@ -43,6 +44,8 @@ public class GridView extends JPanel implements Observer {
 	private final Map<Edge, EdgeView> edgeViews;
 
 	public GridView(Scenario scenario) {
+		this.scenario = scenario;
+
 		URI svgURI = null;
 		try {
 			InputStream svgImage = new FileInputStream(GridView.DATA_MAP_SWITZERLAND);
@@ -62,11 +65,7 @@ public class GridView extends JPanel implements Observer {
 		this.edgeViews = new HashMap<Edge, EdgeView>();
 
 		// Observe the scenario
-		scenario.addObserver(this);
-	}
-
-	protected SVGDiagram getSVGDiagram() {
-		return this.svgDiagram;
+		this.scenario.addObserver(this);
 	}
 
 	@Override
@@ -76,6 +75,9 @@ public class GridView extends JPanel implements Observer {
 		this.svgIcon.setPreferredSize(new Dimension(600, 385));
 		this.svgIcon.setScaleToFit(true);
 		this.svgIcon.paintIcon(this, graphics, 0, 0);
+
+		// Paint the grid
+		this.paintGrid(this.scenario);
 	}
 
 	@Override
@@ -184,6 +186,33 @@ public class GridView extends JPanel implements Observer {
 			default:
 				break;
 			}
+		}
+
+		// Update the diagram
+		try {
+			this.svgDiagram.updateTime(0.0);
+			this.repaint();
+		} catch (SVGException exception) {
+			exception.printStackTrace();
+		}
+	}
+
+	protected SVGDiagram getSVGDiagram() {
+		return this.svgDiagram;
+	}
+
+	private void paintGrid(Scenario scenario) {
+		for (Node node : scenario.getGrid().getNodes()) {
+			scenario.update(scenario, new NodeUpdate(node, UpdateAction.ADD_NODE));
+
+			for (Edge edge : node.getEdges()) {
+				scenario.update(scenario, new EdgeUpdate(edge, UpdateAction.ADD_EDGE));
+			}
+		}
+
+		Node node = scenario.getStartingNode();
+		if (node != null) {
+			scenario.update(scenario, new StartingNodeUpdate(node, UpdateAction.ADD_STARTING_NODE));
 		}
 
 		// Update the diagram

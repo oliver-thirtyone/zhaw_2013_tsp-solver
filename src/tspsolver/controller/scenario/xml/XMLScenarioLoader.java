@@ -146,7 +146,7 @@ public class XMLScenarioLoader implements IScenarioLoader {
 
 		// Check if this edge already exists
 		if (firstNode.hasEdgeToNode(secondNode)) {
-			throw new IllegalArgumentException("Edge already exists: " + firstNodeName + " ->" + secondNodeName);
+			throw new IllegalArgumentException("Edge already exists: " + firstNodeName + " -> " + secondNodeName);
 		}
 
 		// Add the node to the grid
@@ -177,7 +177,7 @@ public class XMLScenarioLoader implements IScenarioLoader {
 
 		// Check if this edge exists
 		if (!firstNode.hasEdgeToNode(secondNode)) {
-			throw new IllegalArgumentException("Edge does not exist: " + firstNodeName + " ->" + secondNodeName);
+			throw new IllegalArgumentException("Edge does not exist: " + firstNodeName + " -> " + secondNodeName);
 		}
 
 		// Remove the edge from the grid

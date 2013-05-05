@@ -2,19 +2,12 @@ package tspsolver.model.algorithm.start;
 
 import tspsolver.model.Scenario;
 import tspsolver.model.algorithm.Algorithm;
-import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
 
 public abstract class AStartAlgorithm extends Algorithm {
 
-	private final Grid grid;
-	private final Node startingNode;
-
 	public AStartAlgorithm(Scenario scenario) {
 		super(scenario);
-
-		this.grid = scenario.getGrid();
-		this.startingNode = scenario.getStartingNode();
 	}
 
 	@Override
@@ -47,14 +40,6 @@ public abstract class AStartAlgorithm extends Algorithm {
 		// TODO: further validations...
 
 		this.setValidArguments(validArguments);
-	}
-
-	public Grid getGrid() {
-		return this.grid;
-	}
-
-	public Node getStartingNode() {
-		return startingNode;
 	}
 
 }

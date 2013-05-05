@@ -1,16 +1,27 @@
 package tspsolver.model.algorithm;
 
 import tspsolver.model.Scenario;
+import tspsolver.model.grid.Grid;
+import tspsolver.model.grid.Node;
+import tspsolver.model.path.Path;
 import tspsolver.model.path.PathUpdater;
 
 public abstract class Algorithm {
 
+	private final Grid grid;
+	private final Node startingNode;
+
+	private final Path path;
 	private final PathUpdater pathUpdater;
 
 	private boolean validArguments;
 	private boolean finishedSuccessfully;
 
 	public Algorithm(Scenario scenario) {
+		this.grid = scenario.getGrid();
+		this.startingNode = scenario.getStartingNode();
+
+		this.path = scenario.getPath();
 		this.pathUpdater = new PathUpdater(scenario.getPath());
 
 		this.validArguments = false;
@@ -27,9 +38,28 @@ public abstract class Algorithm {
 		return this.doStep();
 	}
 
+	public void reset() {
+		this.getPathUpdater().clearPath();
+
+		this.setValidArguments(false);
+		this.setFinishedSuccessful(false);
+	}
+
 	protected abstract boolean doStep();
 
-	public PathUpdater getPathUpdater() {
+	protected Grid getGrid() {
+		return this.grid;
+	}
+
+	protected Node getStartingNode() {
+		return startingNode;
+	}
+
+	protected Path getPath() {
+		return path;
+	}
+
+	protected PathUpdater getPathUpdater() {
 		return this.pathUpdater;
 	}
 
@@ -47,13 +77,6 @@ public abstract class Algorithm {
 
 	protected void setFinishedSuccessful(boolean finishedSuccessfully) {
 		this.finishedSuccessfully = finishedSuccessfully;
-	}
-
-	public void reset() {
-		this.getPathUpdater().clearPath();
-
-		this.setValidArguments(false);
-		this.setFinishedSuccessful(false);
 	}
 
 }

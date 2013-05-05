@@ -9,8 +9,10 @@ import javax.swing.JFrame;
 import tspsolver.controller.runner.AlgorithmRunner;
 import tspsolver.controller.scenario.xml.XMLScenarioLoader;
 import tspsolver.model.Scenario;
+import tspsolver.model.algorithm.optimizer.AOptimizerAlgorithm;
+import tspsolver.model.algorithm.optimizer.TwoOptHeuristik;
 import tspsolver.model.algorithm.start.AStartAlgorithm;
-import tspsolver.model.algorithm.start.NearestNeighborHeuristik;
+import tspsolver.model.algorithm.start.MinimumSpanningTreeHeuristik;
 import tspsolver.util.LayoutManager;
 import tspsolver.view.grid.GridView;
 import tspsolver.view.grid.TestGridView;
@@ -56,9 +58,12 @@ public class TestPelosoAlgorithm extends JFrame {
 		testGridView.setVisible(true);
 
 		// Run an algorithm
-		AStartAlgorithm algorithm = new NearestNeighborHeuristik(scenario);
+		AStartAlgorithm startAlgorithm = new MinimumSpanningTreeHeuristik(scenario);
+		AOptimizerAlgorithm optimizerAlgorithm = new TwoOptHeuristik(scenario);
+
 		AlgorithmRunner runner = new AlgorithmRunner();
-		runner.setStartAlgorithm(algorithm);
+		runner.setStartAlgorithm(startAlgorithm);
+		runner.setOptimizerAlgorithm(optimizerAlgorithm);
 		runner.initialize(2000); // Initialize the runner with a "2 seconds"-step delay
 		runner.start();
 	}

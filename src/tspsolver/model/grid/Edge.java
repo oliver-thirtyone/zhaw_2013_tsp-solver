@@ -50,8 +50,7 @@ public class Edge extends Observable {
 			if (other.firstNode != null) {
 				return false;
 			}
-		}
-		else if (!this.firstNode.equals(other.firstNode) && !this.firstNode.equals(other.secondNode)) {
+		} else if (!this.firstNode.equals(other.firstNode) && !this.firstNode.equals(other.secondNode)) {
 			return false;
 		}
 
@@ -59,8 +58,7 @@ public class Edge extends Observable {
 			if (other.secondNode != null) {
 				return false;
 			}
-		}
-		else if (!this.secondNode.equals(other.secondNode) && !this.secondNode.equals(other.firstNode)) {
+		} else if (!this.secondNode.equals(other.secondNode) && !this.secondNode.equals(other.firstNode)) {
 			return false;
 		}
 
@@ -69,6 +67,17 @@ public class Edge extends Observable {
 		}
 
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(this.getFirstNode());
+		builder.append(" -> ");
+		builder.append(this.getSecondNode());
+
+		return builder.toString();
 	}
 
 	public Node getFirstNode() {

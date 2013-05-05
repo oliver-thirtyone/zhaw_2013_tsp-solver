@@ -78,12 +78,12 @@ public class MinimumSpanningTreeHeuristikTest {
 
 		// Check if we went the right path
 		Assert.assertTrue(this.path.containsEdge(this.edgeNorthEast));
-		Assert.assertTrue(this.path.containsEdge(this.edgeEastSouth));
 		Assert.assertTrue(this.path.containsEdge(this.edgeSouthWest));
-		Assert.assertTrue(this.path.containsEdge(this.edgeNorthWest));
+		Assert.assertTrue(this.path.containsEdge(this.edgeNorthSouth));
+		Assert.assertTrue(this.path.containsEdge(this.edgeEastWest));
 
 		// Check if these edges are not part of the path
-		Assert.assertFalse(this.path.containsEdge(this.edgeNorthSouth));
-		Assert.assertFalse(this.path.containsEdge(this.edgeEastWest));
+		Assert.assertFalse(this.path.containsEdge(this.edgeEastSouth));
+		Assert.assertFalse(this.path.containsEdge(this.edgeNorthWest));
 	}
 }
