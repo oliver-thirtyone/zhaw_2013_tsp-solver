@@ -2,7 +2,6 @@ package tspsolver.model.path;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import tspsolver.model.grid.Edge;
 import tspsolver.model.updates.UpdateAction;
@@ -60,8 +59,7 @@ public class PathUpdater {
 	public synchronized void addEdge(Edge edge) {
 		if (this.edgesToRemove.contains(edge)) {
 			this.edgesToRemove.remove(edge);
-		}
-		else if (!this.edgesToAdd.contains(edge) && !this.path.containsEdge(edge)) {
+		} else if (!this.edgesToAdd.contains(edge) && !this.path.containsEdge(edge)) {
 			this.edgesToAdd.add(edge);
 		}
 	}
@@ -69,19 +67,18 @@ public class PathUpdater {
 	public synchronized void removeEdge(Edge edge) {
 		if (this.edgesToAdd.contains(edge)) {
 			this.edgesToAdd.remove(edge);
-		}
-		else if (!this.edgesToRemove.contains(edge) && this.path.containsEdge(edge)) {
+		} else if (!this.edgesToRemove.contains(edge) && this.path.containsEdge(edge)) {
 			this.edgesToRemove.add(edge);
 		}
 	}
 
-	public synchronized void addEdges(Set<Edge> edges) {
+	public synchronized void addEdges(Edge[] edges) {
 		for (Edge edge : edges) {
 			this.addEdge(edge);
 		}
 	}
 
-	public synchronized void removeEdges(Set<Edge> edges) {
+	public synchronized void removeEdges(Edge[] edges) {
 		for (Edge edge : edges) {
 			this.removeEdge(edge);
 		}
@@ -95,7 +92,7 @@ public class PathUpdater {
 		this.removeEdges(path.getEdges());
 	}
 
-	public synchronized void clearWholePath() {
+	public synchronized void clearPath() {
 		this.removePath(this.path);
 	}
 

@@ -1,18 +1,17 @@
 package tspsolver.view.grid;
 
 import java.awt.GridBagConstraints;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import javax.swing.JFrame;
 
-import tspsolver.controller.Runner;
-import tspsolver.controller.scenario.XMLScenarioLoader;
+import tspsolver.controller.runner.AlgorithmRunner;
+import tspsolver.controller.scenario.xml.XMLScenarioLoader;
 import tspsolver.model.Scenario;
-import tspsolver.model.algorithm.Algorithm;
+import tspsolver.model.algorithm.start.AStartAlgorithm;
 import tspsolver.model.algorithm.start.NearestNeighborHeuristik;
 import tspsolver.util.LayoutManager;
-
-import com.sun.org.apache.bcel.internal.util.ClassLoader;
 
 public class TestGridView extends JFrame {
 
@@ -44,21 +43,20 @@ public class TestGridView extends JFrame {
 	}
 
 	public static void main(String[] args) throws Exception {
-		Scenario scenario = new Scenario();
+		// Load a scenario
+		XMLScenarioLoader scenarioLoader = new XMLScenarioLoader();
+		InputStream inputStream = new FileInputStream("data/scenario/test_north_south_east_west.xml");
+		Scenario scenario = scenarioLoader.loadScenario(inputStream);
 
 		TestGridView testGridView = new TestGridView(scenario);
 		testGridView.setSize(800, 600);
 		testGridView.setLocationRelativeTo(null);
 		testGridView.setVisible(true);
 
-		// Load a scenario
-		XMLScenarioLoader scenarioLoader = new XMLScenarioLoader();
-		InputStream inputStream = ClassLoader.getSystemResourceAsStream("tspsolver/data/scenario/test_north_south_east_west.xml");
-		scenarioLoader.loadScenario(inputStream, scenario);
-
 		// Run an algorithm
-		Algorithm algorithm = new NearestNeighborHeuristik(scenario);
-		Runner runner = new Runner(algorithm);
+		AStartAlgorithm algorithm = new NearestNeighborHeuristik(scenario);
+		AlgorithmRunner runner = new AlgorithmRunner();
+		runner.setStartAlgorithm(algorithm);
 		runner.initialize(2000); // Initialize the runner with a "2 seconds"-step delay
 		runner.start();
 	}

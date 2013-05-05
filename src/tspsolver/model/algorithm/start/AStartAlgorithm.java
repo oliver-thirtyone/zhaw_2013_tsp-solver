@@ -26,12 +26,12 @@ public abstract class AStartAlgorithm extends Algorithm {
 			validArguments = false;
 		}
 
-		if (!this.getGrid().getNodes().contains(this.getStartingNode())) {
+		if (!this.getGrid().containsNode(this.getStartingNode())) {
 			System.err.println("The starting node must be in the node set");
 			validArguments = false;
 		}
 
-		if (this.getGrid().getNodes().size() < 3) {
+		if (this.getGrid().getNumberOfNodes() < 3) {
 			System.err.println("We need at least three nodes in the node set");
 			validArguments = false;
 		}

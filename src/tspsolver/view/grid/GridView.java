@@ -2,6 +2,7 @@ package tspsolver.view.grid;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -29,7 +30,7 @@ import com.kitfox.svg.app.beans.SVGIcon;
 
 public class GridView extends JPanel implements Observer {
 
-	public static final String DATA_MAP_SWITZERLAND = "tspsolver/data/map/switzerland_simple.svg";
+	public static final String DATA_MAP_SWITZERLAND = "data/map/switzerland_simple.svg";
 	public static final String SVG_GROUP_NODES = "tspsolver.nodes";
 	public static final String SVG_GROUP_EDGES = "tspsolver.edges";
 
@@ -42,9 +43,9 @@ public class GridView extends JPanel implements Observer {
 	private final Map<Edge, EdgeView> edgeViews;
 
 	public GridView(Scenario scenario) {
-		InputStream svgImage = ClassLoader.getSystemResourceAsStream(GridView.DATA_MAP_SWITZERLAND);
 		URI svgURI = null;
 		try {
+			InputStream svgImage = new FileInputStream(GridView.DATA_MAP_SWITZERLAND);
 			svgURI = SVGCache.getSVGUniverse().loadSVG(svgImage, GridView.DATA_MAP_SWITZERLAND);
 		} catch (IOException exception) {
 			JOptionPane.showMessageDialog(null, "Unable to load svg image: " + GridView.DATA_MAP_SWITZERLAND, "Error loading svg image", JOptionPane.ERROR_MESSAGE);

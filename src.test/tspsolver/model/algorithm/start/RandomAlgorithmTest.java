@@ -31,7 +31,7 @@ public class RandomAlgorithmTest {
 
 	@Before
 	public void setUp() {
-		this.scenario = new Scenario();
+		this.scenario = new Scenario("RandomAlgorithmTest");
 		this.grid = scenario.getGrid();
 		this.path = scenario.getPath();
 
@@ -67,7 +67,7 @@ public class RandomAlgorithmTest {
 		// Step through the algorithm
 		do {
 			Assert.assertTrue(this.algorithm.step());
-		} while (!this.algorithm.hasFinishedSuccessful());
+		} while (!this.algorithm.hasFinishedSuccessfully());
 
 		// DEBUG OUTPUT
 		// System.out.println("Path: ");

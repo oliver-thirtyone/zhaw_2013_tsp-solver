@@ -8,19 +8,19 @@ public abstract class Algorithm {
 	private final PathUpdater pathUpdater;
 
 	private boolean validArguments;
-	private boolean finishedSuccessful;
+	private boolean finishedSuccessfully;
 
 	public Algorithm(Scenario scenario) {
 		this.pathUpdater = new PathUpdater(scenario.getPath());
 
 		this.validArguments = false;
-		this.finishedSuccessful = false;
+		this.finishedSuccessfully = false;
 	}
 
 	public abstract void validateArguments();
 
 	public final boolean step() {
-		if (!this.hasValidArguments() || this.hasFinishedSuccessful()) {
+		if (!this.hasValidArguments() || this.hasFinishedSuccessfully()) {
 			return false;
 		}
 
@@ -41,16 +41,16 @@ public abstract class Algorithm {
 		this.validArguments = validArguments;
 	}
 
-	public boolean hasFinishedSuccessful() {
-		return this.finishedSuccessful;
+	public boolean hasFinishedSuccessfully() {
+		return this.finishedSuccessfully;
 	}
 
-	protected void setFinishedSuccessful(boolean finishedSuccessful) {
-		this.finishedSuccessful = finishedSuccessful;
+	protected void setFinishedSuccessful(boolean finishedSuccessfully) {
+		this.finishedSuccessfully = finishedSuccessfully;
 	}
 
 	public void reset() {
-		this.getPathUpdater().clearWholePath();
+		this.getPathUpdater().clearPath();
 
 		this.setValidArguments(false);
 		this.setFinishedSuccessful(false);

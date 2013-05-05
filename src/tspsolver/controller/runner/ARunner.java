@@ -1,37 +1,47 @@
-package tspsolver.controller;
+package tspsolver.controller.runner;
 
 import java.util.Observable;
 
-import tspsolver.model.algorithm.Algorithm;
-
-public class Runner extends Observable implements Runnable {
+public abstract class ARunner extends Observable implements Runnable {
 
 	public final static Integer PAUSE_SLEEP_MILLISECONDS = 300;
 
-	private final Algorithm algorithm;
-
 	private Thread thread;
 	private RunnerState state;
+
+	private long timeStarted;
+	private long timeStopped;
+
 	private int stepDelay;
 	private long stepCounter;
 
-	public Runner(Algorithm algorithm) {
-		this.algorithm = algorithm;
-
+	public ARunner() {
 		this.thread = null;
 		this.state = RunnerState.NOT_READY;
+
+		this.timeStarted = 0;
+		this.timeStopped = 0;
+
 		this.stepDelay = 0;
 		this.stepCounter = 0;
 	}
 
+	protected abstract boolean doStep();
+
+	protected abstract boolean doReset();
+
+	protected abstract boolean doInitialize();
+
 	@Override
-	public void run() {
+	public final void run() {
+		this.timeStarted = System.nanoTime();
+
 		while (this.isRunning()) {
 
 			// Sleep and continue if we are paused
 			if (this.getState() == RunnerState.PAUSED) {
 				try {
-					Thread.sleep(Runner.PAUSE_SLEEP_MILLISECONDS);
+					Thread.sleep(ARunner.PAUSE_SLEEP_MILLISECONDS);
 				} catch (InterruptedException exception) {
 					exception.printStackTrace();
 				}
@@ -47,26 +57,20 @@ public class Runner extends Observable implements Runnable {
 				}
 			}
 
-			// Take the next step in the algorithm
-			boolean successfulStep = this.algorithm.step();
-			this.stepCounter++;
-
-			// Stop if there was an error or we are done
-			if (!successfulStep || this.algorithm.hasFinishedSuccessful()) {
-				this.setState(RunnerState.STOPPED);
+			// Take the next step
+			if (this.doStep()) {
+				this.stepCounter++;
 			}
 
-			// Switch to pause if we run in STEP-Mode
-			if (this.getState() == RunnerState.STEPPING) {
-				this.setState(RunnerState.PAUSED);
-			}
-
+			// Notify the observers
 			this.setChanged();
 			this.notifyObservers();
 		}
+
+		this.timeStopped = System.nanoTime();
 	}
 
-	public synchronized boolean canReset() {
+	public final synchronized boolean canReset() {
 		switch (this.getState()) {
 		case READY:
 		case STOPPED:
@@ -78,18 +82,22 @@ public class Runner extends Observable implements Runnable {
 		return false;
 	}
 
-	public synchronized boolean reset() {
+	public final synchronized boolean reset() {
 		boolean successful = false;
 
 		if (this.canReset()) {
-			this.algorithm.reset();
+			if (this.doReset()) {
+				this.thread = null;
 
-			this.thread = null;
-			this.stepDelay = 0;
-			this.stepCounter = 0;
+				this.timeStarted = 0;
+				this.timeStopped = 0;
 
-			this.setState(RunnerState.NOT_READY);
-			successful = true;
+				this.stepDelay = 0;
+				this.stepCounter = 0;
+
+				this.setState(RunnerState.NOT_READY);
+				successful = true;
+			}
 		}
 
 		return successful;
@@ -114,9 +122,8 @@ public class Runner extends Observable implements Runnable {
 		boolean successful = false;
 
 		if (this.canInitialize()) {
-			this.algorithm.validateArguments();
-			if (this.algorithm.hasValidArguments()) {
-				this.thread = new Thread(this, this.algorithm.getClass().getName());
+			if (this.doInitialize()) {
+				this.thread = new Thread(this);
 
 				this.stepDelay = stepDelay;
 				this.setState(RunnerState.READY);
@@ -127,7 +134,7 @@ public class Runner extends Observable implements Runnable {
 		return successful;
 	}
 
-	public synchronized boolean canStart() {
+	public final synchronized boolean canStart() {
 		switch (this.getState()) {
 		case READY:
 		case PAUSED:
@@ -139,7 +146,7 @@ public class Runner extends Observable implements Runnable {
 		return false;
 	}
 
-	public synchronized boolean start() {
+	public final synchronized boolean start() {
 		boolean successful = false;
 
 		if (this.canStart()) {
@@ -153,7 +160,7 @@ public class Runner extends Observable implements Runnable {
 		return successful;
 	}
 
-	public synchronized boolean canStep() {
+	public final synchronized boolean canStep() {
 		switch (this.getState()) {
 		case READY:
 		case PAUSED:
@@ -165,7 +172,7 @@ public class Runner extends Observable implements Runnable {
 		return false;
 	}
 
-	public synchronized boolean step() {
+	public final synchronized boolean step() {
 		boolean successful = false;
 
 		if (this.canStep()) {
@@ -179,7 +186,7 @@ public class Runner extends Observable implements Runnable {
 		return successful;
 	}
 
-	public synchronized boolean canPause() {
+	public final synchronized boolean canPause() {
 		switch (this.getState()) {
 		case RUNNING:
 		case STEPPING:
@@ -191,7 +198,7 @@ public class Runner extends Observable implements Runnable {
 		return false;
 	}
 
-	public synchronized boolean pause() {
+	public final synchronized boolean pause() {
 		boolean successful = false;
 
 		if (this.canPause()) {
@@ -202,7 +209,7 @@ public class Runner extends Observable implements Runnable {
 		return successful;
 	}
 
-	public synchronized boolean canStop() {
+	public final synchronized boolean canStop() {
 		switch (this.getState()) {
 		case RUNNING:
 		case STEPPING:
@@ -215,7 +222,7 @@ public class Runner extends Observable implements Runnable {
 		return false;
 	}
 
-	public synchronized boolean stop() {
+	public final synchronized boolean stop() {
 		boolean successful = false;
 
 		if (this.canStop()) {
@@ -226,11 +233,11 @@ public class Runner extends Observable implements Runnable {
 		return successful;
 	}
 
-	public synchronized RunnerState getState() {
+	public final synchronized RunnerState getState() {
 		return this.state;
 	}
 
-	private synchronized void setState(RunnerState mode) {
+	protected final synchronized void setState(RunnerState mode) {
 		if (this.state == mode) {
 			return;
 		}
@@ -240,19 +247,24 @@ public class Runner extends Observable implements Runnable {
 		this.notifyObservers(this.state);
 	}
 
-	public Algorithm getAlgorithm() {
-		return this.algorithm;
+	public long getTimeElapsed() {
+		long timeCurrent = System.nanoTime();
+
+		long timeStarted = this.timeStarted != 0 ? this.timeStarted : timeCurrent;
+		long timeStopped = this.timeStopped != 0 ? this.timeStopped : timeCurrent;
+
+		return timeStopped - timeStarted;
 	}
 
-	public int getStepDelay() {
+	public final int getStepDelay() {
 		return this.stepDelay;
 	}
 
-	public long getStepCounter() {
+	public final long getStepCounter() {
 		return this.stepCounter;
 	}
 
-	private boolean isRunning() {
+	public final boolean isRunning() {
 		return this.getState() == RunnerState.RUNNING || this.getState() == RunnerState.STEPPING || this.getState() != RunnerState.PAUSED;
 	}
 }

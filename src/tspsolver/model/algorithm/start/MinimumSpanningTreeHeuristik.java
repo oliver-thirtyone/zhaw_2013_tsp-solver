@@ -106,7 +106,7 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 				subMinSpanningTree.remove(edge);
 
 				// Prepare the currentPath for the gui
-				this.getPathUpdater().clearWholePath();
+				this.getPathUpdater().clearPath();
 				this.getPathUpdater().addEdges(path);
 				this.getPathUpdater().addEdges(subMinSpanningTree);
 
@@ -128,7 +128,7 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 				subMinSpanningTree.remove(edge);
 
 				// Prepare the currentPath for the gui
-				this.getPathUpdater().clearWholePath();
+				this.getPathUpdater().clearPath();
 				this.getPathUpdater().addEdges(path);
 				this.getPathUpdater().addEdges(subMinSpanningTree);
 

@@ -75,8 +75,9 @@ public class Node extends Observable implements Observer {
 		return this.y;
 	}
 
-	public Collection<Edge> getEdges() {
-		return this.edges.values();
+	public Edge[] getEdges() {
+		Collection<Edge> edges = this.edges.values();
+		return edges.toArray(new Edge[edges.size()]);
 	}
 
 	public int getNumberOfEdges() {

@@ -2,7 +2,6 @@ package tspsolver.model.algorithm.start;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +21,11 @@ public class RandomAlgorithm extends AStartAlgorithm {
 		super(scenario);
 
 		this.random = new SecureRandom();
-		this.nodesToVisit = new HashSet<Node>(this.getGrid().getNodes());
+
+		this.nodesToVisit = new HashSet<Node>();
+		for (Node node : this.getGrid().getNodes()) {
+			this.nodesToVisit.add(node);
+		}
 
 		this.reset();
 	}
@@ -38,10 +41,12 @@ public class RandomAlgorithm extends AStartAlgorithm {
 			this.nodesToVisit.remove(this.getCurrentNode());
 
 			// Get all available edges from the current node
-			Collection<Edge> edges = this.getCurrentNode().getEdges();
+			List<Edge> possibleEdges = new ArrayList<Edge>();
+			for (Edge edge : this.getCurrentNode().getEdges()) {
+				possibleEdges.add(edge);
+			}
 
 			// Get the a random edge to a node that we still have to visit
-			List<Edge> possibleEdges = new ArrayList<Edge>(edges);
 			while (possibleEdges.size() > 0 && randomEdge == null) {
 				Edge edge = possibleEdges.get(this.random.nextInt(possibleEdges.size()));
 				possibleEdges.remove(edge);
@@ -95,7 +100,10 @@ public class RandomAlgorithm extends AStartAlgorithm {
 		super.reset();
 
 		this.nodesToVisit.clear();
-		this.nodesToVisit.addAll(this.getGrid().getNodes());
+		for (Node node : this.getGrid().getNodes()) {
+			this.nodesToVisit.add(node);
+		}
+
 		this.setCurrentNode(this.getStartingNode());
 	}
 

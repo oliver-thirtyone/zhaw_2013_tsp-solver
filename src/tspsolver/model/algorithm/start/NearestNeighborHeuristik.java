@@ -1,6 +1,5 @@
 package tspsolver.model.algorithm.start;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +16,10 @@ public class NearestNeighborHeuristik extends AStartAlgorithm {
 	public NearestNeighborHeuristik(Scenario scenario) {
 		super(scenario);
 
-		this.nodesToVisit = new HashSet<Node>(this.getGrid().getNodes());
+		this.nodesToVisit = new HashSet<Node>();
+		for (Node node : this.getGrid().getNodes()) {
+			this.nodesToVisit.add(node);
+		}
 
 		this.reset();
 	}
@@ -33,7 +35,7 @@ public class NearestNeighborHeuristik extends AStartAlgorithm {
 			this.nodesToVisit.remove(this.getCurrentNode());
 
 			// Get all available edges from the current node
-			Collection<Edge> edges = this.getCurrentNode().getEdges();
+			Edge[] edges = this.getCurrentNode().getEdges();
 
 			// Get the shortest edge to a node that we still have to visit
 			for (Edge edge : edges) {
@@ -99,7 +101,10 @@ public class NearestNeighborHeuristik extends AStartAlgorithm {
 		super.reset();
 
 		this.nodesToVisit.clear();
-		this.nodesToVisit.addAll(this.getGrid().getNodes());
+		for (Node node : this.getGrid().getNodes()) {
+			this.nodesToVisit.add(node);
+		}
+
 		this.setCurrentNode(this.getStartingNode());
 	}
 

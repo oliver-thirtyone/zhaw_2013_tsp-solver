@@ -34,7 +34,7 @@ public class BruteForceAlgorithmTest {
 
 	@Before
 	public void setUp() {
-		this.scenario = new Scenario();
+		this.scenario = new Scenario("MinimumSpanningTreeHeuristikTest");
 		this.grid = scenario.getGrid();
 		this.path = scenario.getPath();
 
@@ -73,7 +73,7 @@ public class BruteForceAlgorithmTest {
 		do {
 			Assert.assertTrue(this.algorithm.step());
 			stepCounter++;
-		} while (!this.algorithm.hasFinishedSuccessful());
+		} while (!this.algorithm.hasFinishedSuccessfully());
 
 		// Check if we have four edges
 		Assert.assertEquals(4, this.path.getNumberOfEdges());

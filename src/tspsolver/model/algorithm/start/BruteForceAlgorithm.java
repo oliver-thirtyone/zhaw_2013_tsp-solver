@@ -24,8 +24,8 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 	public BruteForceAlgorithm(Scenario scenario) {
 		super(scenario);
 
-		this.nodeCount = this.getGrid().getNodes().size();
-		this.nodes = this.getGrid().getNodes().toArray(new Node[this.nodeCount]);
+		this.nodeCount = this.getGrid().getNumberOfNodes();
+		this.nodes = this.getGrid().getNodes();
 		this.nodeIndexes = new int[this.nodeCount];
 
 		this.currentLightestPath = new Path();
@@ -47,7 +47,7 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 		this.nodeIndexes[this.innerLoopIndex] = temp;
 
 		// Create the new path
-		this.currentNewPathUpdater.clearWholePath();
+		this.currentNewPathUpdater.clearPath();
 		for (int i = 1; i <= this.nodeCount; i++) {
 			int firstIndex = this.nodeIndexes[i - 1];
 			int secondIndex = (i == this.nodeCount) ? this.nodeIndexes[0] : this.nodeIndexes[i];
@@ -66,13 +66,13 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 		this.currentNewPathUpdater.updatePath();
 
 		// Add the lightest and the new path to the current path (for the GUI)
-		this.getPathUpdater().clearWholePath();
+		this.getPathUpdater().clearPath();
 		this.getPathUpdater().addPath(this.currentLightestPath);
 		this.getPathUpdater().addPath(this.currentNewPath);
 
 		// Check if the new path is lighter
 		if (this.currentLightestPath.getWeight() == 0.0 || this.currentNewPath.getWeight() < this.currentLightestPath.getWeight()) {
-			this.currentLightestPathUpdater.clearWholePath();
+			this.currentLightestPathUpdater.clearPath();
 			this.currentLightestPathUpdater.addPath(this.currentNewPath);
 			this.currentLightestPathUpdater.updatePath();
 		}
@@ -93,7 +93,7 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 
 		// Finish the algorithm if we are done with the outer loop
 		if (this.outerLoopIndex >= this.nodeCount) {
-			this.getPathUpdater().clearWholePath();
+			this.getPathUpdater().clearPath();
 			this.getPathUpdater().addPath(this.currentLightestPath);
 			this.setFinishedSuccessful(true);
 		}
@@ -106,11 +106,11 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 	public void reset() {
 		super.reset();
 
-		this.currentLightestPathUpdater.clearWholePath();
+		this.currentLightestPathUpdater.clearPath();
 		this.currentLightestPathUpdater.updatePath();
 
-		this.currentNewPathUpdater.clearWholePath();
-		this.currentNewPathUpdater.clearWholePath();
+		this.currentNewPathUpdater.clearPath();
+		this.currentNewPathUpdater.clearPath();
 
 		this.outerLoopIndex = 0;
 		this.innerLoopIndex = 0;

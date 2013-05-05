@@ -6,20 +6,27 @@ import java.util.Observer;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
 import tspsolver.model.path.Path;
+import tspsolver.model.path.PathUpdater;
 import tspsolver.model.updates.NodeUpdate;
 import tspsolver.model.updates.StartingNodeUpdate;
 import tspsolver.model.updates.UpdateAction;
 
 public class Scenario extends Observable implements Observer {
 
-	private final Path path;
+	private final String name;
+
 	private final Grid grid;
+	private final Path path;
+	private final PathUpdater pathUpdater;
 
 	private Node startingNode;
 
-	public Scenario() {
-		this.path = new Path();
+	public Scenario(String name) {
+		this.name = name;
+
 		this.grid = new Grid();
+		this.path = new Path();
+		this.pathUpdater = new PathUpdater(path);
 
 		this.startingNode = null;
 
@@ -33,12 +40,34 @@ public class Scenario extends Observable implements Observer {
 		this.notifyObservers(argument);
 	}
 
-	public Path getPath() {
-		return path;
+	@Override
+	public String toString() {
+		return this.getName();
+	}
+
+	public synchronized void clear() {
+		this.setStartingNode(null);
+
+		this.getPathUpdater().clearPath();
+		this.getPathUpdater().updatePath();
+
+		this.getGrid().clear();
+	}
+
+	public String getName() {
+		return this.name;
 	}
 
 	public Grid getGrid() {
 		return grid;
+	}
+
+	public Path getPath() {
+		return path;
+	}
+
+	public PathUpdater getPathUpdater() {
+		return pathUpdater;
 	}
 
 	public Node getStartingNode() {

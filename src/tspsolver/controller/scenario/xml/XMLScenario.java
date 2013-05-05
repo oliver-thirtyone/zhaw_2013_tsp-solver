@@ -1,4 +1,4 @@
-package tspsolver.controller.scenario;
+package tspsolver.controller.scenario.xml;
 
 public enum XMLScenario {
 
@@ -20,7 +20,7 @@ public enum XMLScenario {
 	ELEMENT_EDGE_ATTRIBUTE_WEIGHT("weight");
 	// @formatter:on
 
-	public static final String XML_SCHEMA = "tspsolver/data/scenario/schema/scenario.xsd";
+	public static final String XML_SCHEMA = "data/scenario/schema/scenario.xsd";
 
 	private String value;
 

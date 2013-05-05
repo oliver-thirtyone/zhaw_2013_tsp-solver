@@ -34,7 +34,7 @@ public class MinimumSpanningTreeHeuristikTest {
 
 	@Before
 	public void setUp() {
-		this.scenario = new Scenario();
+		this.scenario = new Scenario("MinimumSpanningTreeHeuristikTest");
 		this.grid = scenario.getGrid();
 		this.path = scenario.getPath();
 
@@ -71,7 +71,7 @@ public class MinimumSpanningTreeHeuristikTest {
 		// Step through the algorithm
 		do {
 			Assert.assertTrue(this.algorithm.step());
-		} while (!this.algorithm.hasFinishedSuccessful());
+		} while (!this.algorithm.hasFinishedSuccessfully());
 
 		// Check if we have four edges
 		Assert.assertEquals(4, this.path.getNumberOfEdges());

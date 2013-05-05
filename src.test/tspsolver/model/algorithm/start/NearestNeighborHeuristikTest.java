@@ -34,7 +34,7 @@ public class NearestNeighborHeuristikTest {
 
 	@Before
 	public void setUp() {
-		this.scenario = new Scenario();
+		this.scenario = new Scenario("NearestNeighborHeuristikTest");
 		this.grid = scenario.getGrid();
 		this.path = scenario.getPath();
 
@@ -70,22 +70,22 @@ public class NearestNeighborHeuristikTest {
 
 		// Take the first step
 		Assert.assertTrue(this.algorithm.step());
-		Assert.assertFalse(this.algorithm.hasFinishedSuccessful());
+		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
 		Assert.assertTrue(this.path.containsEdge(this.edgeNorthEast));
 
 		// Take the second step
 		Assert.assertTrue(this.algorithm.step());
-		Assert.assertFalse(this.algorithm.hasFinishedSuccessful());
+		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
 		Assert.assertTrue(this.path.containsEdge(this.edgeEastSouth));
 
 		// Take the third step
 		Assert.assertTrue(this.algorithm.step());
-		Assert.assertFalse(this.algorithm.hasFinishedSuccessful());
+		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
 		Assert.assertTrue(this.path.containsEdge(this.edgeSouthWest));
 
 		// Take the fourth step
 		Assert.assertTrue(this.algorithm.step());
-		Assert.assertTrue(this.algorithm.hasFinishedSuccessful());
+		Assert.assertTrue(this.algorithm.hasFinishedSuccessfully());
 		Assert.assertTrue(this.path.containsEdge(this.edgeNorthWest));
 
 		// Make sure that we can not take an other step

@@ -51,8 +51,7 @@ public class Path extends Observable {
 			if (other.edges != null) {
 				return false;
 			}
-		}
-		else if (!this.edges.equals(other.edges)) {
+		} else if (!this.edges.equals(other.edges)) {
 			return false;
 		}
 
@@ -63,20 +62,20 @@ public class Path extends Observable {
 		return true;
 	}
 
-	public Set<Edge> getEdges() {
-		return this.edges;
-	}
-
-	public boolean containsEdge(Edge edge) {
-		return this.edges.contains(edge);
-	}
-
 	public double getWeight() {
 		return this.weight;
 	}
 
+	public Edge[] getEdges() {
+		return this.edges.toArray(new Edge[this.edges.size()]);
+	}
+
 	public int getNumberOfEdges() {
 		return this.edges.size();
+	}
+
+	public boolean containsEdge(Edge edge) {
+		return this.edges.contains(edge);
 	}
 
 	protected synchronized void addEdge(Edge edge) {

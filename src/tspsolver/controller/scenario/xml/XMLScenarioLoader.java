@@ -1,5 +1,6 @@
-package tspsolver.controller.scenario;
+package tspsolver.controller.scenario.xml;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -20,11 +21,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import tspsolver.controller.scenario.IScenarioLoader;
 import tspsolver.model.Scenario;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.GridFactory;
 
-public class XMLScenarioLoader {
+public class XMLScenarioLoader implements IScenarioLoader {
 
 	private DocumentBuilder documentBuilder;
 	private Validator validator;
@@ -34,7 +36,7 @@ public class XMLScenarioLoader {
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
 
-			InputStream schema = ClassLoader.getSystemResourceAsStream(XMLScenario.XML_SCHEMA);
+			InputStream schema = new FileInputStream(XMLScenario.XML_SCHEMA);
 			Source source = new StreamSource(schema);
 
 			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -50,32 +52,50 @@ public class XMLScenarioLoader {
 		return true;
 	}
 
-	public void loadScenario(InputStream inputStream, Scenario scenario) throws SAXException, IOException, IllegalArgumentException {
-		Document document = this.documentBuilder.parse(inputStream);
-		document.getDocumentElement().normalize();
+	@Override
+	public Scenario loadScenario(InputStream inputStream) throws IllegalArgumentException {
+		Scenario scenario = null;
+		try {
+			Document document = this.documentBuilder.parse(inputStream);
+			document.getDocumentElement().normalize();
 
-		Map<String, tspsolver.model.grid.Node> nodes = new HashMap<String, tspsolver.model.grid.Node>();
+			Map<String, tspsolver.model.grid.Node> nodes = new HashMap<String, tspsolver.model.grid.Node>();
 
-		if (this.isXMLValid(document)) {
-			NodeList rootXMLNodes = document.getChildNodes();
-			for (int x = 0; x < rootXMLNodes.getLength(); x++) {
-				Node rootXMLNode = rootXMLNodes.item(x);
-				if (rootXMLNode.getNodeName().equals(XMLScenario.ELEMENT_SCENARIO.toString())) {
-					NodeList xmlNodes = rootXMLNode.getChildNodes();
-					for (int y = 0; y < xmlNodes.getLength(); y++) {
-						Node xmlNode = xmlNodes.item(y);
-						if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_NODE.toString()))
-							this.parseNode(scenario.getGrid(), nodes, xmlNode);
-						else if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_ADD_EDGE.toString()))
-							this.parseAddEdge(scenario.getGrid(), nodes, xmlNode);
-						else if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_REMOVE_EDGE.toString()))
-							this.parseRemoveEdge(scenario.getGrid(), nodes, xmlNode);
-						else if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_STARTINGNODE.toString()))
-							this.parseStartingNode(scenario, nodes, xmlNode);
+			if (this.isXMLValid(document)) {
+				NodeList rootXMLNodes = document.getChildNodes();
+				for (int x = 0; x < rootXMLNodes.getLength(); x++) {
+					Node rootXMLNode = rootXMLNodes.item(x);
+					if (rootXMLNode.getNodeName().equals(XMLScenario.ELEMENT_SCENARIO.toString())) {
+						scenario = this.parseScenario(rootXMLNode);
+
+						NodeList xmlNodes = rootXMLNode.getChildNodes();
+						for (int y = 0; y < xmlNodes.getLength(); y++) {
+							Node xmlNode = xmlNodes.item(y);
+							if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_NODE.toString()))
+								this.parseNode(scenario.getGrid(), nodes, xmlNode);
+							else if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_ADD_EDGE.toString()))
+								this.parseAddEdge(scenario.getGrid(), nodes, xmlNode);
+							else if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_REMOVE_EDGE.toString()))
+								this.parseRemoveEdge(scenario.getGrid(), nodes, xmlNode);
+							else if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_STARTINGNODE.toString()))
+								this.parseStartingNode(scenario, nodes, xmlNode);
+						}
 					}
 				}
 			}
+		} catch (SAXException exception) {
+			throw new IllegalArgumentException(exception);
+		} catch (IOException exception) {
+			throw new IllegalArgumentException(exception);
 		}
+
+		return scenario;
+	}
+
+	private Scenario parseScenario(Node xmlNode) {
+		Element scenarioElement = (Element) xmlNode;
+		String name = scenarioElement.getAttribute(XMLScenario.ELEMENT_SCENARIO_ATTRIBUTE_NAME.toString());
+		return new Scenario(name);
 	}
 
 	private void parseNode(Grid grid, Map<String, tspsolver.model.grid.Node> nodes, Node xmlNode) {

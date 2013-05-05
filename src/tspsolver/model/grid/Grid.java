@@ -24,8 +24,12 @@ public class Grid extends Observable implements Observer {
 		this.notifyObservers(argument);
 	}
 
-	public Set<Node> getNodes() {
-		return this.nodes;
+	public Node[] getNodes() {
+		return this.nodes.toArray(new Node[this.nodes.size()]);
+	}
+
+	public int getNumberOfNodes() {
+		return this.nodes.size();
 	}
 
 	public boolean containsNode(Node node) {
@@ -64,7 +68,7 @@ public class Grid extends Observable implements Observer {
 		}
 	}
 
-	public synchronized void clearNodes() {
+	public synchronized void clear() {
 		for (Node node : this.getNodes()) {
 			this.removeNode(node);
 		}
