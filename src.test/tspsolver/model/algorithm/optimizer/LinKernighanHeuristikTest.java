@@ -5,14 +5,14 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import tspsolver.model.Scenario;
 import tspsolver.model.algorithm.OptimizerAlgorithm;
-import tspsolver.model.grid.Edge;
-import tspsolver.model.grid.Grid;
-import tspsolver.model.grid.GridFactory;
-import tspsolver.model.grid.Node;
-import tspsolver.model.path.Path;
-import tspsolver.model.path.PathUpdater;
+import tspsolver.model.scenario.Scenario;
+import tspsolver.model.scenario.grid.Edge;
+import tspsolver.model.scenario.grid.Grid;
+import tspsolver.model.scenario.grid.GridFactory;
+import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.path.Path;
+import tspsolver.model.scenario.path.PathUpdater;
 
 public class LinKernighanHeuristikTest {
 

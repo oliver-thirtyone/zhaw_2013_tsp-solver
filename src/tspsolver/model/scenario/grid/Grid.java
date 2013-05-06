@@ -1,4 +1,4 @@
-package tspsolver.model.grid;
+package tspsolver.model.scenario.grid;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -6,8 +6,8 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
-import tspsolver.model.updates.NodeUpdate;
-import tspsolver.model.updates.NodeUpdateAction;
+import tspsolver.model.updates.grid.NodeUpdate;
+import tspsolver.model.updates.grid.NodeUpdateAction;
 
 public class Grid extends Observable implements Serializable, Observer {
 
@@ -19,6 +19,37 @@ public class Grid extends Observable implements Serializable, Observer {
 
 	public Grid() {
 		this.nodes = new HashSet<Node>();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+
+		result = prime * result + ((nodes == null) ? 0 : nodes.hashCode());
+
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+
+		if (obj == null)
+			return false;
+
+		if (getClass() != obj.getClass())
+			return false;
+
+		Grid other = (Grid) obj;
+		if (nodes == null) {
+			if (other.nodes != null)
+				return false;
+		} else if (!nodes.equals(other.nodes))
+			return false;
+
+		return true;
 	}
 
 	@Override

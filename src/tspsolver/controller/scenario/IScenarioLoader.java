@@ -2,7 +2,7 @@ package tspsolver.controller.scenario;
 
 import java.io.InputStream;
 
-import tspsolver.model.Scenario;
+import tspsolver.model.scenario.Scenario;
 
 public interface IScenarioLoader {
 

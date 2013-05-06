@@ -16,7 +16,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
 import tspsolver.controller.Controller;
-import tspsolver.model.Scenario;
+import tspsolver.model.scenario.Scenario;
+import tspsolver.util.runner.Runner;
 import tspsolver.util.view.layout.LayoutManager;
 
 public class ControllerView extends JPanel implements Observer, ActionListener {
@@ -117,34 +118,40 @@ public class ControllerView extends JPanel implements Observer, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
-		String actionCommand = actionEvent.getActionCommand();
+		final String actionCommand = actionEvent.getActionCommand();
 
-		Integer stepDelay = null;
+		// Turn the stepDelay into an integer
+		int number = 0;
 		try {
 			if (!this.stepDelay.getText().isEmpty()) {
-				stepDelay = Integer.parseInt(this.stepDelay.getText());
+				number = Integer.parseInt(this.stepDelay.getText());
 			}
 		} catch (NumberFormatException exception) {
-			stepDelay = 0;
+			number = Runner.DEFAULT_STEP_DELAY;
 		}
+		final int stepDelay = number;
 
-		if (actionCommand.equals("initialize")) {
-			this.controller.initialize(stepDelay);
-		}
-		if (actionCommand.equals("start")) {
-			this.controller.start();
-		} else if (actionCommand.equals("step")) {
-			this.controller.step();
-		} else if (actionCommand.equals("pause")) {
-			this.controller.pause();
-		} else if (actionCommand.equals("stop")) {
-			this.controller.stop();
-		} else if (actionCommand.equals("reset")) {
-			this.controller.reset();
-		} else if (actionCommand.equals("select_scenario")) {
-			Scenario scenario = (Scenario) this.scenarios.getSelectedItem();
-			this.controller.setSelectedScenario(scenario);
-		}
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				if (actionCommand.equals("select_scenario")) {
+					Scenario scenario = (Scenario) ControllerView.this.scenarios.getSelectedItem();
+					ControllerView.this.controller.setSelectedScenario(scenario);
+				} else if (actionCommand.equals("initialize")) {
+					ControllerView.this.controller.initialize(stepDelay);
+				} else if (actionCommand.equals("start")) {
+					ControllerView.this.controller.start();
+				} else if (actionCommand.equals("step")) {
+					ControllerView.this.controller.step();
+				} else if (actionCommand.equals("pause")) {
+					ControllerView.this.controller.pause();
+				} else if (actionCommand.equals("stop")) {
+					ControllerView.this.controller.stop();
+				} else if (actionCommand.equals("reset")) {
+					ControllerView.this.controller.reset();
+				}
+			}
+		});
 	}
 
 	private void doUpdate(Object argument) {

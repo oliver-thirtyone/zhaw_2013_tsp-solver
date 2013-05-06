@@ -1,10 +1,10 @@
 package tspsolver.model.algorithm;
 
-import tspsolver.model.Scenario;
-import tspsolver.model.grid.Grid;
-import tspsolver.model.grid.Node;
-import tspsolver.model.path.Path;
-import tspsolver.model.path.PathUpdater;
+import tspsolver.model.scenario.Scenario;
+import tspsolver.model.scenario.grid.Grid;
+import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.path.Path;
+import tspsolver.model.scenario.path.PathUpdater;
 
 public abstract class Algorithm {
 
@@ -74,7 +74,6 @@ public abstract class Algorithm {
 	}
 
 	protected void finishedSuccessfully() {
-		this.getPathUpdater().updatePath();
 		this.finishedSuccessfully = true;
 	}
 

@@ -1,9 +1,10 @@
 package tspsolver.view.grid;
 
-import tspsolver.model.grid.Node;
+import tspsolver.model.scenario.grid.Node;
 
 import com.kitfox.svg.Circle;
 import com.kitfox.svg.Group;
+import com.kitfox.svg.SVGDiagram;
 import com.kitfox.svg.SVGException;
 import com.kitfox.svg.animation.AnimationElement;
 
@@ -18,10 +19,10 @@ public class NodeView {
 	private final Group svgGroup;
 	private final Circle svgCircle;
 
-	protected NodeView(Node node, GridView gridView) {
+	protected NodeView(Node node, SVGDiagram svgDiagram) {
 		this.node = node;
 
-		this.svgGroup = (Group) gridView.getSVGDiagram().getElement(GridView.SVG_GROUP_NODES);
+		this.svgGroup = (Group) svgDiagram.getElement(GridView.SVG_GROUP_NODES);
 		this.svgCircle = new Circle();
 	}
 
@@ -32,8 +33,7 @@ public class NodeView {
 			this.svgCircle.addAttribute("r", AnimationElement.AT_XML, String.valueOf(NodeView.CIRCLE_RADIUS));
 
 			this.svgGroup.loaderAddChild(null, this.svgCircle);
-		}
-		catch (SVGException exception) {
+		} catch (SVGException exception) {
 			exception.printStackTrace();
 		}
 	}
@@ -41,8 +41,7 @@ public class NodeView {
 	protected void deleteCircle() {
 		try {
 			this.svgGroup.removeChild(this.svgCircle);
-		}
-		catch (SVGException exception) {
+		} catch (SVGException exception) {
 			exception.printStackTrace();
 		}
 	}
@@ -51,12 +50,10 @@ public class NodeView {
 		try {
 			if (this.svgCircle.hasAttribute("fill", AnimationElement.AT_CSS)) {
 				this.svgCircle.setAttribute("fill", AnimationElement.AT_CSS, color);
-			}
-			else {
+			} else {
 				this.svgCircle.addAttribute("fill", AnimationElement.AT_CSS, color);
 			}
-		}
-		catch (SVGException exception) {
+		} catch (SVGException exception) {
 			exception.printStackTrace();
 		}
 	}

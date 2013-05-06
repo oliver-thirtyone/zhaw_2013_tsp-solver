@@ -1,9 +1,9 @@
 package tspsolver.controller;
 
-import tspsolver.model.Scenario;
 import tspsolver.model.algorithm.Algorithm;
 import tspsolver.model.algorithm.OptimizerAlgorithm;
 import tspsolver.model.algorithm.StartAlgorithm;
+import tspsolver.model.scenario.Scenario;
 import tspsolver.util.runner.Runner;
 import tspsolver.util.runner.RunnerState;
 
@@ -82,7 +82,6 @@ public class AlgorithmRunner extends Runner implements Runnable {
 			}
 		}
 
-		System.out.println("AlgorithmRunner STATE after doStep(): " + this.getState());
 		return successfulStep;
 	}
 

@@ -8,9 +8,9 @@ import java.util.Vector;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import tspsolver.model.algorithm.StartAlgorithm;
-import tspsolver.model.grid.Edge;
-import tspsolver.model.grid.Node;
-import tspsolver.model.grid.comparators.EdgeWeightComparator;
+import tspsolver.model.comparators.grid.EdgeWeightComparator;
+import tspsolver.model.scenario.grid.Edge;
+import tspsolver.model.scenario.grid.Node;
 
 public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 

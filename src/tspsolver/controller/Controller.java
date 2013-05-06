@@ -1,9 +1,8 @@
 package tspsolver.controller;
 
-import tspsolver.model.Scenario;
-import tspsolver.util.copy.PipedDeepCopy;
-import tspsolver.util.runner.Runner;
+import tspsolver.model.scenario.Scenario;
 import tspsolver.util.runner.MainRunner;
+import tspsolver.util.runner.Runner;
 
 public class Controller extends MainRunner {
 
@@ -34,7 +33,7 @@ public class Controller extends MainRunner {
 		}
 
 		// Initialize all runners
-		return super.initialize();
+		return super.initialize(stepDelay);
 	}
 
 	@Override
@@ -67,7 +66,7 @@ public class Controller extends MainRunner {
 
 		// Set the scenario for all algorithm runners
 		for (AlgorithmRunner runner : this.getAlgorithmRunners()) {
-			Scenario copyOfScenario = (Scenario) PipedDeepCopy.copy(scenario);
+			Scenario copyOfScenario = scenario.copy();
 
 			boolean setSelectedScenario = runner.setSelectedScenario(copyOfScenario);
 			success = success ? setSelectedScenario : false;

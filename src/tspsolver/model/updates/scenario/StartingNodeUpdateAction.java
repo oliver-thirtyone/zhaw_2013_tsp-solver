@@ -1,4 +1,4 @@
-package tspsolver.model.updates;
+package tspsolver.model.updates.scenario;
 
 public enum StartingNodeUpdateAction {
 

@@ -14,19 +14,21 @@ import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
-import tspsolver.model.Scenario;
-import tspsolver.model.grid.Edge;
-import tspsolver.model.grid.Node;
-import tspsolver.model.updates.EdgeUpdate;
-import tspsolver.model.updates.EdgeUpdateAction;
-import tspsolver.model.updates.NodeUpdate;
-import tspsolver.model.updates.NodeUpdateAction;
-import tspsolver.model.updates.PathUpdate;
-import tspsolver.model.updates.PathUpdateAction;
-import tspsolver.model.updates.StartingNodeUpdate;
-import tspsolver.model.updates.StartingNodeUpdateAction;
+import tspsolver.model.scenario.Scenario;
+import tspsolver.model.scenario.grid.Edge;
+import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.updates.ElementUpdate;
+import tspsolver.model.updates.grid.EdgeUpdate;
+import tspsolver.model.updates.grid.EdgeUpdateAction;
+import tspsolver.model.updates.grid.NodeUpdate;
+import tspsolver.model.updates.grid.NodeUpdateAction;
+import tspsolver.model.updates.path.PathUpdate;
+import tspsolver.model.updates.path.PathUpdateAction;
+import tspsolver.model.updates.scenario.StartingNodeUpdate;
+import tspsolver.model.updates.scenario.StartingNodeUpdateAction;
 
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.SVGDiagram;
@@ -62,14 +64,17 @@ public class GridView extends JPanel implements Observer {
 			exception.printStackTrace();
 		}
 
+		// Create the diagram
 		this.svgDiagram = SVGCache.getSVGUniverse().getDiagram(svgURI);
 
+		// Create the map
 		this.svgIcon = new SVGIcon();
 		this.svgIcon.setSvgURI(svgURI);
 		this.svgIcon.setAntiAlias(true);
 		this.svgIcon.setPreferredSize(new Dimension(MAP_SWITZERLAND_WIDTH, MAP_SWITZERLAND_HEIGHT));
 		this.svgIcon.setScaleToFit(true);
 
+		// Create the views
 		this.nodeViews = new HashMap<Node, NodeView>();
 		this.edgeViews = new HashMap<Edge, EdgeView>();
 
@@ -86,16 +91,41 @@ public class GridView extends JPanel implements Observer {
 	}
 
 	@Override
-	public void update(Observable observable, Object argument) {
-		// TODO: REMOVE DEBUG OUTPUT
-		System.out.println("GridView.update(" + observable + ", " + argument + ") ");
+	public void update(Observable observable, final Object argument) {
+		if (observable != this.scenario) {
+			System.out.println("THIS SHOULD NEVER HAPPEN"); // TODO: REMOVE DEBUG OUTPUT
+			return;
+		}
 
+		// TODO: REMOVE DEBUG OUTPUT
+		ElementUpdate<?, ?> elementUpdate = (ElementUpdate<?, ?>) argument;
+		System.out.println(elementUpdate.getClass() + ": " + elementUpdate.getAction() + " - " + elementUpdate.getElement());
+
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				ElementUpdate<?, ?> elementUpdate = (ElementUpdate<?, ?>) argument;
+				GridView.this.doUpdate(elementUpdate);
+			}
+		});
+	}
+
+	public void updateScenario(final Scenario scenario) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				GridView.this.doUpdateScenario(scenario);
+			}
+		});
+	}
+
+	private synchronized void doUpdate(ElementUpdate<?, ?> elementUpdate) {
 		// Starting node updates
-		if (argument instanceof StartingNodeUpdate) {
-			StartingNodeUpdate update = (StartingNodeUpdate) argument;
+		if (elementUpdate instanceof StartingNodeUpdate) {
+			StartingNodeUpdate update = (StartingNodeUpdate) elementUpdate;
 			StartingNodeUpdateAction action = update.getAction();
 
-			Node node = update.getNode();
+			Node node = update.getElement();
 			NodeView nodeView = this.nodeViews.get(node);
 
 			if (nodeView != null) {
@@ -113,17 +143,17 @@ public class GridView extends JPanel implements Observer {
 		}
 
 		// Node updates
-		else if (argument instanceof NodeUpdate) {
-			NodeUpdate update = (NodeUpdate) argument;
+		else if (elementUpdate instanceof NodeUpdate) {
+			NodeUpdate update = (NodeUpdate) elementUpdate;
 			NodeUpdateAction action = update.getAction();
 
-			Node node = update.getNode();
+			Node node = update.getElement();
 			NodeView nodeView = null;
 
 			switch (action) {
 			case ADD_NODE:
 				if (!this.nodeViews.containsKey(node)) {
-					nodeView = new NodeView(node, this);
+					nodeView = new NodeView(node, this.svgDiagram);
 					nodeView.createCircle();
 					this.nodeViews.put(node, nodeView);
 				}
@@ -141,11 +171,11 @@ public class GridView extends JPanel implements Observer {
 		}
 
 		// Path updates
-		else if (argument instanceof PathUpdate) {
-			PathUpdate update = (PathUpdate) argument;
+		else if (elementUpdate instanceof PathUpdate) {
+			PathUpdate update = (PathUpdate) elementUpdate;
 			PathUpdateAction action = update.getAction();
 
-			Edge edge = update.getEdge();
+			Edge edge = update.getElement();
 			EdgeView edgeView = this.edgeViews.get(edge);
 
 			if (edgeView != null) {
@@ -169,17 +199,17 @@ public class GridView extends JPanel implements Observer {
 		}
 
 		// Edge updates
-		else if (argument instanceof EdgeUpdate) {
-			EdgeUpdate update = (EdgeUpdate) argument;
+		else if (elementUpdate instanceof EdgeUpdate) {
+			EdgeUpdate update = (EdgeUpdate) elementUpdate;
 			EdgeUpdateAction action = update.getAction();
 
-			Edge edge = update.getEdge();
+			Edge edge = update.getElement();
 			EdgeView edgeView = null;
 
 			switch (action) {
 			case ADD_EDGE:
 				if (!this.edgeViews.containsKey(edge)) {
-					edgeView = new EdgeView(edge, this);
+					edgeView = new EdgeView(edge, this.svgDiagram);
 					edgeView.createLine();
 					this.edgeViews.put(edge, edgeView);
 				}
@@ -205,7 +235,7 @@ public class GridView extends JPanel implements Observer {
 		}
 	}
 
-	public synchronized void updateScenario(Scenario scenario) {
+	private synchronized void doUpdateScenario(Scenario scenario) {
 		// Clear the current grid
 		if (this.scenario != null) {
 			this.clearGrid();
@@ -228,10 +258,6 @@ public class GridView extends JPanel implements Observer {
 		} catch (SVGException exception) {
 			exception.printStackTrace();
 		}
-	}
-
-	protected SVGDiagram getSVGDiagram() {
-		return this.svgDiagram;
 	}
 
 	private void paintGrid() {

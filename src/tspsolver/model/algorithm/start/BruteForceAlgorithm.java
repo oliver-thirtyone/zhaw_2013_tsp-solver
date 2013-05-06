@@ -1,10 +1,10 @@
 package tspsolver.model.algorithm.start;
 
 import tspsolver.model.algorithm.StartAlgorithm;
-import tspsolver.model.grid.Edge;
-import tspsolver.model.grid.Node;
-import tspsolver.model.path.Path;
-import tspsolver.model.path.PathUpdater;
+import tspsolver.model.scenario.grid.Edge;
+import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.path.Path;
+import tspsolver.model.scenario.path.PathUpdater;
 
 public class BruteForceAlgorithm extends StartAlgorithm {
 

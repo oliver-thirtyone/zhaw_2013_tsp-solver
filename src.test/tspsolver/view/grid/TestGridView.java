@@ -6,12 +6,14 @@ import java.io.InputStream;
 
 import javax.swing.JFrame;
 
+import org.junit.Assert;
+
 import tspsolver.controller.AlgorithmRunner;
 import tspsolver.controller.scenario.xml.XMLScenarioLoader;
-import tspsolver.model.Scenario;
 import tspsolver.model.algorithm.OptimizerAlgorithm;
 import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.algorithm.start.NearestNeighborHeuristik;
+import tspsolver.model.scenario.Scenario;
 import tspsolver.util.view.layout.LayoutManager;
 
 public class TestGridView extends JFrame {
@@ -28,11 +30,14 @@ public class TestGridView extends JFrame {
 		this.layoutManager = new LayoutManager(this.getContentPane());
 
 		this.gridView = new GridView();
-		this.gridView.updateScenario(scenario);
 
 		this.components();
 		this.pack();
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+	public GridView getGridView() {
+		return gridView;
 	}
 
 	private void components() {
@@ -59,9 +64,32 @@ public class TestGridView extends JFrame {
 		StartAlgorithm algorithm = new NearestNeighborHeuristik();
 		AlgorithmRunner runner = new AlgorithmRunner(new StartAlgorithm[] { algorithm }, new OptimizerAlgorithm[] {});
 
-		runner.setSelectedScenario(scenario);
-		runner.setSelectedStartAlgorithm(algorithm);
+		// Scenario copyOfScenario = (Scenario) PipedDeepCopy.copy(scenario);
+		Scenario copyOfScenario = scenario.copy();
+		// Scenario copyOfScenario = scenario;
 
+		Assert.assertEquals(scenario, copyOfScenario);
+		testGridView.getGridView().updateScenario(copyOfScenario);
+
+		// // TEST - START
+		// System.out.println("TEST - START");
+		// Assert.assertTrue(copyOfScenario.getPath().getNumberOfEdges() == 0);
+		// PathUpdater pathUpdater = new PathUpdater(copyOfScenario.getPath());
+		// Edge edge = GridFactory.getEdge(copyOfScenario.getGrid().getNodes()[0], copyOfScenario.getGrid().getNodes()[1]);
+		// pathUpdater.addEdge(edge);
+		// pathUpdater.updatePath();
+		// Assert.assertTrue(copyOfScenario.getPath().getNumberOfEdges() == 1);
+		// System.out.println("TEST - END");
+		// // TEST - END
+		//
+		// // updateScenario
+		// System.out.println(">>>> updateScenario - START");
+		// testGridView.getGridView().updateScenario(copyOfScenario);
+		// System.out.println(">>>> updateScenario - END");
+
+		// TODO: remove comment
+		runner.setSelectedScenario(copyOfScenario);
+		runner.setSelectedStartAlgorithm(algorithm);
 		runner.initialize(2000); // Initialize the runner with a "2 seconds"-step delay
 		runner.start();
 	}

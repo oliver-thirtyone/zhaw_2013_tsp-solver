@@ -19,12 +19,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
 import tspsolver.controller.AlgorithmRunner;
-import tspsolver.model.Scenario;
 import tspsolver.model.algorithm.Algorithm;
 import tspsolver.model.algorithm.OptimizerAlgorithm;
 import tspsolver.model.algorithm.StartAlgorithm;
-import tspsolver.model.grid.Grid;
-import tspsolver.model.path.Path;
+import tspsolver.model.scenario.Scenario;
+import tspsolver.model.scenario.grid.Grid;
+import tspsolver.model.scenario.path.Path;
 import tspsolver.util.runner.RunnerState;
 import tspsolver.util.view.layout.LayoutManager;
 import tspsolver.view.grid.GridView;
@@ -65,8 +65,6 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 
 	private final JLabel timeElapsedLabel;
 	private final JTextField timeElapsed;
-
-	private Algorithm runningAlgorithm;
 
 	public AlgorithmRunnerView(AlgorithmRunner algorithmRunner) {
 		this.algorithmRunner = algorithmRunner;
@@ -137,7 +135,6 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 		this.setBorder(titledBorder);
 
 		// Initialize
-		this.runningAlgorithm = null;
 		this.doUpdate(null);
 		this.algorithmRunner.addObserver(this);
 	}
@@ -227,8 +224,6 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 			Date date = new Date(algorithmRunner.getTimeElapsed());
 			this.timeElapsed.setText(TIME_FORMAT.format(date));
 
-			// Update the algorithms
-			this.runningAlgorithm = this.algorithmRunner.getRunningAlgorithm();
 			// TODO: textfield which algorithem and the state
 		}
 

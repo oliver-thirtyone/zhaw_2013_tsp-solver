@@ -1,4 +1,5 @@
-package tspsolver.model.grid;
+package tspsolver.model.scenario.grid;
+
 
 public abstract class GridFactory {
 

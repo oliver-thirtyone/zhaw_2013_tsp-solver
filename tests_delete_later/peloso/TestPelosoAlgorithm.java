@@ -8,11 +8,11 @@ import javax.swing.JFrame;
 
 import tspsolver.controller.AlgorithmRunner;
 import tspsolver.controller.scenario.xml.XMLScenarioLoader;
-import tspsolver.model.Scenario;
 import tspsolver.model.algorithm.OptimizerAlgorithm;
 import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.algorithm.optimizer.TwoOptHeuristik;
 import tspsolver.model.algorithm.start.MinimumSpanningTreeHeuristik;
+import tspsolver.model.scenario.Scenario;
 import tspsolver.util.view.layout.LayoutManager;
 import tspsolver.view.grid.GridView;
 

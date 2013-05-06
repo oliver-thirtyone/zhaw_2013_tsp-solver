@@ -1,13 +1,13 @@
-package tspsolver.model.path;
+package tspsolver.model.scenario.path;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Observable;
 import java.util.Set;
 
-import tspsolver.model.grid.Edge;
-import tspsolver.model.updates.PathUpdateAction;
-import tspsolver.model.updates.PathUpdate;
+import tspsolver.model.scenario.grid.Edge;
+import tspsolver.model.updates.path.PathUpdate;
+import tspsolver.model.updates.path.PathUpdateAction;
 
 public class Path extends Observable implements Serializable {
 

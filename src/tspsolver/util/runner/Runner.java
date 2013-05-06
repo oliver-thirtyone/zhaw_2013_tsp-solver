@@ -35,7 +35,7 @@ public abstract class Runner extends Observable implements Runnable {
 
 	@Override
 	public final void run() {
-		this.timeStarted = System.nanoTime();
+		this.timeStarted = System.currentTimeMillis();
 
 		while (this.isRunning()) {
 
@@ -73,7 +73,7 @@ public abstract class Runner extends Observable implements Runnable {
 			}
 		}
 
-		this.timeStopped = System.nanoTime();
+		this.timeStopped = System.currentTimeMillis();
 	}
 
 	public synchronized boolean canInitialize() {
@@ -255,7 +255,7 @@ public abstract class Runner extends Observable implements Runnable {
 	}
 
 	public final synchronized long getTimeElapsed() {
-		long timeCurrent = System.nanoTime();
+		long timeCurrent = System.currentTimeMillis();
 
 		long timeStarted = this.timeStarted != 0 ? this.timeStarted : timeCurrent;
 		long timeStopped = this.timeStopped != 0 ? this.timeStopped : timeCurrent;

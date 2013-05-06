@@ -1,4 +1,4 @@
-package tspsolver.model.grid;
+package tspsolver.model.scenario.grid;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
-import tspsolver.model.updates.EdgeUpdateAction;
-import tspsolver.model.updates.EdgeUpdate;
+import tspsolver.model.updates.grid.EdgeUpdate;
+import tspsolver.model.updates.grid.EdgeUpdateAction;
 
 public class Node extends Observable implements Serializable, Observer {
 

@@ -1,4 +1,4 @@
-package tspsolver.model.updates;
+package tspsolver.model.updates.grid;
 
 public enum NodeUpdateAction {
 

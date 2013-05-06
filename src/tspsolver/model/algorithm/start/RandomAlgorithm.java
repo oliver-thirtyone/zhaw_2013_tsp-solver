@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import tspsolver.model.algorithm.StartAlgorithm;
-import tspsolver.model.grid.Edge;
-import tspsolver.model.grid.Node;
+import tspsolver.model.scenario.grid.Edge;
+import tspsolver.model.scenario.grid.Node;
 
 public class RandomAlgorithm extends StartAlgorithm {
 

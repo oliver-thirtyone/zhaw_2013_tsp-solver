@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import tspsolver.model.algorithm.StartAlgorithm;
-import tspsolver.model.grid.Edge;
-import tspsolver.model.grid.Node;
+import tspsolver.model.scenario.grid.Edge;
+import tspsolver.model.scenario.grid.Node;
 
 public class NearestNeighborHeuristik extends StartAlgorithm {
 

@@ -1,6 +1,6 @@
 package tspsolver.model.algorithm;
 
-import tspsolver.model.grid.Node;
+import tspsolver.model.scenario.grid.Node;
 
 public abstract class StartAlgorithm extends Algorithm {
 

@@ -11,7 +11,6 @@ import tspsolver.controller.AlgorithmRunner;
 import tspsolver.controller.Controller;
 import tspsolver.controller.scenario.IScenarioLoader;
 import tspsolver.controller.scenario.xml.XMLScenarioLoader;
-import tspsolver.model.Scenario;
 import tspsolver.model.algorithm.OptimizerAlgorithm;
 import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.algorithm.optimizer.LinKernighanHeuristik;
@@ -20,11 +19,12 @@ import tspsolver.model.algorithm.start.BruteForceAlgorithm;
 import tspsolver.model.algorithm.start.MinimumSpanningTreeHeuristik;
 import tspsolver.model.algorithm.start.NearestNeighborHeuristik;
 import tspsolver.model.algorithm.start.RandomAlgorithm;
+import tspsolver.model.scenario.Scenario;
 import tspsolver.view.MainFrame;
 
 public class Launcher {
 
-	public static final int NUMBER_OF_ALGORITHM_RUNNERS = 2;
+	public static final int NUMBER_OF_ALGORITHM_RUNNERS = 1;
 	public static final String SCENARIO_DIRECTORY = "data/scenario";
 
 	public static void main(String[] args) {

@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Vector;
 
 import tspsolver.model.algorithm.OptimizerAlgorithm;
-import tspsolver.model.grid.Edge;
-import tspsolver.model.path.Path;
-import tspsolver.model.path.PathUpdater;
+import tspsolver.model.scenario.grid.Edge;
+import tspsolver.model.scenario.path.Path;
+import tspsolver.model.scenario.path.PathUpdater;
 
 public class TwoOptHeuristik extends OptimizerAlgorithm {
 

@@ -1,4 +1,4 @@
-package tspsolver.model.updates;
+package tspsolver.model.updates.path;
 
 public enum PathUpdateAction {
 

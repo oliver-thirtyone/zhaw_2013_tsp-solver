@@ -1,8 +1,8 @@
-package tspsolver.model.grid.comparators;
+package tspsolver.model.comparators.grid;
 
 import java.util.Comparator;
 
-import tspsolver.model.grid.Edge;
+import tspsolver.model.scenario.grid.Edge;
 
 
 public class EdgeWeightComparator implements Comparator<Edge> {

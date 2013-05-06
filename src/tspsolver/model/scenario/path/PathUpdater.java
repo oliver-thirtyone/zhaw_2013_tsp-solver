@@ -1,11 +1,11 @@
-package tspsolver.model.path;
+package tspsolver.model.scenario.path;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import tspsolver.model.grid.Edge;
-import tspsolver.model.updates.PathUpdateAction;
+import tspsolver.model.scenario.grid.Edge;
+import tspsolver.model.updates.path.PathUpdateAction;
 
 public class PathUpdater {
 

@@ -3,8 +3,8 @@ package tspsolver.model.algorithm;
 import java.util.ArrayList;
 import java.util.List;
 
-import tspsolver.model.grid.Edge;
-import tspsolver.model.grid.Node;
+import tspsolver.model.scenario.grid.Edge;
+import tspsolver.model.scenario.grid.Node;
 
 public abstract class OptimizerAlgorithm extends Algorithm {
 

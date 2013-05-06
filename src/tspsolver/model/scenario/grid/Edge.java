@@ -1,4 +1,4 @@
-package tspsolver.model.grid;
+package tspsolver.model.scenario.grid;
 
 import java.io.Serializable;
 import java.util.Observable;
