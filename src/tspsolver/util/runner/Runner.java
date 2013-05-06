@@ -50,9 +50,8 @@ public abstract class Runner extends Observable implements Runnable {
 				continue;
 			}
 
-			// Sleep between the steps to create a delay
-			// TODO: only when state = running
-			if (this.getStepDelay() > 0) {
+			// Sleep between the steps to create a delay if we are RUNNING
+			if (this.getState() == RunnerState.RUNNING && this.getStepDelay() > 0) {
 				try {
 					Thread.sleep(this.getStepDelay());
 				}
@@ -66,14 +65,13 @@ public abstract class Runner extends Observable implements Runnable {
 				this.stepCounter++;
 			}
 
+			// Notify the observers
+			this.setChanged();
+			this.notifyObservers(this.stepCounter);
+
 			// Switch to PAUSE if we are STEPPING
 			if (this.getState() == RunnerState.STEPPING) {
 				this.setState(RunnerState.PAUSED);
-			}
-			else {
-				// Notify the observers
-				this.setChanged();
-				this.notifyObservers();
 			}
 		}
 
@@ -200,7 +198,6 @@ public abstract class Runner extends Observable implements Runnable {
 		switch (this.getState()) {
 			case RUNNING:
 			case STEPPING:
-			case STOPPED:
 				return true;
 			default:
 				break;

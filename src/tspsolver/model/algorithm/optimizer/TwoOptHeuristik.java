@@ -1,7 +1,6 @@
 package tspsolver.model.algorithm.optimizer;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Vector;
 
 import tspsolver.model.algorithm.OptimizerAlgorithm;
@@ -12,16 +11,14 @@ import tspsolver.model.scenario.path.PathUpdater;
 
 public class TwoOptHeuristik extends OptimizerAlgorithm {
 
-	private Vector<Node> nodesInOrder;
+	private final Vector<Node> nodesInOrder;
 
 	public TwoOptHeuristik() {
+		this.nodesInOrder = new Vector<Node>();
 	}
 
 	@Override
 	protected void doInitialize() {
-
-		this.nodesInOrder = new Vector<Node>();
-
 		// Get the node in line
 		Node currentNode = this.getStartingNode();
 
@@ -62,6 +59,7 @@ public class TwoOptHeuristik extends OptimizerAlgorithm {
 
 	@Override
 	protected void doReset() {
+		this.nodesInOrder.clear();
 	}
 
 	@Override
@@ -114,7 +112,7 @@ public class TwoOptHeuristik extends OptimizerAlgorithm {
 			newNodePath.add(this.nodesInOrder.get(j));
 		}
 
-		return convertNodesToPath(newNodePath);
+		return this.convertNodesToPath(newNodePath);
 	}
 
 	private Path convertNodesToPath(Vector<Node> nodePath) {

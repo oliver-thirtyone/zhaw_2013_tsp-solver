@@ -234,6 +234,8 @@ public class GridView extends JPanel implements Observer {
 	}
 
 	private synchronized void doUpdateScenario(Scenario scenario) {
+		System.out.println(">>> doUpdateScenario"); // TODO: REMOVE
+
 		// Clear the current grid
 		if (this.scenario != null) {
 			this.clearGrid();
@@ -272,9 +274,17 @@ public class GridView extends JPanel implements Observer {
 		if (startingNode != null) {
 			this.scenario.update(this.scenario, new StartingNodeUpdate(startingNode, StartingNodeUpdateAction.ADD_STARTING_NODE));
 		}
+
+		for (Edge edge : this.scenario.getPath().getEdges()) {
+			this.scenario.update(this.scenario, new PathUpdate(edge, PathUpdateAction.PATH_ELEMENT));
+		}
 	}
 
 	private void clearGrid() {
+		for (Edge edge : this.scenario.getPath().getEdges()) {
+			this.scenario.update(this.scenario, new PathUpdate(edge, PathUpdateAction.NON_PATH_ELEMENT));
+		}
+
 		Node startingNode = this.scenario.getStartingNode();
 		if (startingNode != null) {
 			this.scenario.update(this.scenario, new StartingNodeUpdate(startingNode, StartingNodeUpdateAction.REMOVE_STARTING_NODE));

@@ -24,7 +24,7 @@ import tspsolver.view.MainFrame;
 
 public class Launcher {
 
-	public static final int NUMBER_OF_ALGORITHM_RUNNERS = 1;
+	public static final int NUMBER_OF_ALGORITHM_RUNNERS = 2;
 	public static final String SCENARIO_DIRECTORY = "data/scenario";
 
 	public static void main(String[] args) {
@@ -58,8 +58,8 @@ public class Launcher {
 		Scenario[] scenarios = scenarioList.toArray(new Scenario[scenarioList.size()]);
 
 		// Create the algorithm runners
-		AlgorithmRunner[] algorithmRunners = new AlgorithmRunner[NUMBER_OF_ALGORITHM_RUNNERS];
-		for (int i = 0; i < NUMBER_OF_ALGORITHM_RUNNERS; i++) {
+		AlgorithmRunner[] algorithmRunners = new AlgorithmRunner[Launcher.NUMBER_OF_ALGORITHM_RUNNERS];
+		for (int i = 0; i < Launcher.NUMBER_OF_ALGORITHM_RUNNERS; i++) {
 			// Create the start-algorithms
 			StartAlgorithm[] startAlgorithms = new StartAlgorithm[4];
 			startAlgorithms[0] = new BruteForceAlgorithm();

@@ -31,7 +31,6 @@ public abstract class Algorithm {
 	}
 
 	public final synchronized void reset() {
-		System.out.println("Algorithm.reset()"); // TODO: REMOVE
 		if (this.getPathUpdater() != null) {
 			this.getPathUpdater().clearPath();
 			this.getPathUpdater().updatePath();
@@ -76,6 +75,7 @@ public abstract class Algorithm {
 
 	protected void finishedSuccessfully() {
 		this.finishedSuccessfully = true;
+		this.getPathUpdater().updatePath();
 	}
 
 	public Scenario getScenario() {

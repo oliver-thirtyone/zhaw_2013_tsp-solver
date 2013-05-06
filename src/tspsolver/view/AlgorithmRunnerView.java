@@ -35,7 +35,7 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 
 	private static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss:SSS");
 	{
-		TIME_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+		AlgorithmRunnerView.TIME_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
 
 	private final AlgorithmRunner algorithmRunner;
@@ -49,6 +49,18 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 
 	private final GridView gridView;
 
+	private final JLabel runnerStateLabel;
+	private final JTextField runnerState;
+
+	private final JLabel runningAlgorithmLabel;
+	private final JTextField runningAlgorithm;
+
+	private final JLabel timeElapsedLabel;
+	private final JTextField timeElapsed;
+
+	private final JLabel stepCounterLabel;
+	private final JTextField stepCounter;
+
 	private final JLabel finishedSuccessfullyLabel;
 	private final JTextField finishedSuccessfully;
 
@@ -59,12 +71,6 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 	private final JTextField numberOfEdges;
 	private final JLabel slashLabel;
 	private final JTextField numberOfNodes;
-
-	private final JLabel stepCounterLabel;
-	private final JTextField stepCounter;
-
-	private final JLabel timeElapsedLabel;
-	private final JTextField timeElapsed;
 
 	public AlgorithmRunnerView(AlgorithmRunner algorithmRunner) {
 		this.algorithmRunner = algorithmRunner;
@@ -98,10 +104,30 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 		this.gridView = new GridView();
 		this.gridView.setPreferredSize(new Dimension(GridView.MAP_SWITZERLAND_WIDTH, GridView.MAP_SWITZERLAND_HEIGHT));
 
+		// Runner state
+		this.runnerStateLabel = new JLabel("Runner state: ");
+		this.runnerState = new JTextField();
+		this.runnerState.setEditable(false);
+
+		// Running algorithm
+		this.runningAlgorithmLabel = new JLabel("Running algorithm: ");
+		this.runningAlgorithm = new JTextField();
+		this.runningAlgorithm.setEditable(false);
+
 		// Finished successfully
 		this.finishedSuccessfullyLabel = new JLabel("Finished successfully: ");
 		this.finishedSuccessfully = new JTextField();
 		this.finishedSuccessfully.setEditable(false);
+
+		// Step counter
+		this.stepCounterLabel = new JLabel("Step counter: ");
+		this.stepCounter = new JTextField();
+		this.stepCounter.setEditable(false);
+
+		// Elapsed time
+		this.timeElapsedLabel = new JLabel("Elapsed time: ");
+		this.timeElapsed = new JTextField();
+		this.timeElapsed.setEditable(false);
 
 		// Path weight
 		this.pathWeightLabel = new JLabel("Path weight: ");
@@ -115,16 +141,6 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 		this.slashLabel = new JLabel("/");
 		this.numberOfNodes = new JTextField();
 		this.numberOfNodes.setEditable(false);
-
-		// Step counter
-		this.stepCounterLabel = new JLabel("Step counter: ");
-		this.stepCounter = new JTextField();
-		this.stepCounter.setEditable(false);
-
-		// Elapsed time
-		this.timeElapsedLabel = new JLabel("Elapsed time: ");
-		this.timeElapsed = new JTextField();
-		this.timeElapsed.setEditable(false);
 
 		// Create the components
 		this.components();
@@ -148,26 +164,32 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 
 		this.layoutManager.setX(0).setY(0).addComponent(this.startAlgorithmLabel);
 		this.layoutManager.setX(0).setY(1).addComponent(this.optimizerAlgorithmLabel);
-		this.layoutManager.setX(0).setY(3).addComponent(this.finishedSuccessfullyLabel);
-		this.layoutManager.setX(0).setY(4).addComponent(this.pathWeightLabel);
-		this.layoutManager.setX(0).setY(5).addComponent(this.numberOfEdgesLabel);
+
+		this.layoutManager.setX(0).setY(3).addComponent(this.runnerStateLabel);
+		this.layoutManager.setX(0).setY(4).addComponent(this.runningAlgorithmLabel);
+		this.layoutManager.setX(0).setY(5).addComponent(this.timeElapsedLabel);
 		this.layoutManager.setX(0).setY(6).addComponent(this.stepCounterLabel);
-		this.layoutManager.setX(0).setY(7).addComponent(this.timeElapsedLabel);
-		this.layoutManager.setX(2).setY(5).addComponent(this.slashLabel);
+		this.layoutManager.setX(0).setY(7).addComponent(this.finishedSuccessfullyLabel);
+		this.layoutManager.setX(0).setY(8).addComponent(this.pathWeightLabel);
+		this.layoutManager.setX(0).setY(9).addComponent(this.numberOfEdgesLabel);
+		this.layoutManager.setX(2).setY(9).addComponent(this.slashLabel);
 
 		this.layoutManager.setWeightX(1.0);
 
-		this.layoutManager.setX(1).setY(5).addComponent(this.numberOfEdges);
-		this.layoutManager.setX(3).setY(5).addComponent(this.numberOfNodes);
+		this.layoutManager.setX(1).setY(9).addComponent(this.numberOfEdges);
+		this.layoutManager.setX(3).setY(9).addComponent(this.numberOfNodes);
 
 		this.layoutManager.setWidth(3);
 
 		this.layoutManager.setX(1).setY(0).addComponent(this.startAlgorithms);
 		this.layoutManager.setX(1).setY(1).addComponent(this.optimizerAlgorithms);
-		this.layoutManager.setX(1).setY(3).addComponent(this.finishedSuccessfully);
-		this.layoutManager.setX(1).setY(4).addComponent(this.pathWeight);
+
+		this.layoutManager.setX(1).setY(3).addComponent(this.runnerState);
+		this.layoutManager.setX(1).setY(4).addComponent(this.runningAlgorithm);
+		this.layoutManager.setX(1).setY(5).addComponent(this.timeElapsed);
 		this.layoutManager.setX(1).setY(6).addComponent(this.stepCounter);
-		this.layoutManager.setX(1).setY(7).addComponent(this.timeElapsed);
+		this.layoutManager.setX(1).setY(7).addComponent(this.finishedSuccessfully);
+		this.layoutManager.setX(1).setY(8).addComponent(this.pathWeight);
 
 		this.layoutManager.setWeightY(1.0).setWidth(4);
 		this.layoutManager.setFill(GridBagConstraints.BOTH);
@@ -194,11 +216,28 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 	}
 
 	private void doUpdate(Object argument) {
-		// The runner state changed
-		if (argument == null || argument instanceof RunnerState) {
-			// Update the comboboxes
-			this.startAlgorithms.setEnabled(this.algorithmRunner.canInitialize());
-			this.optimizerAlgorithms.setEnabled(this.algorithmRunner.canInitialize());
+		// TODO: REMOVE
+		if (argument != null) {
+			System.out.println("argument = " + argument.getClass());
+		}
+		else {
+			System.out.println("argument = null");
+		}
+
+		// The runner step-counter changed
+		if (argument == null || argument instanceof Long) {
+			// Update the runner statistics
+			this.timeElapsed.setText(AlgorithmRunnerView.TIME_FORMAT.format(new Date(this.algorithmRunner.getTimeElapsed())));
+			this.stepCounter.setText(String.valueOf(this.algorithmRunner.getStepCounter()));
+
+			// Update the algorithm statistics
+			Algorithm runningAlgorithm = this.algorithmRunner.getRunningAlgorithm();
+			if (runningAlgorithm != null) {
+				this.finishedSuccessfully.setText(String.valueOf(runningAlgorithm.hasFinishedSuccessfully()));
+			}
+			else {
+				this.finishedSuccessfully.setText(String.valueOf(false));
+			}
 
 			// Update the scenario statistics
 			Scenario scenario = this.algorithmRunner.getSelectedScenario();
@@ -210,24 +249,29 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 			}
 			else {
 				this.pathWeight.setText(String.valueOf(0.0));
+				this.numberOfEdges.setText(String.valueOf(0));
 			}
+		}
 
-			// Update the algorithm statistics
+		// The runner state changed
+		if (argument == null || argument instanceof RunnerState) {
+			// Update the comboboxes
+			this.startAlgorithms.setEnabled(this.algorithmRunner.canInitialize());
+			this.optimizerAlgorithms.setEnabled(this.algorithmRunner.canInitialize());
+
+			// Update the runner statistics
+			this.runnerState.setText(this.algorithmRunner.getState().toString());
+		}
+
+		// The running algorithm changed
+		if (argument == null || argument instanceof Algorithm) {
 			Algorithm runningAlgorithm = this.algorithmRunner.getRunningAlgorithm();
 			if (runningAlgorithm != null) {
-				this.finishedSuccessfully.setText(String.valueOf(runningAlgorithm.hasFinishedSuccessfully()));
-
+				this.runningAlgorithm.setText(runningAlgorithm.toString());
 			}
 			else {
-				this.finishedSuccessfully.setText(String.valueOf(false));
+				this.runningAlgorithm.setText("");
 			}
-
-			// Update the algorithm-runner statistics
-			this.stepCounter.setText(String.valueOf(algorithmRunner.getStepCounter()));
-			Date date = new Date(algorithmRunner.getTimeElapsed());
-			this.timeElapsed.setText(TIME_FORMAT.format(date));
-
-			// TODO: textfield which algorithem and the state
 		}
 
 		// The scenario changed
@@ -238,7 +282,6 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 			if (scenario != null) {
 				Grid grid = scenario.getGrid();
 				this.numberOfNodes.setText(String.valueOf(grid.getNumberOfNodes()));
-
 			}
 			else {
 				this.numberOfNodes.setText(String.valueOf(0));
@@ -249,8 +292,10 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 
 	@Override
 	public void update(Observable observable, final Object argument) {
-		if (observable != this.algorithmRunner)
+		if (observable != this.algorithmRunner) {
+			System.out.println("THIS SHOULD NEVE HAPPEN");
 			return;
+		}
 
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
