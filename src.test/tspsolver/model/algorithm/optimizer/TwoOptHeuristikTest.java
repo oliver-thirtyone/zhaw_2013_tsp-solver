@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import tspsolver.model.Scenario;
+import tspsolver.model.algorithm.OptimizerAlgorithm;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.GridFactory;
@@ -31,7 +32,7 @@ public class TwoOptHeuristikTest {
 	private Edge edgeEastWest;
 	private Edge edgeSouthWest;
 
-	private AOptimizerAlgorithm algorithm;
+	private OptimizerAlgorithm algorithm;
 
 	@Before
 	public void setUp() {
@@ -44,11 +45,12 @@ public class TwoOptHeuristikTest {
 		this.nodeSouth = GridFactory.createNode(1, 3);
 		this.nodeWest = GridFactory.createNode(2, 4);
 
-		this.grid.addNode(this.nodeNorth);
-		this.grid.addNode(this.nodeEast);
-		this.grid.addNode(this.nodeSouth);
-		this.grid.addNode(this.nodeWest);
-		this.scenario.setStartingNode(this.nodeNorth);
+		GridFactory.addNode(this.grid, this.nodeNorth);
+		GridFactory.addNode(this.grid, this.nodeEast);
+		GridFactory.addNode(this.grid, this.nodeSouth);
+		GridFactory.addNode(this.grid, this.nodeWest);
+
+		this.scenario.setStartingNode(nodeNorth);
 
 		this.edgeNorthEast = GridFactory.getEdge(this.nodeNorth, this.nodeEast);
 		this.edgeNorthSouth = GridFactory.getEdge(this.nodeNorth, this.nodeSouth);
@@ -57,7 +59,7 @@ public class TwoOptHeuristikTest {
 		this.edgeEastWest = GridFactory.getEdge(this.nodeEast, this.nodeWest);
 		this.edgeSouthWest = GridFactory.getEdge(this.nodeSouth, this.nodeWest);
 
-		this.algorithm = new TwoOptHeuristik(this.scenario);
+		this.algorithm = new TwoOptHeuristik();
 	}
 
 	@Test
@@ -73,8 +75,8 @@ public class TwoOptHeuristikTest {
 		// Make sure that we can not take a step yet
 		Assert.assertFalse(this.algorithm.step());
 
-		// Validate the arguments
-		this.algorithm.validateArguments();
+		// Initialize the algorithm
+		this.algorithm.initialize(this.scenario);
 		Assert.assertTrue(this.algorithm.hasValidArguments());
 
 		// Step through the algorithm

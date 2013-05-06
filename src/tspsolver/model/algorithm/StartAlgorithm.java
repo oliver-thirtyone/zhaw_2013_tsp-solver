@@ -1,17 +1,11 @@
-package tspsolver.model.algorithm.start;
+package tspsolver.model.algorithm;
 
-import tspsolver.model.Scenario;
-import tspsolver.model.algorithm.Algorithm;
 import tspsolver.model.grid.Node;
 
-public abstract class AStartAlgorithm extends Algorithm {
-
-	public AStartAlgorithm(Scenario scenario) {
-		super(scenario);
-	}
+public abstract class StartAlgorithm extends Algorithm {
 
 	@Override
-	public final void validateArguments() {
+	public final synchronized void validateArguments() {
 		boolean validArguments = true;
 
 		if (this.getStartingNode() == null) {
@@ -36,8 +30,6 @@ public abstract class AStartAlgorithm extends Algorithm {
 				break;
 			}
 		}
-
-		// TODO: further validations...
 
 		this.setValidArguments(validArguments);
 	}

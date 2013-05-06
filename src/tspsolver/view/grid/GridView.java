@@ -11,17 +11,22 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
 
 import tspsolver.model.Scenario;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Node;
 import tspsolver.model.updates.EdgeUpdate;
+import tspsolver.model.updates.EdgeUpdateAction;
 import tspsolver.model.updates.NodeUpdate;
+import tspsolver.model.updates.NodeUpdateAction;
 import tspsolver.model.updates.PathUpdate;
+import tspsolver.model.updates.PathUpdateAction;
 import tspsolver.model.updates.StartingNodeUpdate;
-import tspsolver.model.updates.UpdateAction;
+import tspsolver.model.updates.StartingNodeUpdateAction;
 
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.SVGDiagram;
@@ -30,22 +35,24 @@ import com.kitfox.svg.app.beans.SVGIcon;
 
 public class GridView extends JPanel implements Observer {
 
+	public static final int MAP_SWITZERLAND_WIDTH = 500;
+	public static final int MAP_SWITZERLAND_HEIGHT = 320;
+
 	public static final String DATA_MAP_SWITZERLAND = "data/map/switzerland_simple.svg";
 	public static final String SVG_GROUP_NODES = "tspsolver.nodes";
 	public static final String SVG_GROUP_EDGES = "tspsolver.edges";
 
 	private static final long serialVersionUID = -5210001067574218993L;
 
-	private final Scenario scenario;
 	private final SVGDiagram svgDiagram;
 	private final SVGIcon svgIcon;
 
 	private final Map<Node, NodeView> nodeViews;
 	private final Map<Edge, EdgeView> edgeViews;
 
-	public GridView(Scenario scenario) {
-		this.scenario = scenario;
+	private Scenario scenario;
 
+	public GridView() {
 		URI svgURI = null;
 		try {
 			InputStream svgImage = new FileInputStream(GridView.DATA_MAP_SWITZERLAND);
@@ -60,32 +67,33 @@ public class GridView extends JPanel implements Observer {
 		this.svgIcon = new SVGIcon();
 		this.svgIcon.setSvgURI(svgURI);
 		this.svgIcon.setAntiAlias(true);
+		this.svgIcon.setPreferredSize(new Dimension(MAP_SWITZERLAND_WIDTH, MAP_SWITZERLAND_HEIGHT));
+		this.svgIcon.setScaleToFit(true);
 
 		this.nodeViews = new HashMap<Node, NodeView>();
 		this.edgeViews = new HashMap<Edge, EdgeView>();
 
-		// Observe the scenario
-		this.scenario.addObserver(this);
+		// Create the titled border
+		TitledBorder titledBorder = BorderFactory.createTitledBorder("");
+		titledBorder.setTitlePosition(TitledBorder.ABOVE_TOP);
+		this.setBorder(titledBorder);
 	}
 
 	@Override
 	public void paintComponent(Graphics graphics) {
 		super.paintComponent(graphics);
-
-		this.svgIcon.setPreferredSize(new Dimension(600, 385));
-		this.svgIcon.setScaleToFit(true);
 		this.svgIcon.paintIcon(this, graphics, 0, 0);
-
-		// Paint the grid
-		this.paintGrid(this.scenario);
 	}
 
 	@Override
 	public void update(Observable observable, Object argument) {
+		// TODO: REMOVE DEBUG OUTPUT
+		System.out.println("GridView.update(" + observable + ", " + argument + ") ");
+
 		// Starting node updates
 		if (argument instanceof StartingNodeUpdate) {
-			NodeUpdate update = (StartingNodeUpdate) argument;
-			UpdateAction action = update.getAction();
+			StartingNodeUpdate update = (StartingNodeUpdate) argument;
+			StartingNodeUpdateAction action = update.getAction();
 
 			Node node = update.getNode();
 			NodeView nodeView = this.nodeViews.get(node);
@@ -107,7 +115,7 @@ public class GridView extends JPanel implements Observer {
 		// Node updates
 		else if (argument instanceof NodeUpdate) {
 			NodeUpdate update = (NodeUpdate) argument;
-			UpdateAction action = update.getAction();
+			NodeUpdateAction action = update.getAction();
 
 			Node node = update.getNode();
 			NodeView nodeView = null;
@@ -135,7 +143,7 @@ public class GridView extends JPanel implements Observer {
 		// Path updates
 		else if (argument instanceof PathUpdate) {
 			PathUpdate update = (PathUpdate) argument;
-			UpdateAction action = update.getAction();
+			PathUpdateAction action = update.getAction();
 
 			Edge edge = update.getEdge();
 			EdgeView edgeView = this.edgeViews.get(edge);
@@ -163,7 +171,7 @@ public class GridView extends JPanel implements Observer {
 		// Edge updates
 		else if (argument instanceof EdgeUpdate) {
 			EdgeUpdate update = (EdgeUpdate) argument;
-			UpdateAction action = update.getAction();
+			EdgeUpdateAction action = update.getAction();
 
 			Edge edge = update.getEdge();
 			EdgeView edgeView = null;
@@ -197,22 +205,20 @@ public class GridView extends JPanel implements Observer {
 		}
 	}
 
-	protected SVGDiagram getSVGDiagram() {
-		return this.svgDiagram;
-	}
-
-	private void paintGrid(Scenario scenario) {
-		for (Node node : scenario.getGrid().getNodes()) {
-			scenario.update(scenario, new NodeUpdate(node, UpdateAction.ADD_NODE));
-
-			for (Edge edge : node.getEdges()) {
-				scenario.update(scenario, new EdgeUpdate(edge, UpdateAction.ADD_EDGE));
-			}
+	public synchronized void updateScenario(Scenario scenario) {
+		// Clear the current grid
+		if (this.scenario != null) {
+			this.clearGrid();
+			this.scenario.deleteObserver(this);
 		}
 
-		Node node = scenario.getStartingNode();
-		if (node != null) {
-			scenario.update(scenario, new StartingNodeUpdate(node, UpdateAction.ADD_STARTING_NODE));
+		// Update the scenario
+		this.scenario = scenario;
+
+		// Paint the new grid
+		if (this.scenario != null) {
+			this.scenario.addObserver(this);
+			this.paintGrid();
 		}
 
 		// Update the diagram
@@ -221,6 +227,40 @@ public class GridView extends JPanel implements Observer {
 			this.repaint();
 		} catch (SVGException exception) {
 			exception.printStackTrace();
+		}
+	}
+
+	protected SVGDiagram getSVGDiagram() {
+		return this.svgDiagram;
+	}
+
+	private void paintGrid() {
+		for (Node node : this.scenario.getGrid().getNodes()) {
+			for (Edge edge : node.getEdges()) {
+				this.scenario.update(this.scenario, new EdgeUpdate(edge, EdgeUpdateAction.ADD_EDGE));
+			}
+
+			this.scenario.update(this.scenario, new NodeUpdate(node, NodeUpdateAction.ADD_NODE));
+		}
+
+		Node startingNode = this.scenario.getStartingNode();
+		if (startingNode != null) {
+			this.scenario.update(this.scenario, new StartingNodeUpdate(startingNode, StartingNodeUpdateAction.ADD_STARTING_NODE));
+		}
+	}
+
+	private void clearGrid() {
+		Node startingNode = this.scenario.getStartingNode();
+		if (startingNode != null) {
+			this.scenario.update(this.scenario, new StartingNodeUpdate(startingNode, StartingNodeUpdateAction.REMOVE_STARTING_NODE));
+		}
+
+		for (Node node : this.scenario.getGrid().getNodes()) {
+			this.scenario.update(this.scenario, new NodeUpdate(node, NodeUpdateAction.REMOVE_NODE));
+
+			for (Edge edge : node.getEdges()) {
+				this.scenario.update(this.scenario, new EdgeUpdate(edge, EdgeUpdateAction.REMOVE_EDGE));
+			}
 		}
 	}
 }

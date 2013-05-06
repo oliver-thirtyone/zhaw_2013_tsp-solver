@@ -7,11 +7,19 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import tspsolver.controller.runner.AlgorithmRunner;
-import tspsolver.controller.runner.MainRunner;
+import tspsolver.controller.AlgorithmRunner;
+import tspsolver.controller.Controller;
 import tspsolver.controller.scenario.IScenarioLoader;
 import tspsolver.controller.scenario.xml.XMLScenarioLoader;
 import tspsolver.model.Scenario;
+import tspsolver.model.algorithm.OptimizerAlgorithm;
+import tspsolver.model.algorithm.StartAlgorithm;
+import tspsolver.model.algorithm.optimizer.LinKernighanHeuristik;
+import tspsolver.model.algorithm.optimizer.TwoOptHeuristik;
+import tspsolver.model.algorithm.start.BruteForceAlgorithm;
+import tspsolver.model.algorithm.start.MinimumSpanningTreeHeuristik;
+import tspsolver.model.algorithm.start.NearestNeighborHeuristik;
+import tspsolver.model.algorithm.start.RandomAlgorithm;
 import tspsolver.view.MainFrame;
 
 public class Launcher {
@@ -30,7 +38,7 @@ public class Launcher {
 		}
 
 		// Create the scenarios
-		List<Scenario> scenarios = new ArrayList<Scenario>();
+		List<Scenario> scenarioList = new ArrayList<Scenario>();
 		for (File scenarioFile : scenarioDirectory.listFiles()) {
 			if (scenarioFile.isDirectory()) {
 				continue;
@@ -38,26 +46,38 @@ public class Launcher {
 			try {
 				InputStream inputStream = new FileInputStream(scenarioFile);
 				Scenario scenario = scenarioLoader.loadScenario(inputStream);
-				scenarios.add(scenario);
+				scenarioList.add(scenario);
 			} catch (IllegalArgumentException exception) {
 				exception.printStackTrace();
 			} catch (FileNotFoundException exception) {
 				exception.printStackTrace();
 			}
 		}
+		Scenario[] scenarios = scenarioList.toArray(new Scenario[scenarioList.size()]);
 
 		// Create the algorithm runners
-		List<AlgorithmRunner> algorithmRunners = new ArrayList<AlgorithmRunner>();
+		AlgorithmRunner[] algorithmRunners = new AlgorithmRunner[NUMBER_OF_ALGORITHM_RUNNERS];
 		for (int i = 0; i < NUMBER_OF_ALGORITHM_RUNNERS; i++) {
-			algorithmRunners.add(new AlgorithmRunner());
+			// Create the start-algorithms
+			StartAlgorithm[] startAlgorithms = new StartAlgorithm[4];
+			startAlgorithms[0] = new BruteForceAlgorithm();
+			startAlgorithms[1] = new NearestNeighborHeuristik();
+			startAlgorithms[2] = new MinimumSpanningTreeHeuristik();
+			startAlgorithms[3] = new RandomAlgorithm();
+
+			// Create the optimizer-algorithms
+			OptimizerAlgorithm[] optimizerAlgorithms = new OptimizerAlgorithm[2];
+			optimizerAlgorithms[0] = new TwoOptHeuristik();
+			optimizerAlgorithms[1] = new LinKernighanHeuristik();
+
+			algorithmRunners[i] = new AlgorithmRunner(startAlgorithms, optimizerAlgorithms);
 		}
 
 		// Create the main runner
-		Scenario[] scenarioArray = scenarios.toArray(new Scenario[scenarios.size()]);
-		AlgorithmRunner[] algorithmRunnerArray = algorithmRunners.toArray(new AlgorithmRunner[algorithmRunners.size()]);
-		MainRunner mainRunner = new MainRunner(scenarioArray, algorithmRunnerArray);
+		Controller controller = new Controller(scenarios, algorithmRunners);
 
-		MainFrame mainFrame = new MainFrame(mainRunner);
+		// Create the main view
+		MainFrame mainFrame = new MainFrame(controller);
 		mainFrame.setVisible(true);
 	}
 }

@@ -3,35 +3,41 @@ package tspsolver.model.algorithm.optimizer;
 import java.util.List;
 import java.util.Vector;
 
-import tspsolver.model.Scenario;
+import tspsolver.model.algorithm.OptimizerAlgorithm;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.path.Path;
 import tspsolver.model.path.PathUpdater;
 
-public class TwoOptHeuristik extends AOptimizerAlgorithm {
+public class TwoOptHeuristik extends OptimizerAlgorithm {
 
 	private final List<Edge> orderlyPath;
 
 	private int i;
 	private int k;
 
-	public TwoOptHeuristik(Scenario scenario) {
-		super(scenario);
-
+	public TwoOptHeuristik() {
 		this.orderlyPath = new Vector<Edge>();
 		this.reset();
 	}
 
 	@Override
-	protected boolean doStep() {
+	protected void doInitialize() {
 
-		// Initialize
-		if (i == 0 && k == 1 && orderlyPath.isEmpty()) {
-			for (Edge edge : this.getPath().getEdges()) {
-				this.orderlyPath.add(edge);
-			}
+		for (Edge edge : this.getPath().getEdges()) {
+			this.orderlyPath.add(edge);
 		}
+	}
 
+	@Override
+	protected void doReset() {
+		this.orderlyPath.clear();
+
+		this.i = 0;
+		this.k = 1;
+	}
+
+	@Override
+	protected boolean doStep() {
 		if (i < this.getPath().getNumberOfEdges()) {
 			// Create the new path
 			List<Edge> newOrderlyPath = this.createNewOrderlyPath();
@@ -94,12 +100,4 @@ public class TwoOptHeuristik extends AOptimizerAlgorithm {
 		return newPath;
 	}
 
-	@Override
-	public void reset() {
-		super.reset();
-
-		this.orderlyPath.clear();
-		this.i = 0;
-		this.k = 1;
-	}
 }

@@ -7,12 +7,12 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import tspsolver.model.Scenario;
+import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Node;
 import tspsolver.model.grid.comparators.EdgeWeightComparator;
 
-public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
+public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 	private enum Phase {
 		CREATE_SPANNING_TREE, DO_EULERIAN_TRAIL
@@ -20,17 +20,42 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 
 	private Phase phase;
 
-	private Vector<Edge> spanningTreeEdges;
-	private Set<Node> spanningTreeNodes;
-	private TreeSet<Edge> spanningTreePossibleEdges;
+	private final Vector<Edge> spanningTreeEdges;
+	private final Set<Node> spanningTreeNodes;
+	private final TreeSet<Edge> spanningTreePossibleEdges;
 
 	private Node currentNode;
 	private Stack<Node> brancheNodes;
 
-	public MinimumSpanningTreeHeuristik(Scenario scenario) {
-		super(scenario);
+	public MinimumSpanningTreeHeuristik() {
+		this.spanningTreeEdges = new Vector<Edge>();
+		this.spanningTreeNodes = new HashSet<Node>();
 
-		this.initSpanningTree();
+		this.spanningTreePossibleEdges = new TreeSet<Edge>(new EdgeWeightComparator());
+
+		this.reset();
+	}
+
+	@Override
+	protected void doInitialize() {
+		this.spanningTreeNodes.add(this.getStartingNode());
+
+		// Sort all possible edges by weight
+		for (Edge edge : this.getStartingNode().getEdges()) {
+			this.spanningTreePossibleEdges.add(edge);
+		}
+
+		this.phase = Phase.CREATE_SPANNING_TREE;
+	}
+
+	@Override
+	protected void doReset() {
+		this.spanningTreeNodes.clear();
+		this.spanningTreeEdges.clear();
+
+		this.spanningTreePossibleEdges.clear();
+
+		this.phase = null;
 	}
 
 	@Override
@@ -47,22 +72,6 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 			throw new NotImplementedException();
 		}
 
-	}
-
-	private void initSpanningTree() {
-
-		this.spanningTreeEdges = new Vector<Edge>();
-
-		this.spanningTreeNodes = new HashSet<Node>();
-		this.spanningTreeNodes.add(this.getStartingNode());
-
-		// Sort all possible edges by weight
-		this.spanningTreePossibleEdges = new TreeSet<Edge>(new EdgeWeightComparator());
-		for (Edge edge : this.getStartingNode().getEdges()) {
-			this.spanningTreePossibleEdges.add(edge);
-		}
-
-		this.phase = Phase.CREATE_SPANNING_TREE;
 	}
 
 	private boolean doStepCreateSpanningTree() {
@@ -217,9 +226,11 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 				this.getPathUpdater().updatePath();
 				return true;
 
-			} else if (i >= spanningTreeEdges.size()) {
+			} else if (i < spanningTreeEdges.size()) {
 				// A leaf from the spanning tree
 				// Nothing happen to the path, so recall the step.
+
+				// FIXME: Remove the recursion
 				return doStepEulerianTrail();
 			} else {
 				i++;

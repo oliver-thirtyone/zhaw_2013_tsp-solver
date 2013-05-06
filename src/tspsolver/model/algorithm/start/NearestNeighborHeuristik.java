@@ -3,25 +3,34 @@ package tspsolver.model.algorithm.start;
 import java.util.HashSet;
 import java.util.Set;
 
-import tspsolver.model.Scenario;
+import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Node;
 
-public class NearestNeighborHeuristik extends AStartAlgorithm {
+public class NearestNeighborHeuristik extends StartAlgorithm {
 
 	private final Set<Node> nodesToVisit;
 
 	private Node currentNode;
 
-	public NearestNeighborHeuristik(Scenario scenario) {
-		super(scenario);
-
+	public NearestNeighborHeuristik() {
 		this.nodesToVisit = new HashSet<Node>();
+
+		this.reset();
+	}
+
+	@Override
+	protected void doInitialize() {
 		for (Node node : this.getGrid().getNodes()) {
 			this.nodesToVisit.add(node);
 		}
+		this.setCurrentNode(this.getStartingNode());
+	}
 
-		this.reset();
+	@Override
+	protected void doReset() {
+		this.nodesToVisit.clear();
+		this.setCurrentNode(null);
 	}
 
 	@Override
@@ -92,18 +101,6 @@ public class NearestNeighborHeuristik extends AStartAlgorithm {
 
 		this.getPathUpdater().updatePath();
 		return successfulStep;
-	}
-
-	@Override
-	public void reset() {
-		super.reset();
-
-		this.nodesToVisit.clear();
-		for (Node node : this.getGrid().getNodes()) {
-			this.nodesToVisit.add(node);
-		}
-
-		this.setCurrentNode(this.getStartingNode());
 	}
 
 	public Node getCurrentNode() {

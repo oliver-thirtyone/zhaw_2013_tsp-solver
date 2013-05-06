@@ -1,21 +1,15 @@
-package tspsolver.model.algorithm.optimizer;
+package tspsolver.model.algorithm;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import tspsolver.model.Scenario;
-import tspsolver.model.algorithm.Algorithm;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Node;
 
-public abstract class AOptimizerAlgorithm extends Algorithm {
-
-	public AOptimizerAlgorithm(Scenario scenario) {
-		super(scenario);
-	}
+public abstract class OptimizerAlgorithm extends Algorithm {
 
 	@Override
-	public final void validateArguments() {
+	public final synchronized void validateArguments() {
 		boolean validArguments = true;
 
 		// Add each node twice, because each node must touch exactly two edges

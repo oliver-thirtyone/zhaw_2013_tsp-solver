@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import tspsolver.model.Scenario;
+import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.GridFactory;
@@ -30,7 +31,7 @@ public class MinimumSpanningTreeHeuristikTest {
 	private Edge edgeEastWest;
 	private Edge edgeSouthWest;
 
-	private AStartAlgorithm algorithm;
+	private StartAlgorithm algorithm;
 
 	@Before
 	public void setUp() {
@@ -43,10 +44,11 @@ public class MinimumSpanningTreeHeuristikTest {
 		this.nodeSouth = GridFactory.createNode(1, 3);
 		this.nodeWest = GridFactory.createNode(2, 4);
 
-		this.grid.addNode(this.nodeNorth);
-		this.grid.addNode(this.nodeEast);
-		this.grid.addNode(this.nodeSouth);
-		this.grid.addNode(this.nodeWest);
+		GridFactory.addNode(this.grid, this.nodeNorth);
+		GridFactory.addNode(this.grid, this.nodeEast);
+		GridFactory.addNode(this.grid, this.nodeSouth);
+		GridFactory.addNode(this.grid, this.nodeWest);
+
 		this.scenario.setStartingNode(nodeNorth);
 
 		this.edgeNorthEast = GridFactory.getEdge(this.nodeNorth, this.nodeEast);
@@ -56,7 +58,7 @@ public class MinimumSpanningTreeHeuristikTest {
 		this.edgeEastWest = GridFactory.getEdge(this.nodeEast, this.nodeWest);
 		this.edgeSouthWest = GridFactory.getEdge(this.nodeSouth, this.nodeWest);
 
-		this.algorithm = new MinimumSpanningTreeHeuristik(this.scenario);
+		this.algorithm = new MinimumSpanningTreeHeuristik();
 	}
 
 	@Test
@@ -64,8 +66,8 @@ public class MinimumSpanningTreeHeuristikTest {
 		// Make sure that we can not take a step yet
 		Assert.assertFalse(this.algorithm.step());
 
-		// Validate the arguments
-		this.algorithm.validateArguments();
+		// Initialize the algorithm
+		this.algorithm.initialize(this.scenario);
 		Assert.assertTrue(this.algorithm.hasValidArguments());
 
 		// Step through the algorithm

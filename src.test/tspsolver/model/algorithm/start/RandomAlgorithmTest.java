@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import tspsolver.model.Scenario;
+import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.GridFactory;
 import tspsolver.model.grid.Node;
@@ -27,7 +28,7 @@ public class RandomAlgorithmTest {
 
 	private Set<Node> nodes;
 
-	private AStartAlgorithm algorithm;
+	private StartAlgorithm algorithm;
 
 	@Before
 	public void setUp() {
@@ -46,13 +47,14 @@ public class RandomAlgorithmTest {
 		this.nodes.add(this.nodeSouth);
 		this.nodes.add(this.nodeWest);
 
-		this.grid.addNode(this.nodeNorth);
-		this.grid.addNode(this.nodeEast);
-		this.grid.addNode(this.nodeSouth);
-		this.grid.addNode(this.nodeWest);
-		this.scenario.setStartingNode(this.nodeNorth);
+		GridFactory.addNode(this.grid, this.nodeNorth);
+		GridFactory.addNode(this.grid, this.nodeEast);
+		GridFactory.addNode(this.grid, this.nodeSouth);
+		GridFactory.addNode(this.grid, this.nodeWest);
 
-		this.algorithm = new RandomAlgorithm(this.scenario);
+		this.scenario.setStartingNode(nodeNorth);
+
+		this.algorithm = new RandomAlgorithm();
 	}
 
 	@Test
@@ -60,8 +62,8 @@ public class RandomAlgorithmTest {
 		// Make sure that we can not take a step yet
 		Assert.assertFalse(this.algorithm.step());
 
-		// Validate the arguments
-		this.algorithm.validateArguments();
+		// Initialize the algorithm
+		this.algorithm.initialize(this.scenario);
 		Assert.assertTrue(this.algorithm.hasValidArguments());
 
 		// Step through the algorithm

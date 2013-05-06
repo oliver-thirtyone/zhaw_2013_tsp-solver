@@ -1,15 +1,18 @@
 package tspsolver.model.grid;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
+import tspsolver.model.updates.EdgeUpdateAction;
 import tspsolver.model.updates.EdgeUpdate;
-import tspsolver.model.updates.UpdateAction;
 
-public class Node extends Observable implements Observer {
+public class Node extends Observable implements Serializable, Observer {
+
+	private static final long serialVersionUID = -5593471052000934706L;
 
 	private final int x;
 	private final int y;
@@ -148,7 +151,7 @@ public class Node extends Observable implements Observer {
 		edge.addObserver(this);
 
 		this.edges.put(toNode, edge);
-		this.fireEdgeUpdate(edge, UpdateAction.ADD_EDGE);
+		this.fireEdgeUpdate(edge, EdgeUpdateAction.ADD_EDGE);
 	}
 
 	private void removeEdge(Node toNode) {
@@ -156,10 +159,10 @@ public class Node extends Observable implements Observer {
 		edge.deleteObserver(this);
 
 		this.edges.remove(toNode);
-		this.fireEdgeUpdate(edge, UpdateAction.REMOVE_EDGE);
+		this.fireEdgeUpdate(edge, EdgeUpdateAction.REMOVE_EDGE);
 	}
 
-	private void fireEdgeUpdate(Edge edge, UpdateAction action) {
+	private void fireEdgeUpdate(Edge edge, EdgeUpdateAction action) {
 		EdgeUpdate update = new EdgeUpdate(edge, action);
 
 		this.setChanged();

@@ -6,12 +6,13 @@ import java.io.InputStream;
 
 import javax.swing.JFrame;
 
-import tspsolver.controller.runner.AlgorithmRunner;
+import tspsolver.controller.AlgorithmRunner;
 import tspsolver.controller.scenario.xml.XMLScenarioLoader;
 import tspsolver.model.Scenario;
-import tspsolver.model.algorithm.start.AStartAlgorithm;
+import tspsolver.model.algorithm.OptimizerAlgorithm;
+import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.algorithm.start.NearestNeighborHeuristik;
-import tspsolver.util.LayoutManager;
+import tspsolver.util.view.layout.LayoutManager;
 
 public class TestGridView extends JFrame {
 
@@ -26,7 +27,8 @@ public class TestGridView extends JFrame {
 
 		this.layoutManager = new LayoutManager(this.getContentPane());
 
-		this.gridView = new GridView(scenario);
+		this.gridView = new GridView();
+		this.gridView.updateScenario(scenario);
 
 		this.components();
 		this.pack();
@@ -54,9 +56,12 @@ public class TestGridView extends JFrame {
 		testGridView.setVisible(true);
 
 		// Run an algorithm
-		AStartAlgorithm algorithm = new NearestNeighborHeuristik(scenario);
-		AlgorithmRunner runner = new AlgorithmRunner();
-		runner.setStartAlgorithm(algorithm);
+		StartAlgorithm algorithm = new NearestNeighborHeuristik();
+		AlgorithmRunner runner = new AlgorithmRunner(new StartAlgorithm[] { algorithm }, new OptimizerAlgorithm[] {});
+
+		runner.setSelectedScenario(scenario);
+		runner.setSelectedStartAlgorithm(algorithm);
+
 		runner.initialize(2000); // Initialize the runner with a "2 seconds"-step delay
 		runner.start();
 	}

@@ -1,10 +1,11 @@
-package tspsolver.controller.runner;
+package tspsolver.util.runner;
 
 import java.util.Observable;
 
-public abstract class ARunner extends Observable implements Runnable {
+public abstract class Runner extends Observable implements Runnable {
 
-	public final static Integer PAUSE_SLEEP_MILLISECONDS = 300;
+	public final static int DEFAULT_STEP_DELAY = 0;
+	public final static int PAUSE_SLEEP_MILLISECONDS = 300;
 
 	private Thread thread;
 	private RunnerState state;
@@ -15,7 +16,7 @@ public abstract class ARunner extends Observable implements Runnable {
 	private int stepDelay;
 	private long stepCounter;
 
-	public ARunner() {
+	public Runner() {
 		this.thread = null;
 		this.state = RunnerState.NOT_READY;
 
@@ -26,11 +27,11 @@ public abstract class ARunner extends Observable implements Runnable {
 		this.stepCounter = 0;
 	}
 
-	protected abstract boolean doStep();
+	protected abstract boolean doInitialize();
 
 	protected abstract boolean doReset();
 
-	protected abstract boolean doInitialize();
+	protected abstract boolean doStep();
 
 	@Override
 	public final void run() {
@@ -38,10 +39,10 @@ public abstract class ARunner extends Observable implements Runnable {
 
 		while (this.isRunning()) {
 
-			// Sleep and continue if we are paused
+			// Sleep and continue if we are PAUSED
 			if (this.getState() == RunnerState.PAUSED) {
 				try {
-					Thread.sleep(ARunner.PAUSE_SLEEP_MILLISECONDS);
+					Thread.sleep(Runner.PAUSE_SLEEP_MILLISECONDS);
 				} catch (InterruptedException exception) {
 					exception.printStackTrace();
 				}
@@ -49,7 +50,7 @@ public abstract class ARunner extends Observable implements Runnable {
 			}
 
 			// Sleep between the steps to create a delay
-			if (this.getStepDelay() != 0) {
+			if (this.getStepDelay() > 0) {
 				try {
 					Thread.sleep(this.getStepDelay());
 				} catch (InterruptedException exception) {
@@ -62,12 +63,48 @@ public abstract class ARunner extends Observable implements Runnable {
 				this.stepCounter++;
 			}
 
-			// Notify the observers
-			this.setChanged();
-			this.notifyObservers();
+			// Switch to PAUSE if we are STEPPING
+			if (this.getState() == RunnerState.STEPPING) {
+				this.setState(RunnerState.PAUSED);
+			} else {
+				// Notify the observers
+				this.setChanged();
+				this.notifyObservers();
+			}
 		}
 
 		this.timeStopped = System.nanoTime();
+	}
+
+	public synchronized boolean canInitialize() {
+		switch (this.getState()) {
+		case NOT_READY:
+			return true;
+		default:
+			break;
+		}
+
+		return false;
+	}
+
+	public synchronized boolean initialize() {
+		return this.initialize(0);
+	}
+
+	public synchronized boolean initialize(int stepDelay) {
+		boolean successful = false;
+
+		if (this.canInitialize()) {
+			if (this.doInitialize()) {
+				this.thread = new Thread(this);
+
+				this.stepDelay = stepDelay;
+				this.setState(RunnerState.READY);
+				successful = true;
+			}
+		}
+
+		return successful;
 	}
 
 	public final synchronized boolean canReset() {
@@ -96,37 +133,6 @@ public abstract class ARunner extends Observable implements Runnable {
 				this.stepCounter = 0;
 
 				this.setState(RunnerState.NOT_READY);
-				successful = true;
-			}
-		}
-
-		return successful;
-	}
-
-	public synchronized boolean canInitialize() {
-		switch (this.getState()) {
-		case NOT_READY:
-			return true;
-		default:
-			break;
-		}
-
-		return false;
-	}
-
-	public synchronized boolean initialize() {
-		return this.initialize(0);
-	}
-
-	public synchronized boolean initialize(int stepDelay) {
-		boolean successful = false;
-
-		if (this.canInitialize()) {
-			if (this.doInitialize()) {
-				this.thread = new Thread(this);
-
-				this.stepDelay = stepDelay;
-				this.setState(RunnerState.READY);
 				successful = true;
 			}
 		}
@@ -190,6 +196,7 @@ public abstract class ARunner extends Observable implements Runnable {
 		switch (this.getState()) {
 		case RUNNING:
 		case STEPPING:
+		case STOPPED:
 			return true;
 		default:
 			break;
@@ -237,17 +244,17 @@ public abstract class ARunner extends Observable implements Runnable {
 		return this.state;
 	}
 
-	protected final synchronized void setState(RunnerState mode) {
-		if (this.state == mode) {
+	protected final synchronized void setState(RunnerState state) {
+		if (this.state == state) {
 			return;
 		}
 
-		this.state = mode;
+		this.state = state;
 		this.setChanged();
 		this.notifyObservers(this.state);
 	}
 
-	public long getTimeElapsed() {
+	public final synchronized long getTimeElapsed() {
 		long timeCurrent = System.nanoTime();
 
 		long timeStarted = this.timeStarted != 0 ? this.timeStarted : timeCurrent;
@@ -256,15 +263,16 @@ public abstract class ARunner extends Observable implements Runnable {
 		return timeStopped - timeStarted;
 	}
 
-	public final int getStepDelay() {
+	public final synchronized int getStepDelay() {
 		return this.stepDelay;
 	}
 
-	public final long getStepCounter() {
+	public final synchronized long getStepCounter() {
 		return this.stepCounter;
 	}
 
-	public final boolean isRunning() {
-		return this.getState() == RunnerState.RUNNING || this.getState() == RunnerState.STEPPING || this.getState() != RunnerState.PAUSED;
+	public final synchronized boolean isRunning() {
+		RunnerState state = this.getState();
+		return state == RunnerState.RUNNING || state == RunnerState.STEPPING || state == RunnerState.PAUSED;
 	}
 }

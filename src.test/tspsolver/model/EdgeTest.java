@@ -25,19 +25,19 @@ public class EdgeTest {
 		this.firstNode = GridFactory.createNode(2, 3);
 		this.secondNode = GridFactory.createNode(-2, -3);
 
-		this.grid.addNode(firstNode);
-		this.grid.addNode(secondNode);
+		GridFactory.addNode(this.grid, firstNode);
+		GridFactory.addNode(this.grid, secondNode);
 
 		this.edge = GridFactory.getEdge(firstNode, secondNode);
 	}
 
 	@Test
-	public void testGetLength() {
+	public void testGetWeight() {
 		Assert.assertEquals(Math.sqrt(16 + 36), this.edge.getWeight());
 	}
 
 	@Test
-	public void testNodeEdges() {
+	public void testNumberOfEdges() {
 		Assert.assertEquals(1, this.firstNode.getNumberOfEdges());
 		Assert.assertEquals(1, this.secondNode.getNumberOfEdges());
 	}

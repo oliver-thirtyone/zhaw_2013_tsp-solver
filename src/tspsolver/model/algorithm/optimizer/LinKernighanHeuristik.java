@@ -1,18 +1,23 @@
 package tspsolver.model.algorithm.optimizer;
 
-import tspsolver.model.Scenario;
+import tspsolver.model.algorithm.OptimizerAlgorithm;
 
-public class LinKernighanHeuristik extends AOptimizerAlgorithm {
+public class LinKernighanHeuristik extends OptimizerAlgorithm {
 
-	public LinKernighanHeuristik(Scenario scenario) {
-		super(scenario);
+	@Override
+	protected void doInitialize() {
+
+	}
+
+	@Override
+	protected void doReset() {
+
 	}
 
 	@Override
 	protected boolean doStep() {
 
 		// TODO: magic
-		// http://en.wikipedia.org/wiki/2-opt
 
 		return false;
 	}

@@ -6,28 +6,36 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import tspsolver.model.Scenario;
+import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.grid.Edge;
 import tspsolver.model.grid.Node;
 
-public class RandomAlgorithm extends AStartAlgorithm {
+public class RandomAlgorithm extends StartAlgorithm {
 
 	private final SecureRandom random;
 	private final Set<Node> nodesToVisit;
 
 	private Node currentNode;
 
-	public RandomAlgorithm(Scenario scenario) {
-		super(scenario);
-
+	public RandomAlgorithm() {
 		this.random = new SecureRandom();
-
 		this.nodesToVisit = new HashSet<Node>();
+
+		this.reset();
+	}
+
+	@Override
+	protected void doInitialize() {
 		for (Node node : this.getGrid().getNodes()) {
 			this.nodesToVisit.add(node);
 		}
+		this.setCurrentNode(this.getStartingNode());
+	}
 
-		this.reset();
+	@Override
+	protected void doReset() {
+		this.nodesToVisit.clear();
+		this.setCurrentNode(null);
 	}
 
 	@Override
@@ -91,18 +99,6 @@ public class RandomAlgorithm extends AStartAlgorithm {
 
 		this.getPathUpdater().updatePath();
 		return successfulStep;
-	}
-
-	@Override
-	public void reset() {
-		super.reset();
-
-		this.nodesToVisit.clear();
-		for (Node node : this.getGrid().getNodes()) {
-			this.nodesToVisit.add(node);
-		}
-
-		this.setCurrentNode(this.getStartingNode());
 	}
 
 	public Node getCurrentNode() {

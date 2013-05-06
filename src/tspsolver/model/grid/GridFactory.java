@@ -6,6 +6,14 @@ public abstract class GridFactory {
 		return new Node(x, y);
 	}
 
+	public static void addNode(Grid grid, Node node) {
+		grid.addNode(node);
+	}
+
+	public static void addNode(Grid grid, Node node, boolean link) {
+		grid.addNode(node, link);
+	}
+
 	public static boolean hasEdge(Node firstNode, Node secondNode) {
 		return firstNode.hasEdgeToNode(secondNode);
 	}

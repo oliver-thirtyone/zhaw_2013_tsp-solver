@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import tspsolver.model.grid.Edge;
-import tspsolver.model.updates.UpdateAction;
+import tspsolver.model.updates.PathUpdateAction;
 
 public class PathUpdater {
 
@@ -30,20 +30,20 @@ public class PathUpdater {
 	public synchronized void updatePath() {
 		// Mark the added edges as a path element
 		for (Edge edge : this.addedEdges) {
-			this.path.firePathUpdate(edge, UpdateAction.PATH_ELEMENT);
+			this.path.firePathUpdate(edge, PathUpdateAction.PATH_ELEMENT);
 		}
 		this.addedEdges.clear();
 
 		// Mark the removed edges as a normal edge
 		for (Edge edge : this.removedEdges) {
-			this.path.firePathUpdate(edge, UpdateAction.NON_PATH_ELEMENT);
+			this.path.firePathUpdate(edge, PathUpdateAction.NON_PATH_ELEMENT);
 		}
 		this.removedEdges.clear();
 
 		// Add the new edges and mark them as a new path element
 		for (Edge edge : this.edgesToAdd) {
 			this.path.addEdge(edge);
-			this.path.firePathUpdate(edge, UpdateAction.NEW_PATH_ELEMENT);
+			this.path.firePathUpdate(edge, PathUpdateAction.NEW_PATH_ELEMENT);
 		}
 		this.addedEdges.addAll(this.edgesToAdd);
 		this.edgesToAdd.clear();
@@ -51,7 +51,7 @@ public class PathUpdater {
 		// Remove the old edges and mark them as a old path element
 		for (Edge edge : this.edgesToRemove) {
 			this.path.removeEdge(edge);
-			this.path.firePathUpdate(edge, UpdateAction.OLD_PATH_ELEMENT);
+			this.path.firePathUpdate(edge, PathUpdateAction.OLD_PATH_ELEMENT);
 		}
 		this.removedEdges.addAll(this.edgesToRemove);
 		this.edgesToRemove.clear();

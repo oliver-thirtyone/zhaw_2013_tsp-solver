@@ -1,11 +1,14 @@
 package tspsolver.view;
 
 import java.awt.GridBagConstraints;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 
-import tspsolver.controller.runner.MainRunner;
-import tspsolver.util.LayoutManager;
+import tspsolver.controller.AlgorithmRunner;
+import tspsolver.controller.Controller;
+import tspsolver.util.view.layout.LayoutManager;
 
 public class MainFrame extends JFrame {
 
@@ -13,20 +16,20 @@ public class MainFrame extends JFrame {
 
 	private final LayoutManager layoutManager;
 
-	// private final MemoryView memoryView;
-	private final MainRunnerView runnerView;
+	private final ControllerView mainRunnerView;
+	private final List<AlgorithmRunnerView> algorithmRunnerViews;
 
-	// private final ProcessorView processorBinaryView;
-	// private final ProcessorView processorDecimalView;
-
-	public MainFrame(MainRunner mainRunner) {
+	public MainFrame(Controller controller) {
 		super("TSP Solver");
 		this.layoutManager = new LayoutManager(this.getContentPane());
 
-		this.runnerView = new MainRunnerView(mainRunner);
-		// this.memoryView = new MemoryView(runner.getMemory(), runner.getProcessor().getInstructionDecoder());
-		// this.processorBinaryView = new ProcessorView(runner.getProcessor(), Boolean.TRUE);
-		// this.processorDecimalView = new ProcessorView(runner.getProcessor(), Boolean.FALSE);
+		this.mainRunnerView = new ControllerView(controller);
+		this.algorithmRunnerViews = new ArrayList<AlgorithmRunnerView>();
+
+		for (AlgorithmRunner algorithmRunner : controller.getAlgorithmRunners()) {
+			AlgorithmRunnerView algorithmRunnerView = new AlgorithmRunnerView(algorithmRunner);
+			this.algorithmRunnerViews.add(algorithmRunnerView);
+		}
 
 		this.components();
 		this.pack();
@@ -36,16 +39,17 @@ public class MainFrame extends JFrame {
 	private void components() {
 		this.layoutManager.reset();
 		this.layoutManager.setAnchor(GridBagConstraints.NORTHWEST);
+		this.layoutManager.setFill(GridBagConstraints.BOTH);
+		this.layoutManager.setWeightX(1.0).setWeightY(1.0);
+
+		this.layoutManager.setY(1);
+		for (int x = 0; x < this.algorithmRunnerViews.size(); x++) {
+			this.layoutManager.setX(x).addComponent(this.algorithmRunnerViews.get(x));
+		}
+
 		this.layoutManager.setFill(GridBagConstraints.HORIZONTAL);
-		this.layoutManager.setWeightX(1.0).setWeightY(0.0);
+		this.layoutManager.setWeightY(0.0).setWidth(this.algorithmRunnerViews.size());
+		this.layoutManager.setX(0).setY(0).addComponent(this.mainRunnerView);
 
-		this.layoutManager.setX(0).setY(0).setWidth(2).addComponent(this.runnerView);
-		// this.layoutManager.setX(1).setY(1).addComponent(this.processorBinaryView);
-		// this.layoutManager.setX(1).setY(2).addComponent(this.processorDecimalView);
-
-		// this.layoutManager.setFill(GridBagConstraints.BOTH);
-		// this.layoutManager.setWeightX(1.0).setWeightY(1.0);
-		// this.layoutManager.setX(0).setY(1).setWidth(1).setHeight(2).addComponent(this.memoryView);
 	}
-
 }

@@ -1,8 +1,11 @@
 package tspsolver.model.grid;
 
+import java.io.Serializable;
 import java.util.Observable;
 
-public class Edge extends Observable {
+public class Edge extends Observable implements Serializable {
+
+	private static final long serialVersionUID = -1032951953663147952L;
 
 	private final Node firstNode;
 	private final Node secondNode;

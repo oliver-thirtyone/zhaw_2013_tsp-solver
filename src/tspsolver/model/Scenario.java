@@ -1,23 +1,23 @@
 package tspsolver.model;
 
+import java.io.Serializable;
 import java.util.Observable;
 import java.util.Observer;
 
 import tspsolver.model.grid.Grid;
 import tspsolver.model.grid.Node;
 import tspsolver.model.path.Path;
-import tspsolver.model.path.PathUpdater;
-import tspsolver.model.updates.NodeUpdate;
+import tspsolver.model.updates.StartingNodeUpdateAction;
 import tspsolver.model.updates.StartingNodeUpdate;
-import tspsolver.model.updates.UpdateAction;
 
-public class Scenario extends Observable implements Observer {
+public class Scenario extends Observable implements Serializable, Observer {
+
+	private static final long serialVersionUID = -7758506719837963384L;
 
 	private final String name;
 
 	private final Grid grid;
 	private final Path path;
-	private final PathUpdater pathUpdater;
 
 	private Node startingNode;
 
@@ -26,7 +26,6 @@ public class Scenario extends Observable implements Observer {
 
 		this.grid = new Grid();
 		this.path = new Path();
-		this.pathUpdater = new PathUpdater(path);
 
 		this.startingNode = null;
 
@@ -45,15 +44,6 @@ public class Scenario extends Observable implements Observer {
 		return this.getName();
 	}
 
-	public synchronized void clear() {
-		this.setStartingNode(null);
-
-		this.getPathUpdater().clearPath();
-		this.getPathUpdater().updatePath();
-
-		this.getGrid().clear();
-	}
-
 	public String getName() {
 		return this.name;
 	}
@@ -66,28 +56,24 @@ public class Scenario extends Observable implements Observer {
 		return path;
 	}
 
-	public PathUpdater getPathUpdater() {
-		return pathUpdater;
-	}
-
 	public Node getStartingNode() {
 		return this.startingNode;
 	}
 
 	public void setStartingNode(Node startingNode) {
 		if (this.startingNode != null) {
-			this.fireStartingNodeUpdate(this.startingNode, UpdateAction.REMOVE_STARTING_NODE);
+			this.fireStartingNodeUpdate(this.startingNode, StartingNodeUpdateAction.REMOVE_STARTING_NODE);
 		}
 
 		this.startingNode = startingNode;
 
 		if (this.startingNode != null) {
-			this.fireStartingNodeUpdate(this.startingNode, UpdateAction.ADD_STARTING_NODE);
+			this.fireStartingNodeUpdate(this.startingNode, StartingNodeUpdateAction.ADD_STARTING_NODE);
 		}
 	}
 
-	private void fireStartingNodeUpdate(Node node, UpdateAction action) {
-		NodeUpdate update = new StartingNodeUpdate(node, action);
+	private void fireStartingNodeUpdate(Node node, StartingNodeUpdateAction action) {
+		StartingNodeUpdate update = new StartingNodeUpdate(node, action);
 
 		this.setChanged();
 		this.notifyObservers(update);

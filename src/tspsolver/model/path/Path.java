@@ -1,14 +1,17 @@
 package tspsolver.model.path;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Observable;
 import java.util.Set;
 
 import tspsolver.model.grid.Edge;
+import tspsolver.model.updates.PathUpdateAction;
 import tspsolver.model.updates.PathUpdate;
-import tspsolver.model.updates.UpdateAction;
 
-public class Path extends Observable {
+public class Path extends Observable implements Serializable {
+
+	private static final long serialVersionUID = 8102936507138748772L;
 
 	private final Set<Edge> edges;
 	private double weight;
@@ -74,6 +77,10 @@ public class Path extends Observable {
 		return this.edges.size();
 	}
 
+	public boolean isEmpty() {
+		return this.getNumberOfEdges() < 1;
+	}
+
 	public boolean containsEdge(Edge edge) {
 		return this.edges.contains(edge);
 	}
@@ -90,7 +97,7 @@ public class Path extends Observable {
 		}
 	}
 
-	protected void firePathUpdate(Edge edge, UpdateAction action) {
+	protected void firePathUpdate(Edge edge, PathUpdateAction action) {
 		PathUpdate update = new PathUpdate(edge, action);
 
 		this.setChanged();

@@ -116,9 +116,9 @@ public class XMLScenarioLoader implements IScenarioLoader {
 
 		// Add the node to the grid
 		if (!link.isEmpty()) {
-			grid.addNode(node, Boolean.parseBoolean(link));
+			GridFactory.addNode(grid, node, Boolean.parseBoolean(link));
 		} else {
-			grid.addNode(node);
+			GridFactory.addNode(grid, node);
 		}
 
 		// Add the node to a temporary map for future references

@@ -15,16 +15,15 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
-import tspsolver.controller.runner.MainRunner;
-import tspsolver.controller.runner.RunnerState;
+import tspsolver.controller.Controller;
 import tspsolver.model.Scenario;
-import tspsolver.util.LayoutManager;
+import tspsolver.util.view.layout.LayoutManager;
 
-public class MainRunnerView extends JPanel implements Observer, ActionListener {
+public class ControllerView extends JPanel implements Observer, ActionListener {
 
 	private static final long serialVersionUID = 6150985298461587724L;
 
-	private final MainRunner mainRunner;
+	private final Controller controller;
 	private final LayoutManager layoutManager;
 
 	private final JButton initialize;
@@ -34,17 +33,14 @@ public class MainRunnerView extends JPanel implements Observer, ActionListener {
 	private final JButton step;
 	private final JButton pause;
 
-	private final JLabel modeLabel;
-	private final JTextField mode;
-
 	private final JLabel stepDelayLabel;
 	private final JTextField stepDelay;
 
 	private final JLabel scenarioLabel;
 	private final JComboBox<Scenario> scenarios;
 
-	public MainRunnerView(MainRunner mainRunner) {
-		this.mainRunner = mainRunner;
+	public ControllerView(Controller mainRunner) {
+		this.controller = mainRunner;
 
 		this.layoutManager = new LayoutManager(this);
 
@@ -72,17 +68,14 @@ public class MainRunnerView extends JPanel implements Observer, ActionListener {
 		this.pause.setActionCommand("pause");
 		this.pause.addActionListener(this);
 
-		this.modeLabel = new JLabel("Mode: ");
-		this.mode = new JTextField();
-		this.mode.setEditable(false);
-
 		this.stepDelayLabel = new JLabel("Instruction delay [ms]:");
 		this.stepDelay = new JTextField(15);
 
 		this.scenarioLabel = new JLabel("Scenario:");
 		this.scenarios = new JComboBox<Scenario>();
+		this.scenarios.setEditable(false);
 
-		for (Scenario scenario : this.mainRunner.getScenarios()) {
+		for (Scenario scenario : this.controller.getScenarios()) {
 			this.scenarios.addItem(scenario);
 		}
 		this.scenarios.setActionCommand("select_scenario");
@@ -95,8 +88,8 @@ public class MainRunnerView extends JPanel implements Observer, ActionListener {
 		titledBorder.setTitlePosition(TitledBorder.ABOVE_TOP);
 		this.setBorder(titledBorder);
 
-		this.doUpdate(this.mainRunner.getState());
-		this.mainRunner.addObserver(this);
+		this.doUpdate(null);
+		this.controller.addObserver(this);
 	}
 
 	private void components() {
@@ -106,21 +99,20 @@ public class MainRunnerView extends JPanel implements Observer, ActionListener {
 		this.layoutManager.setWeightY(0.0);
 		this.layoutManager.setWeightX(0.0);
 
-		this.layoutManager.setX(2).setY(0).addComponent(this.initialize);
-		this.layoutManager.setX(3).setY(0).addComponent(this.reset);
-		this.layoutManager.setX(2).setY(1).addComponent(this.start);
-		this.layoutManager.setX(3).setY(1).addComponent(this.stop);
-		this.layoutManager.setX(2).setY(2).addComponent(this.step);
-		this.layoutManager.setX(3).setY(2).addComponent(this.pause);
-
-		this.layoutManager.setX(0).setY(0).addComponent(this.modeLabel);
-		this.layoutManager.setX(0).setY(1).addComponent(this.scenarioLabel);
-		this.layoutManager.setX(0).setY(2).addComponent(this.stepDelayLabel);
+		this.layoutManager.setX(0).setY(0).addComponent(this.scenarioLabel);
+		this.layoutManager.setX(0).setY(1).addComponent(this.stepDelayLabel);
 
 		this.layoutManager.setWeightX(1.0);
-		this.layoutManager.setX(1).setY(0).addComponent(this.mode);
-		this.layoutManager.setX(1).setY(1).addComponent(this.scenarios);
-		this.layoutManager.setX(1).setY(2).addComponent(this.stepDelay);
+		this.layoutManager.setX(1).setY(1).addComponent(this.stepDelay);
+		this.layoutManager.setX(2).setY(1).addComponent(this.initialize);
+		this.layoutManager.setX(3).setY(1).addComponent(this.start);
+		this.layoutManager.setX(4).setY(1).addComponent(this.step);
+		this.layoutManager.setX(5).setY(1).addComponent(this.pause);
+		this.layoutManager.setX(6).setY(1).addComponent(this.stop);
+		this.layoutManager.setX(7).setY(1).addComponent(this.reset);
+
+		this.layoutManager.setWidth(7);
+		this.layoutManager.setX(1).setY(0).addComponent(this.scenarios);
 	}
 
 	@Override
@@ -137,55 +129,48 @@ public class MainRunnerView extends JPanel implements Observer, ActionListener {
 		}
 
 		if (actionCommand.equals("initialize")) {
-			this.mainRunner.initialize(stepDelay);
+			this.controller.initialize(stepDelay);
 		}
 		if (actionCommand.equals("start")) {
-			this.mainRunner.start();
+			this.controller.start();
 		} else if (actionCommand.equals("step")) {
-			this.mainRunner.step();
+			this.controller.step();
 		} else if (actionCommand.equals("pause")) {
-			this.mainRunner.pause();
+			this.controller.pause();
 		} else if (actionCommand.equals("stop")) {
-			this.mainRunner.stop();
+			this.controller.stop();
 		} else if (actionCommand.equals("reset")) {
-			this.mainRunner.reset();
+			this.controller.reset();
 		} else if (actionCommand.equals("select_scenario")) {
 			Scenario scenario = (Scenario) this.scenarios.getSelectedItem();
-			this.mainRunner.setSelectedScenario(scenario);
+			this.controller.setSelectedScenario(scenario);
 		}
 	}
 
-	private void doUpdate(RunnerState state) {
-		// Nothing else changed, our job here is done
-		if (state == null)
-			return;
-
-		this.scenarios.setEditable(this.mainRunner.canInitialize());
-		this.stepDelay.setEditable(this.mainRunner.canInitialize());
-
-		this.initialize.setEnabled(this.mainRunner.canInitialize());
-		this.start.setEnabled(this.mainRunner.canStart());
-		this.step.setEnabled(this.mainRunner.canStep());
-		this.pause.setEnabled(this.mainRunner.canPause());
-		this.stop.setEnabled(this.mainRunner.canStop());
-		this.reset.setEnabled(this.mainRunner.canReset());
-
-		this.mode.setText(state.toString());
-
-		String stepDelay = String.valueOf(this.mainRunner.getStepDelay());
+	private void doUpdate(Object argument) {
+		String stepDelay = String.valueOf(this.controller.getStepDelay());
 		this.stepDelay.setText(stepDelay);
+
+		this.scenarios.setEnabled(this.controller.canInitialize());
+		this.stepDelay.setEditable(this.controller.canInitialize());
+
+		this.initialize.setEnabled(this.controller.canInitialize());
+		this.start.setEnabled(this.controller.canStart());
+		this.step.setEnabled(this.controller.canStep());
+		this.pause.setEnabled(this.controller.canPause());
+		this.stop.setEnabled(this.controller.canStop());
+		this.reset.setEnabled(this.controller.canReset());
 	}
 
 	@Override
 	public void update(Observable observable, final Object argument) {
-		if (observable != mainRunner)
+		if (observable != this.controller)
 			return;
 
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				RunnerState state = (argument instanceof RunnerState) ? (RunnerState) argument : null;
-				MainRunnerView.this.doUpdate(state);
+				ControllerView.this.doUpdate(argument);
 			}
 		});
 	}

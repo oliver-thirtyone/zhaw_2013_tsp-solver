@@ -5,9 +5,9 @@ import tspsolver.model.grid.Node;
 public class NodeUpdate {
 
 	private final Node node;
-	private final UpdateAction action;
+	private final NodeUpdateAction action;
 
-	public NodeUpdate(Node node, UpdateAction action) {
+	public NodeUpdate(Node node, NodeUpdateAction action) {
 		this.node = node;
 		this.action = action;
 	}
@@ -16,7 +16,7 @@ public class NodeUpdate {
 		return this.node;
 	}
 
-	public UpdateAction getAction() {
+	public NodeUpdateAction getAction() {
 		return this.action;
 	}
 

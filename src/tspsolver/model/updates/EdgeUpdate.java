@@ -5,9 +5,9 @@ import tspsolver.model.grid.Edge;
 public class EdgeUpdate {
 
 	private final Edge edge;
-	private final UpdateAction action;
+	private final EdgeUpdateAction action;
 
-	public EdgeUpdate(Edge edge, UpdateAction action) {
+	public EdgeUpdate(Edge edge, EdgeUpdateAction action) {
 		this.edge = edge;
 		this.action = action;
 	}
@@ -16,7 +16,7 @@ public class EdgeUpdate {
 		return this.edge;
 	}
 
-	public UpdateAction getAction() {
+	public EdgeUpdateAction getAction() {
 		return this.action;
 	}
 

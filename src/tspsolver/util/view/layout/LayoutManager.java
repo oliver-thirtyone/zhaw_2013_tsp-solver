@@ -1,4 +1,4 @@
-package tspsolver.util;
+package tspsolver.util.view.layout;
 
 import java.awt.Component;
 import java.awt.Container;

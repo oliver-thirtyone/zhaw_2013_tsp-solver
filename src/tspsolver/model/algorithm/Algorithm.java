@@ -8,29 +8,44 @@ import tspsolver.model.path.PathUpdater;
 
 public abstract class Algorithm {
 
-	private final Grid grid;
-	private final Node startingNode;
-
-	private final Path path;
-	private final PathUpdater pathUpdater;
+	private Scenario scenario;
+	private PathUpdater pathUpdater;
 
 	private boolean validArguments;
 	private boolean finishedSuccessfully;
 
-	public Algorithm(Scenario scenario) {
-		this.grid = scenario.getGrid();
-		this.startingNode = scenario.getStartingNode();
-
-		this.path = scenario.getPath();
-		this.pathUpdater = new PathUpdater(scenario.getPath());
-
-		this.validArguments = false;
-		this.finishedSuccessfully = false;
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
 	}
 
-	public abstract void validateArguments();
+	public final synchronized void initialize(Scenario scenario) {
+		// Reset everything before we initialize
+		this.reset();
 
-	public final boolean step() {
+		this.scenario = scenario;
+		this.pathUpdater = new PathUpdater(this.getPath());
+
+		this.doInitialize();
+		this.validateArguments();
+	}
+
+	public final synchronized void reset() {
+		if (this.getPathUpdater() != null) {
+			this.getPathUpdater().clearPath();
+			this.getPathUpdater().updatePath();
+		}
+
+		this.scenario = null;
+		this.pathUpdater = null;
+
+		this.setValidArguments(false);
+		this.finishedSuccessfully = false;
+
+		this.doReset();
+	}
+
+	public final synchronized boolean step() {
 		if (!this.hasValidArguments() || this.hasFinishedSuccessfully()) {
 			return false;
 		}
@@ -38,30 +53,13 @@ public abstract class Algorithm {
 		return this.doStep();
 	}
 
-	public void reset() {
-		this.getPathUpdater().clearPath();
+	protected abstract void doInitialize();
 
-		this.setValidArguments(false);
-		this.finishedSuccessfully = false;
-	}
+	protected abstract void doReset();
 
 	protected abstract boolean doStep();
 
-	protected Grid getGrid() {
-		return this.grid;
-	}
-
-	protected Node getStartingNode() {
-		return startingNode;
-	}
-
-	protected Path getPath() {
-		return path;
-	}
-
-	protected PathUpdater getPathUpdater() {
-		return this.pathUpdater;
-	}
+	protected abstract void validateArguments();
 
 	public boolean hasValidArguments() {
 		return this.validArguments;
@@ -76,8 +74,27 @@ public abstract class Algorithm {
 	}
 
 	protected void finishedSuccessfully() {
-		this.pathUpdater.updatePath();
+		this.getPathUpdater().updatePath();
 		this.finishedSuccessfully = true;
 	}
 
+	public Scenario getScenario() {
+		return this.scenario;
+	}
+
+	public Grid getGrid() {
+		return this.scenario.getGrid();
+	}
+
+	public Node getStartingNode() {
+		return this.scenario.getStartingNode();
+	}
+
+	public Path getPath() {
+		return this.scenario.getPath();
+	}
+
+	protected PathUpdater getPathUpdater() {
+		return this.pathUpdater;
+	}
 }
