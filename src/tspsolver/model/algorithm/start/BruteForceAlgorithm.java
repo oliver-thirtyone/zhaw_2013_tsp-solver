@@ -95,7 +95,7 @@ public class BruteForceAlgorithm extends AStartAlgorithm {
 		if (this.outerLoopIndex >= this.nodeCount) {
 			this.getPathUpdater().clearPath();
 			this.getPathUpdater().addPath(this.currentLightestPath);
-			this.setFinishedSuccessful(true);
+			this.finishedSuccessfully();
 		}
 
 		this.getPathUpdater().updatePath();

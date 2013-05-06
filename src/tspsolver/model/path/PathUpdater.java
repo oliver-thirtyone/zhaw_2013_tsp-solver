@@ -1,5 +1,6 @@
 package tspsolver.model.path;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -79,6 +80,18 @@ public class PathUpdater {
 	}
 
 	public synchronized void removeEdges(Edge[] edges) {
+		for (Edge edge : edges) {
+			this.removeEdge(edge);
+		}
+	}
+
+	public synchronized void addEdges(Collection<Edge> edges) {
+		for (Edge edge : edges) {
+			this.addEdge(edge);
+		}
+	}
+
+	public synchronized void removeEdges(Collection<Edge> edges) {
 		for (Edge edge : edges) {
 			this.removeEdge(edge);
 		}

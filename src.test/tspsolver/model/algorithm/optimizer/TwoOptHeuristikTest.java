@@ -57,7 +57,7 @@ public class TwoOptHeuristikTest {
 		this.edgeEastWest = GridFactory.getEdge(this.nodeEast, this.nodeWest);
 		this.edgeSouthWest = GridFactory.getEdge(this.nodeSouth, this.nodeWest);
 
-		this.algorithm = new LinKernighanHeuristik(this.scenario);
+		this.algorithm = new TwoOptHeuristik(this.scenario);
 	}
 
 	@Test

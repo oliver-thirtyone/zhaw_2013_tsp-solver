@@ -238,7 +238,7 @@ public class MinimumSpanningTreeHeuristik extends AStartAlgorithm {
 		this.getPathUpdater().addEdge(newEdge);
 
 		this.getPathUpdater().updatePath();
-		this.setFinishedSuccessful(true);
+		this.finishedSuccessfully();
 		return true;
 	}
 }

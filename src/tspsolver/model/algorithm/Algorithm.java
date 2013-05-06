@@ -42,7 +42,7 @@ public abstract class Algorithm {
 		this.getPathUpdater().clearPath();
 
 		this.setValidArguments(false);
-		this.setFinishedSuccessful(false);
+		this.finishedSuccessfully = false;
 	}
 
 	protected abstract boolean doStep();
@@ -75,8 +75,9 @@ public abstract class Algorithm {
 		return this.finishedSuccessfully;
 	}
 
-	protected void setFinishedSuccessful(boolean finishedSuccessfully) {
-		this.finishedSuccessfully = finishedSuccessfully;
+	protected void finishedSuccessfully() {
+		this.pathUpdater.updatePath();
+		this.finishedSuccessfully = true;
 	}
 
 }

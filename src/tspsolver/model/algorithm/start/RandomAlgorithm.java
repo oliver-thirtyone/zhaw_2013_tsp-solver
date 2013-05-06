@@ -81,12 +81,10 @@ public class RandomAlgorithm extends AStartAlgorithm {
 				this.getPathUpdater().addEdge(lastEdge);
 				this.setCurrentNode(this.getStartingNode());
 
-				this.setFinishedSuccessful(true);
+				this.finishedSuccessfully();
 			} else {
 				// FIXME: If the last node has no accessible edge to the starting node we fail here
 				System.err.println("Jetzt hämmer es Problem...");
-
-				this.setFinishedSuccessful(false);
 				successfulStep = false;
 			}
 		}
