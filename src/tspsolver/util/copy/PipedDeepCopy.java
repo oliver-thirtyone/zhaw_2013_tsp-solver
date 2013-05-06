@@ -43,7 +43,8 @@ public class PipedDeepCopy {
 			// See if something went wrong
 			if (obj == ERROR)
 				obj = null;
-		} catch (IOException ioe) {
+		}
+		catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
 
@@ -81,12 +82,14 @@ public class PipedDeepCopy {
 			try {
 				ObjectInputStream oin = new ObjectInputStream(in);
 				o = oin.readObject();
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				// This should never happen. If it does we make sure
 				// that a the object is set to a flag that indicates
 				// deserialization was not possible.
 				e.printStackTrace();
-			} catch (ClassNotFoundException cnfe) {
+			}
+			catch (ClassNotFoundException cnfe) {
 				// Same here...
 				cnfe.printStackTrace();
 			}
@@ -111,7 +114,8 @@ public class PipedDeepCopy {
 						lock.wait();
 					}
 				}
-			} catch (InterruptedException ie) {
+			}
+			catch (InterruptedException ie) {
 				// If we are interrupted we just return null
 			}
 			return obj;

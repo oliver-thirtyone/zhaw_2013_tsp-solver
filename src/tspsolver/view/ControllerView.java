@@ -119,42 +119,64 @@ public class ControllerView extends JPanel implements Observer, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
 		final String actionCommand = actionEvent.getActionCommand();
-
-		// Turn the stepDelay into an integer
-		int number = 0;
-		try {
-			if (!this.stepDelay.getText().isEmpty()) {
-				number = Integer.parseInt(this.stepDelay.getText());
-			}
-		} catch (NumberFormatException exception) {
-			number = Runner.DEFAULT_STEP_DELAY;
-		}
-		final int stepDelay = number;
-
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				if (actionCommand.equals("select_scenario")) {
-					Scenario scenario = (Scenario) ControllerView.this.scenarios.getSelectedItem();
-					ControllerView.this.controller.setSelectedScenario(scenario);
-				} else if (actionCommand.equals("initialize")) {
-					ControllerView.this.controller.initialize(stepDelay);
-				} else if (actionCommand.equals("start")) {
-					ControllerView.this.controller.start();
-				} else if (actionCommand.equals("step")) {
-					ControllerView.this.controller.step();
-				} else if (actionCommand.equals("pause")) {
-					ControllerView.this.controller.pause();
-				} else if (actionCommand.equals("stop")) {
-					ControllerView.this.controller.stop();
-				} else if (actionCommand.equals("reset")) {
-					ControllerView.this.controller.reset();
-				}
+				ControllerView.this.actionPerformed(actionCommand);
 			}
 		});
 	}
 
-	private void doUpdate(Object argument) {
+	@Override
+	public void update(Observable observable, final Object argument) {
+		if (observable != this.controller) {
+			return;
+		}
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				ControllerView.this.doUpdate(argument);
+			}
+		});
+	}
+
+	private synchronized void actionPerformed(String actionCommand) {
+		// Turn the stepDelay into an integer
+		int stepDelay = Runner.DEFAULT_STEP_DELAY;
+		try {
+			if (!this.stepDelay.getText().isEmpty()) {
+				stepDelay = Integer.parseInt(this.stepDelay.getText());
+			}
+		}
+		catch (NumberFormatException exception) {
+			// Nothing to do here
+		}
+
+		if (actionCommand.equals("select_scenario")) {
+			Scenario scenario = (Scenario) this.scenarios.getSelectedItem();
+			this.controller.setSelectedScenario(scenario);
+		}
+		else if (actionCommand.equals("initialize")) {
+			this.controller.initialize(stepDelay);
+		}
+		else if (actionCommand.equals("start")) {
+			this.controller.start();
+		}
+		else if (actionCommand.equals("step")) {
+			this.controller.step();
+		}
+		else if (actionCommand.equals("pause")) {
+			this.controller.pause();
+		}
+		else if (actionCommand.equals("stop")) {
+			this.controller.stop();
+		}
+		else if (actionCommand.equals("reset")) {
+			this.controller.reset();
+		}
+	}
+
+	private synchronized void doUpdate(Object argument) {
 		String stepDelay = String.valueOf(this.controller.getStepDelay());
 		this.stepDelay.setText(stepDelay);
 
@@ -167,19 +189,6 @@ public class ControllerView extends JPanel implements Observer, ActionListener {
 		this.pause.setEnabled(this.controller.canPause());
 		this.stop.setEnabled(this.controller.canStop());
 		this.reset.setEnabled(this.controller.canReset());
-	}
-
-	@Override
-	public void update(Observable observable, final Object argument) {
-		if (observable != this.controller)
-			return;
-
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				ControllerView.this.doUpdate(argument);
-			}
-		});
 	}
 
 }

@@ -30,6 +30,19 @@ public class AlgorithmRunner extends Runner implements Runnable {
 	}
 
 	@Override
+	protected synchronized boolean doInitialize() {
+		// Check if a scenario and a start algorithm is selected
+		if (this.getSelectedScenario() == null || this.getSelectedStartAlgorithm() == null) {
+			return false;
+		}
+
+		this.getSelectedStartAlgorithm().initialize(this.getSelectedScenario());
+		this.setRunningAlgorithm(this.selectedstartAlgorithm);
+
+		return true;
+	}
+
+	@Override
 	protected synchronized boolean doReset() {
 		if (this.getSelectedStartAlgorithm() != null) {
 			this.getSelectedStartAlgorithm().reset();
@@ -39,23 +52,10 @@ public class AlgorithmRunner extends Runner implements Runnable {
 		}
 
 		this.setSelectedScenario(null);
-		this.setSelectedStartAlgorithm(startAlgorithms[0]);
+		this.setSelectedStartAlgorithm(this.startAlgorithms[0]);
 		this.setSelectedOptimizerAlgorithm(null);
 
 		this.setRunningAlgorithm(null);
-		return true;
-	}
-
-	@Override
-	protected synchronized boolean doInitialize() {
-		// Check if a scenario and a start algorithm is selected
-		if (this.getSelectedScenario() == null || this.getSelectedStartAlgorithm() == null) {
-			return false;
-		}
-
-		this.getSelectedStartAlgorithm().initialize(this.getSelectedScenario());
-		this.setRunningAlgorithm(selectedstartAlgorithm);
-
 		return true;
 	}
 
@@ -139,7 +139,7 @@ public class AlgorithmRunner extends Runner implements Runnable {
 	}
 
 	public Algorithm getRunningAlgorithm() {
-		return runningAlgorithm;
+		return this.runningAlgorithm;
 	}
 
 	private void setRunningAlgorithm(Algorithm algorithm) {

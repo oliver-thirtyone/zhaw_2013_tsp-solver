@@ -66,25 +66,29 @@ public class Scenario extends Observable implements Serializable, Observer {
 		if (name == null) {
 			if (other.name != null)
 				return false;
-		} else if (!name.equals(other.name))
+		}
+		else if (!name.equals(other.name))
 			return false;
 
 		if (grid == null) {
 			if (other.grid != null)
 				return false;
-		} else if (!grid.equals(other.grid))
+		}
+		else if (!grid.equals(other.grid))
 			return false;
 
 		if (path == null) {
 			if (other.path != null)
 				return false;
-		} else if (!path.equals(other.path))
+		}
+		else if (!path.equals(other.path))
 			return false;
 
 		if (startingNode == null) {
 			if (other.startingNode != null)
 				return false;
-		} else if (!startingNode.equals(other.startingNode))
+		}
+		else if (!startingNode.equals(other.startingNode))
 			return false;
 
 		return true;

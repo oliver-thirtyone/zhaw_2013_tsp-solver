@@ -41,7 +41,8 @@ public class XMLScenarioLoader implements IScenarioLoader {
 
 			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			this.validator = schemaFactory.newSchema(source).newValidator();
-		} catch (Exception exception) {
+		}
+		catch (Exception exception) {
 			exception.printStackTrace();
 		}
 	}
@@ -83,9 +84,11 @@ public class XMLScenarioLoader implements IScenarioLoader {
 					}
 				}
 			}
-		} catch (SAXException exception) {
+		}
+		catch (SAXException exception) {
 			throw new IllegalArgumentException(exception);
-		} catch (IOException exception) {
+		}
+		catch (IOException exception) {
 			throw new IllegalArgumentException(exception);
 		}
 
@@ -117,7 +120,8 @@ public class XMLScenarioLoader implements IScenarioLoader {
 		// Add the node to the grid
 		if (!link.isEmpty()) {
 			GridFactory.addNode(grid, node, Boolean.parseBoolean(link));
-		} else {
+		}
+		else {
 			GridFactory.addNode(grid, node);
 		}
 
@@ -152,7 +156,8 @@ public class XMLScenarioLoader implements IScenarioLoader {
 		// Add the node to the grid
 		if (!weight.isEmpty()) {
 			GridFactory.addEdge(firstNode, secondNode, Double.parseDouble(weight));
-		} else {
+		}
+		else {
 			GridFactory.addEdge(firstNode, secondNode);
 		}
 	}

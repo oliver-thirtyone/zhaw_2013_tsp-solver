@@ -62,14 +62,14 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 	public boolean doStep() {
 
 		switch (this.phase) {
-		case CREATE_SPANNING_TREE:
-			return this.doStepCreateSpanningTree();
+			case CREATE_SPANNING_TREE:
+				return this.doStepCreateSpanningTree();
 
-		case DO_EULERIAN_TRAIL:
-			return this.doStepEulerianTrail();
+			case DO_EULERIAN_TRAIL:
+				return this.doStepEulerianTrail();
 
-		default:
-			throw new NotImplementedException();
+			default:
+				throw new NotImplementedException();
 		}
 
 	}
@@ -103,14 +103,16 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 					// The edge is used now.
 					this.spanningTreePossibleEdges.remove(edge);
 
-				} else {
+				}
+				else {
 					// finish create spanning tree
 					this.initEulerianTrail();
 				}
 
 				break;
 
-			} else if (this.spanningTreeNodes.contains(edge.getSecondNode()) == false) {
+			}
+			else if (this.spanningTreeNodes.contains(edge.getSecondNode()) == false) {
 
 				// Add the edge to the spanning tree.
 				this.spanningTreeEdges.add(edge);
@@ -132,14 +134,16 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 					// The edge is used now.
 					this.spanningTreePossibleEdges.remove(edge);
 
-				} else {
+				}
+				else {
 					// finish create spanning tree
 					this.initEulerianTrail();
 				}
 
 				break;
 
-			} else {
+			}
+			else {
 				// This edge will build a circle, remove it to improve
 				// performance
 				// FIXME: Alternative zu diesem Schritt währe, dass man die
@@ -200,7 +204,8 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 				this.getPathUpdater().updatePath();
 				return true;
 
-			} else if (edge.getSecondNode() == brancheNode) {
+			}
+			else if (edge.getSecondNode() == brancheNode) {
 
 				Edge newEdge = this.currentNode.getEdgeToNode(edge.getFirstNode());
 				if (newEdge == null) {
@@ -226,13 +231,15 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 				this.getPathUpdater().updatePath();
 				return true;
 
-			} else if (i < spanningTreeEdges.size()) {
+			}
+			else if (i < spanningTreeEdges.size()) {
 				// A leaf from the spanning tree
 				// Nothing happen to the path, so recall the step.
 
 				// FIXME: Remove the recursion
 				return doStepEulerianTrail();
-			} else {
+			}
+			else {
 				i++;
 			}
 		}

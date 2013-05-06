@@ -54,7 +54,8 @@ public class Path extends Observable implements Serializable {
 			if (other.edges != null) {
 				return false;
 			}
-		} else if (!this.edges.equals(other.edges)) {
+		}
+		else if (!this.edges.equals(other.edges)) {
 			return false;
 		}
 

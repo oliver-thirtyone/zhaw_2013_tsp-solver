@@ -46,7 +46,8 @@ public class Grid extends Observable implements Serializable, Observer {
 		if (nodes == null) {
 			if (other.nodes != null)
 				return false;
-		} else if (!nodes.equals(other.nodes))
+		}
+		else if (!nodes.equals(other.nodes))
 			return false;
 
 		return true;

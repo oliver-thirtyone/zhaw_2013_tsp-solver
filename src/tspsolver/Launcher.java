@@ -47,9 +47,11 @@ public class Launcher {
 				InputStream inputStream = new FileInputStream(scenarioFile);
 				Scenario scenario = scenarioLoader.loadScenario(inputStream);
 				scenarioList.add(scenario);
-			} catch (IllegalArgumentException exception) {
+			}
+			catch (IllegalArgumentException exception) {
 				exception.printStackTrace();
-			} catch (FileNotFoundException exception) {
+			}
+			catch (FileNotFoundException exception) {
 				exception.printStackTrace();
 			}
 		}

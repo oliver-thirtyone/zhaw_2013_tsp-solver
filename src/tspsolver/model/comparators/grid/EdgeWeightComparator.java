@@ -4,7 +4,6 @@ import java.util.Comparator;
 
 import tspsolver.model.scenario.grid.Edge;
 
-
 public class EdgeWeightComparator implements Comparator<Edge> {
 
 	@Override

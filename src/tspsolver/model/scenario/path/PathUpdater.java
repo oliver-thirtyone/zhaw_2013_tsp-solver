@@ -60,7 +60,8 @@ public class PathUpdater {
 	public synchronized void addEdge(Edge edge) {
 		if (this.edgesToRemove.contains(edge)) {
 			this.edgesToRemove.remove(edge);
-		} else if (!this.edgesToAdd.contains(edge) && !this.path.containsEdge(edge)) {
+		}
+		else if (!this.edgesToAdd.contains(edge) && !this.path.containsEdge(edge)) {
 			this.edgesToAdd.add(edge);
 		}
 	}
@@ -68,7 +69,8 @@ public class PathUpdater {
 	public synchronized void removeEdge(Edge edge) {
 		if (this.edgesToAdd.contains(edge)) {
 			this.edgesToAdd.remove(edge);
-		} else if (!this.edgesToRemove.contains(edge) && this.path.containsEdge(edge)) {
+		}
+		else if (!this.edgesToRemove.contains(edge) && this.path.containsEdge(edge)) {
 			this.edgesToRemove.add(edge);
 		}
 	}

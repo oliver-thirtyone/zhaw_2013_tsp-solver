@@ -77,14 +77,17 @@ public class NearestNeighborHeuristik extends StartAlgorithm {
 				// Set the new current node
 				if (shortestEdge.getFirstNode() == this.getCurrentNode()) {
 					this.setCurrentNode(shortestEdge.getSecondNode());
-				} else {
+				}
+				else {
 					this.setCurrentNode(shortestEdge.getFirstNode());
 				}
-			} else {
+			}
+			else {
 				System.err.println("No edge found, we stop here...");
 				successfulStep = false;
 			}
-		} else {
+		}
+		else {
 			// Link the last node with the starting node
 			Edge lastEdge = this.getCurrentNode().getEdgeToNode(this.getStartingNode());
 			if (lastEdge != null) {
@@ -92,7 +95,8 @@ public class NearestNeighborHeuristik extends StartAlgorithm {
 				this.setCurrentNode(this.getStartingNode());
 
 				this.finishedSuccessfully();
-			} else {
+			}
+			else {
 				// FIXME: If the last node has no accessible edge to the starting node we fail here
 				System.err.println("Jetzt hämmer es Problem...");
 				successfulStep = false;

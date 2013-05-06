@@ -33,7 +33,8 @@ public class NodeView {
 			this.svgCircle.addAttribute("r", AnimationElement.AT_XML, String.valueOf(NodeView.CIRCLE_RADIUS));
 
 			this.svgGroup.loaderAddChild(null, this.svgCircle);
-		} catch (SVGException exception) {
+		}
+		catch (SVGException exception) {
 			exception.printStackTrace();
 		}
 	}
@@ -41,7 +42,8 @@ public class NodeView {
 	protected void deleteCircle() {
 		try {
 			this.svgGroup.removeChild(this.svgCircle);
-		} catch (SVGException exception) {
+		}
+		catch (SVGException exception) {
 			exception.printStackTrace();
 		}
 	}
@@ -50,10 +52,12 @@ public class NodeView {
 		try {
 			if (this.svgCircle.hasAttribute("fill", AnimationElement.AT_CSS)) {
 				this.svgCircle.setAttribute("fill", AnimationElement.AT_CSS, color);
-			} else {
+			}
+			else {
 				this.svgCircle.addAttribute("fill", AnimationElement.AT_CSS, color);
 			}
-		} catch (SVGException exception) {
+		}
+		catch (SVGException exception) {
 			exception.printStackTrace();
 		}
 	}

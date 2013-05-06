@@ -1,6 +1,5 @@
 package tspsolver.model.scenario.grid;
 
-
 public abstract class GridFactory {
 
 	public static Node createNode(int x, int y) {

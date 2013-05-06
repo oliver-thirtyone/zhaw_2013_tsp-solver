@@ -31,6 +31,7 @@ public abstract class Algorithm {
 	}
 
 	public final synchronized void reset() {
+		System.out.println("Algorithm.reset()"); // TODO: REMOVE
 		if (this.getPathUpdater() != null) {
 			this.getPathUpdater().clearPath();
 			this.getPathUpdater().updatePath();

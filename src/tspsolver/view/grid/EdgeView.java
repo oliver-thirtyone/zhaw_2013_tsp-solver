@@ -41,7 +41,8 @@ public class EdgeView {
 			this.svgLine.addAttribute("stroke-dasharray", AnimationElement.AT_CSS, "2, 4");
 
 			this.svgGroup.loaderAddChild(null, this.svgLine);
-		} catch (SVGException exception) {
+		}
+		catch (SVGException exception) {
 			exception.printStackTrace();
 		}
 	}
@@ -49,7 +50,8 @@ public class EdgeView {
 	protected void deleteLine() {
 		try {
 			this.svgGroup.removeChild(this.svgLine);
-		} catch (SVGException exception) {
+		}
+		catch (SVGException exception) {
 			exception.printStackTrace();
 		}
 	}
@@ -59,7 +61,8 @@ public class EdgeView {
 			// Set the color
 			if (this.svgLine.hasAttribute("stroke", AnimationElement.AT_CSS)) {
 				this.svgLine.setAttribute("stroke", AnimationElement.AT_CSS, color);
-			} else {
+			}
+			else {
 				this.svgLine.addAttribute("stroke", AnimationElement.AT_CSS, color);
 			}
 
@@ -67,15 +70,18 @@ public class EdgeView {
 			if (dashedLine) {
 				if (this.svgLine.hasAttribute("stroke-dasharray", AnimationElement.AT_CSS)) {
 					this.svgLine.setAttribute("stroke-dasharray", AnimationElement.AT_CSS, "2, 4");
-				} else {
+				}
+				else {
 					this.svgLine.addAttribute("stroke-dasharray", AnimationElement.AT_CSS, "2, 4");
 				}
-			} else {
+			}
+			else {
 				if (this.svgLine.hasAttribute("stroke-dasharray", AnimationElement.AT_CSS)) {
 					this.svgLine.removeAttribute("stroke-dasharray", AnimationElement.AT_CSS);
 				}
 			}
-		} catch (SVGException exception) {
+		}
+		catch (SVGException exception) {
 			exception.printStackTrace();
 		}
 	}

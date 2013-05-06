@@ -44,7 +44,8 @@ public class TwoOptHeuristik extends OptimizerAlgorithm {
 
 					this.nodesInOrder.add(currentNode);
 					break;
-				} else if (edge.getSecondNode() == currentNode) {
+				}
+				else if (edge.getSecondNode() == currentNode) {
 
 					edges.remove(edge);
 
@@ -91,7 +92,8 @@ public class TwoOptHeuristik extends OptimizerAlgorithm {
 			this.finishedSuccessfully();
 			return true;
 
-		} catch (IllegalStateException ex) {
+		}
+		catch (IllegalStateException ex) {
 			return false;
 		}
 	}
@@ -122,8 +124,7 @@ public class TwoOptHeuristik extends OptimizerAlgorithm {
 
 		for (int j = 1; j <= this.nodesInOrder.size(); j++) {
 			Node firstNode = nodePath.get(j - 1);
-			Node secondNode = (j == this.nodesInOrder.size()) ? nodePath.get(0)
-					: nodePath.get(j);
+			Node secondNode = (j == this.nodesInOrder.size()) ? nodePath.get(0) : nodePath.get(j);
 
 			Edge edge = firstNode.getEdgeToNode(secondNode);
 			if (edge == null) {

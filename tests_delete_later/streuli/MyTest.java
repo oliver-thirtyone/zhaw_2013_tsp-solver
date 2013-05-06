@@ -29,30 +29,30 @@ class DynamicIconPanel2 extends JPanel {
 
 	public DynamicIconPanel2() throws IOException {
 		InputStream svgImage = this.getClass().getClassLoader().getResourceAsStream("map/switzerland_simple.svg");
-		uri = SVGCache.getSVGUniverse().loadSVG(svgImage, "map_switzerland_simple");
+		this.uri = SVGCache.getSVGUniverse().loadSVG(svgImage, "map_switzerland_simple");
 
-		icon = new SVGIcon();
-		icon.setAntiAlias(true);
-		icon.setSvgURI(uri);
+		this.icon = new SVGIcon();
+		this.icon.setAntiAlias(true);
+		this.icon.setSvgURI(this.uri);
 
-		setPreferredSize(new Dimension(400, 400));
+		this.setPreferredSize(new Dimension(400, 400));
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
-		final int width = getWidth();
-		final int height = getHeight();
+		final int width = this.getWidth();
+		final int height = this.getHeight();
 
-		g.setColor(getBackground());
+		g.setColor(this.getBackground());
 		g.fillRect(0, 0, width, height);
 
-		icon.setPreferredSize(new Dimension(400, 257));
-		icon.setScaleToFit(true);
-		icon.paintIcon(this, g, 0, 0);
+		this.icon.setPreferredSize(new Dimension(400, 257));
+		this.icon.setScaleToFit(true);
+		this.icon.paintIcon(this, g, 0, 0);
 	}
 
 	public void addCircle() {
-		SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(uri);
+		SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(this.uri);
 		Group group = (Group) diagram.getElement("tspsolver.nodes");
 
 		Circle circle = new Circle();
@@ -73,7 +73,7 @@ class DynamicIconPanel2 extends JPanel {
 			group.updateTime(0.0);
 
 			// Keep track of circles so we can remove them later
-			extraElements.add(circle);
+			this.extraElements.add(circle);
 		}
 		catch (SVGException e) {
 			e.printStackTrace();
@@ -82,14 +82,15 @@ class DynamicIconPanel2 extends JPanel {
 	}
 
 	public void removeElement() {
-		int size = extraElements.size();
-		if (size == 0)
+		int size = this.extraElements.size();
+		if (size == 0) {
 			return;
+		}
 
 		int idx = (int) (Math.random() * size);
-		ShapeElement shapeElement = extraElements.remove(idx);
+		ShapeElement shapeElement = this.extraElements.remove(idx);
 
-		SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(uri);
+		SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(this.uri);
 		Group group = (Group) diagram.getElement("tspsolver.nodes");
 
 		try {
@@ -118,13 +119,13 @@ public class MyTest extends javax.swing.JFrame {
 	 */
 	public MyTest() throws IOException {
 
-		panel = new DynamicIconPanel2();
+		this.panel = new DynamicIconPanel2();
 
-		initComponents();
+		this.initComponents();
 
-		panel_display.add(panel, BorderLayout.CENTER);
+		this.panel_display.add(this.panel, BorderLayout.CENTER);
 
-		pack();
+		this.pack();
 	}
 
 	/**
@@ -132,61 +133,61 @@ public class MyTest extends javax.swing.JFrame {
 	 */
 	// <editor-fold defaultstate="collapsed" desc=" Generated Code ">
 	private void initComponents() {
-		panel_display = new javax.swing.JPanel();
-		jPanel2 = new javax.swing.JPanel();
-		jPanel3 = new javax.swing.JPanel();
-		bn_add = new javax.swing.JButton();
-		bn_remove = new javax.swing.JButton();
-		jPanel1 = new javax.swing.JPanel();
-		jLabel1 = new javax.swing.JLabel();
+		this.panel_display = new javax.swing.JPanel();
+		this.jPanel2 = new javax.swing.JPanel();
+		this.jPanel3 = new javax.swing.JPanel();
+		this.bn_add = new javax.swing.JButton();
+		this.bn_remove = new javax.swing.JButton();
+		this.jPanel1 = new javax.swing.JPanel();
+		this.jLabel1 = new javax.swing.JLabel();
 
-		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-		panel_display.setLayout(new java.awt.BorderLayout());
+		this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		this.panel_display.setLayout(new java.awt.BorderLayout());
 
-		getContentPane().add(panel_display, java.awt.BorderLayout.CENTER);
+		this.getContentPane().add(this.panel_display, java.awt.BorderLayout.CENTER);
 
-		jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.Y_AXIS));
+		this.jPanel2.setLayout(new javax.swing.BoxLayout(this.jPanel2, javax.swing.BoxLayout.Y_AXIS));
 
-		bn_add.setText("Add Circle");
-		bn_add.addActionListener(new java.awt.event.ActionListener() {
+		this.bn_add.setText("Add Circle");
+		this.bn_add.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				bn_addActionPerformed(evt);
+				MyTest.this.bn_addActionPerformed(evt);
 			}
 		});
 
-		jPanel3.add(bn_add);
+		this.jPanel3.add(this.bn_add);
 
-		bn_remove.setText("Remove");
-		bn_remove.addActionListener(new java.awt.event.ActionListener() {
+		this.bn_remove.setText("Remove");
+		this.bn_remove.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				bn_removeActionPerformed(evt);
+				MyTest.this.bn_removeActionPerformed(evt);
 			}
 		});
 
-		jPanel3.add(bn_remove);
+		this.jPanel3.add(this.bn_remove);
 
-		jPanel2.add(jPanel3);
+		this.jPanel2.add(this.jPanel3);
 
-		jLabel1.setText("Text");
-		jPanel1.add(jLabel1);
+		this.jLabel1.setText("Text");
+		this.jPanel1.add(this.jLabel1);
 
-		jPanel2.add(jPanel1);
+		this.jPanel2.add(this.jPanel1);
 
-		getContentPane().add(jPanel2, java.awt.BorderLayout.SOUTH);
+		this.getContentPane().add(this.jPanel2, java.awt.BorderLayout.SOUTH);
 
-		pack();
+		this.pack();
 	}// </editor-fold>
 
 	private void bn_removeActionPerformed(java.awt.event.ActionEvent evt) {
-		panel.removeElement();
-		repaint();
+		this.panel.removeElement();
+		this.repaint();
 	}
 
 	private void bn_addActionPerformed(java.awt.event.ActionEvent evt) {
-		panel.addCircle();
-		repaint();
+		this.panel.addCircle();
+		this.repaint();
 	}
 
 	/**
@@ -201,7 +202,6 @@ public class MyTest extends javax.swing.JFrame {
 					new MyTest().setVisible(true);
 				}
 				catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

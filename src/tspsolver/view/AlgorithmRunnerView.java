@@ -181,7 +181,8 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 		if (actionCommand.equals("select_startAlgorithm")) {
 			StartAlgorithm startAlgorithm = (StartAlgorithm) this.startAlgorithms.getSelectedItem();
 			this.algorithmRunner.setSelectedStartAlgorithm(startAlgorithm);
-		} else if (actionCommand.equals("select_optimizerAlgorithm")) {
+		}
+		else if (actionCommand.equals("select_optimizerAlgorithm")) {
 			Object selectedItem = this.optimizerAlgorithms.getSelectedItem();
 			OptimizerAlgorithm optimizerAlgorithm = null;
 
@@ -206,7 +207,8 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 				this.pathWeight.setText(String.valueOf(path.getWeight()));
 				this.numberOfEdges.setText(String.valueOf(path.getNumberOfEdges()));
 
-			} else {
+			}
+			else {
 				this.pathWeight.setText(String.valueOf(0.0));
 			}
 
@@ -215,7 +217,8 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 			if (runningAlgorithm != null) {
 				this.finishedSuccessfully.setText(String.valueOf(runningAlgorithm.hasFinishedSuccessfully()));
 
-			} else {
+			}
+			else {
 				this.finishedSuccessfully.setText(String.valueOf(false));
 			}
 
@@ -236,7 +239,8 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 				Grid grid = scenario.getGrid();
 				this.numberOfNodes.setText(String.valueOf(grid.getNumberOfNodes()));
 
-			} else {
+			}
+			else {
 				this.numberOfNodes.setText(String.valueOf(0));
 			}
 		}
