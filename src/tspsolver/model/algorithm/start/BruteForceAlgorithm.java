@@ -65,23 +65,23 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 
 	@Override
 	protected boolean doStep() {
-		boolean successfulStep = true;
+		final boolean successfulStep = true;
 
 		// Swap the node indexes
-		int temp = this.nodeIndexes[this.outerLoopIndex];
+		final int temp = this.nodeIndexes[this.outerLoopIndex];
 		this.nodeIndexes[this.outerLoopIndex] = this.nodeIndexes[this.innerLoopIndex];
 		this.nodeIndexes[this.innerLoopIndex] = temp;
 
 		// Create the new path
 		this.currentNewPathUpdater.clearPath();
 		for (int i = 1; i <= this.nodeCount; i++) {
-			int firstIndex = this.nodeIndexes[i - 1];
-			int secondIndex = (i == this.nodeCount) ? this.nodeIndexes[0] : this.nodeIndexes[i];
+			final int firstIndex = this.nodeIndexes[i - 1];
+			final int secondIndex = (i == this.nodeCount) ? this.nodeIndexes[0] : this.nodeIndexes[i];
 
-			Node firstNode = this.nodes[firstIndex];
-			Node secondNode = this.nodes[secondIndex];
+			final Node firstNode = this.nodes[firstIndex];
+			final Node secondNode = this.nodes[secondIndex];
 
-			Edge edge = firstNode.getEdgeToNode(secondNode);
+			final Edge edge = firstNode.getEdgeToNode(secondNode);
 			if (edge == null) {
 				// FIXME: this path does not work, what do we do now?
 				return false;

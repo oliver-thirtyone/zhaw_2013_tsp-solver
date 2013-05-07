@@ -36,8 +36,8 @@ public class MinimumSpanningTreeHeuristikTest {
 	@Before
 	public void setUp() {
 		this.scenario = new Scenario("MinimumSpanningTreeHeuristikTest");
-		this.grid = scenario.getGrid();
-		this.path = scenario.getPath();
+		this.grid = this.scenario.getGrid();
+		this.path = this.scenario.getPath();
 
 		this.nodeNorth = GridFactory.createNode(3, 1);
 		this.nodeEast = GridFactory.createNode(4, 2);
@@ -49,7 +49,7 @@ public class MinimumSpanningTreeHeuristikTest {
 		GridFactory.addNode(this.grid, this.nodeSouth);
 		GridFactory.addNode(this.grid, this.nodeWest);
 
-		this.scenario.setStartingNode(nodeNorth);
+		this.scenario.setStartingNode(this.nodeNorth);
 
 		this.edgeNorthEast = GridFactory.getEdge(this.nodeNorth, this.nodeEast);
 		this.edgeNorthSouth = GridFactory.getEdge(this.nodeNorth, this.nodeSouth);

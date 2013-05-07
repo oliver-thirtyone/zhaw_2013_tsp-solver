@@ -34,7 +34,7 @@ public class NodeView {
 
 			this.svgGroup.loaderAddChild(null, this.svgCircle);
 		}
-		catch (SVGException exception) {
+		catch (final SVGException exception) {
 			exception.printStackTrace();
 		}
 	}
@@ -43,7 +43,7 @@ public class NodeView {
 		try {
 			this.svgGroup.removeChild(this.svgCircle);
 		}
-		catch (SVGException exception) {
+		catch (final SVGException exception) {
 			exception.printStackTrace();
 		}
 	}
@@ -57,7 +57,7 @@ public class NodeView {
 				this.svgCircle.addAttribute("fill", AnimationElement.AT_CSS, color);
 			}
 		}
-		catch (SVGException exception) {
+		catch (final SVGException exception) {
 			exception.printStackTrace();
 		}
 	}

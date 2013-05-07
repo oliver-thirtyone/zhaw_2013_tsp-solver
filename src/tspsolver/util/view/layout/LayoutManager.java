@@ -16,9 +16,9 @@ public class LayoutManager {
 
 	private GridBagConstraints constraints;
 
-	private Container container;
+	private final Container container;
 
-	private GridBagLayout layout;
+	private final GridBagLayout layout;
 
 	/**
 	 * @param container
@@ -41,7 +41,7 @@ public class LayoutManager {
 	 * @return {@code true} if the component count got increased
 	 */
 	public boolean addComponent(Component component) {
-		int componentCount = this.container.getComponentCount();
+		final int componentCount = this.container.getComponentCount();
 
 		this.layout.setConstraints(component, this.constraints);
 		this.container.add(component);

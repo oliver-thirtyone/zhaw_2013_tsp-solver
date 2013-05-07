@@ -57,10 +57,10 @@ public class GridView extends JPanel implements Observer {
 	public GridView() {
 		URI svgURI = null;
 		try {
-			InputStream svgImage = new FileInputStream(GridView.DATA_MAP_SWITZERLAND);
+			final InputStream svgImage = new FileInputStream(GridView.DATA_MAP_SWITZERLAND);
 			svgURI = SVGCache.getSVGUniverse().loadSVG(svgImage, GridView.DATA_MAP_SWITZERLAND);
 		}
-		catch (IOException exception) {
+		catch (final IOException exception) {
 			JOptionPane.showMessageDialog(null, "Unable to load svg image: " + GridView.DATA_MAP_SWITZERLAND, "Error loading svg image", JOptionPane.ERROR_MESSAGE);
 			exception.printStackTrace();
 		}
@@ -80,7 +80,7 @@ public class GridView extends JPanel implements Observer {
 		this.edgeViews = new HashMap<Edge, EdgeView>();
 
 		// Create the titled border
-		TitledBorder titledBorder = BorderFactory.createTitledBorder("");
+		final TitledBorder titledBorder = BorderFactory.createTitledBorder("");
 		titledBorder.setTitlePosition(TitledBorder.ABOVE_TOP);
 		this.setBorder(titledBorder);
 	}
@@ -101,7 +101,7 @@ public class GridView extends JPanel implements Observer {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				ElementUpdate<?, ?> elementUpdate = (ElementUpdate<?, ?>) argument;
+				final ElementUpdate<?, ?> elementUpdate = (ElementUpdate<?, ?>) argument;
 				GridView.this.doUpdate(elementUpdate);
 			}
 		});
@@ -119,11 +119,11 @@ public class GridView extends JPanel implements Observer {
 	private synchronized void doUpdate(ElementUpdate<?, ?> elementUpdate) {
 		// Starting node updates
 		if (elementUpdate instanceof StartingNodeUpdate) {
-			StartingNodeUpdate update = (StartingNodeUpdate) elementUpdate;
-			StartingNodeUpdateAction action = update.getAction();
+			final StartingNodeUpdate update = (StartingNodeUpdate) elementUpdate;
+			final StartingNodeUpdateAction action = update.getAction();
 
-			Node node = update.getElement();
-			NodeView nodeView = this.nodeViews.get(node);
+			final Node node = update.getElement();
+			final NodeView nodeView = this.nodeViews.get(node);
 
 			if (nodeView != null) {
 				switch (action) {
@@ -141,10 +141,10 @@ public class GridView extends JPanel implements Observer {
 
 		// Node updates
 		else if (elementUpdate instanceof NodeUpdate) {
-			NodeUpdate update = (NodeUpdate) elementUpdate;
-			NodeUpdateAction action = update.getAction();
+			final NodeUpdate update = (NodeUpdate) elementUpdate;
+			final NodeUpdateAction action = update.getAction();
 
-			Node node = update.getElement();
+			final Node node = update.getElement();
 			NodeView nodeView = null;
 
 			switch (action) {
@@ -169,11 +169,11 @@ public class GridView extends JPanel implements Observer {
 
 		// Path updates
 		else if (elementUpdate instanceof PathUpdate) {
-			PathUpdate update = (PathUpdate) elementUpdate;
-			PathUpdateAction action = update.getAction();
+			final PathUpdate update = (PathUpdate) elementUpdate;
+			final PathUpdateAction action = update.getAction();
 
-			Edge edge = update.getElement();
-			EdgeView edgeView = this.edgeViews.get(edge);
+			final Edge edge = update.getElement();
+			final EdgeView edgeView = this.edgeViews.get(edge);
 
 			if (edgeView != null) {
 				switch (action) {
@@ -197,10 +197,10 @@ public class GridView extends JPanel implements Observer {
 
 		// Edge updates
 		else if (elementUpdate instanceof EdgeUpdate) {
-			EdgeUpdate update = (EdgeUpdate) elementUpdate;
-			EdgeUpdateAction action = update.getAction();
+			final EdgeUpdate update = (EdgeUpdate) elementUpdate;
+			final EdgeUpdateAction action = update.getAction();
 
-			Edge edge = update.getElement();
+			final Edge edge = update.getElement();
 			EdgeView edgeView = null;
 
 			switch (action) {
@@ -228,7 +228,7 @@ public class GridView extends JPanel implements Observer {
 			this.svgDiagram.updateTime(0.0);
 			this.repaint();
 		}
-		catch (SVGException exception) {
+		catch (final SVGException exception) {
 			exception.printStackTrace();
 		}
 	}
@@ -256,44 +256,44 @@ public class GridView extends JPanel implements Observer {
 			this.svgDiagram.updateTime(0.0);
 			this.repaint();
 		}
-		catch (SVGException exception) {
+		catch (final SVGException exception) {
 			exception.printStackTrace();
 		}
 	}
 
 	private void paintGrid() {
-		for (Node node : this.scenario.getGrid().getNodes()) {
-			for (Edge edge : node.getEdges()) {
+		for (final Node node : this.scenario.getGrid().getNodes()) {
+			for (final Edge edge : node.getEdges()) {
 				this.scenario.update(this.scenario, new EdgeUpdate(edge, EdgeUpdateAction.ADD_EDGE));
 			}
 
 			this.scenario.update(this.scenario, new NodeUpdate(node, NodeUpdateAction.ADD_NODE));
 		}
 
-		Node startingNode = this.scenario.getStartingNode();
+		final Node startingNode = this.scenario.getStartingNode();
 		if (startingNode != null) {
 			this.scenario.update(this.scenario, new StartingNodeUpdate(startingNode, StartingNodeUpdateAction.ADD_STARTING_NODE));
 		}
 
-		for (Edge edge : this.scenario.getPath().getEdges()) {
+		for (final Edge edge : this.scenario.getPath().getEdges()) {
 			this.scenario.update(this.scenario, new PathUpdate(edge, PathUpdateAction.PATH_ELEMENT));
 		}
 	}
 
 	private void clearGrid() {
-		for (Edge edge : this.scenario.getPath().getEdges()) {
+		for (final Edge edge : this.scenario.getPath().getEdges()) {
 			this.scenario.update(this.scenario, new PathUpdate(edge, PathUpdateAction.NON_PATH_ELEMENT));
 		}
 
-		Node startingNode = this.scenario.getStartingNode();
+		final Node startingNode = this.scenario.getStartingNode();
 		if (startingNode != null) {
 			this.scenario.update(this.scenario, new StartingNodeUpdate(startingNode, StartingNodeUpdateAction.REMOVE_STARTING_NODE));
 		}
 
-		for (Node node : this.scenario.getGrid().getNodes()) {
+		for (final Node node : this.scenario.getGrid().getNodes()) {
 			this.scenario.update(this.scenario, new NodeUpdate(node, NodeUpdateAction.REMOVE_NODE));
 
-			for (Edge edge : node.getEdges()) {
+			for (final Edge edge : node.getEdges()) {
 				this.scenario.update(this.scenario, new EdgeUpdate(edge, EdgeUpdateAction.REMOVE_EDGE));
 			}
 		}

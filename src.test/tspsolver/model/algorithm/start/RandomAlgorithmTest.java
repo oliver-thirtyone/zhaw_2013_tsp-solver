@@ -33,8 +33,8 @@ public class RandomAlgorithmTest {
 	@Before
 	public void setUp() {
 		this.scenario = new Scenario("RandomAlgorithmTest");
-		this.grid = scenario.getGrid();
-		this.path = scenario.getPath();
+		this.grid = this.scenario.getGrid();
+		this.path = this.scenario.getPath();
 
 		this.nodeNorth = GridFactory.createNode(0, 5);
 		this.nodeEast = GridFactory.createNode(5, 0);
@@ -52,7 +52,7 @@ public class RandomAlgorithmTest {
 		GridFactory.addNode(this.grid, this.nodeSouth);
 		GridFactory.addNode(this.grid, this.nodeWest);
 
-		this.scenario.setStartingNode(nodeNorth);
+		this.scenario.setStartingNode(this.nodeNorth);
 
 		this.algorithm = new RandomAlgorithm();
 	}

@@ -37,8 +37,8 @@ public class TwoOptHeuristikTest {
 	@Before
 	public void setUp() {
 		this.scenario = new Scenario("TwoOptHeuristikTest");
-		this.grid = scenario.getGrid();
-		this.path = scenario.getPath();
+		this.grid = this.scenario.getGrid();
+		this.path = this.scenario.getPath();
 
 		this.nodeNorth = GridFactory.createNode(3, 1);
 		this.nodeEast = GridFactory.createNode(4, 2);
@@ -50,7 +50,7 @@ public class TwoOptHeuristikTest {
 		GridFactory.addNode(this.grid, this.nodeSouth);
 		GridFactory.addNode(this.grid, this.nodeWest);
 
-		this.scenario.setStartingNode(nodeNorth);
+		this.scenario.setStartingNode(this.nodeNorth);
 
 		this.edgeNorthEast = GridFactory.getEdge(this.nodeNorth, this.nodeEast);
 		this.edgeNorthSouth = GridFactory.getEdge(this.nodeNorth, this.nodeSouth);
@@ -65,7 +65,7 @@ public class TwoOptHeuristikTest {
 	@Test
 	public void test() {
 		// Create a valid path that is too heavy
-		PathUpdater pathUpdater = new PathUpdater(this.path);
+		final PathUpdater pathUpdater = new PathUpdater(this.path);
 		pathUpdater.addEdge(this.edgeNorthSouth);
 		pathUpdater.addEdge(this.edgeSouthWest);
 		pathUpdater.addEdge(this.edgeEastWest);

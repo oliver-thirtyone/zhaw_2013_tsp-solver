@@ -26,8 +26,8 @@ public class MainFrame extends JFrame {
 		this.mainRunnerView = new ControllerView(controller);
 		this.algorithmRunnerViews = new ArrayList<AlgorithmRunnerView>();
 
-		for (AlgorithmRunner algorithmRunner : controller.getAlgorithmRunners()) {
-			AlgorithmRunnerView algorithmRunnerView = new AlgorithmRunnerView(algorithmRunner);
+		for (final AlgorithmRunner algorithmRunner : controller.getAlgorithmRunners()) {
+			final AlgorithmRunnerView algorithmRunnerView = new AlgorithmRunnerView(algorithmRunner);
 			this.algorithmRunnerViews.add(algorithmRunnerView);
 		}
 

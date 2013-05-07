@@ -28,7 +28,7 @@ class DynamicIconPanel2 extends JPanel {
 	LinkedList<Circle> extraElements = new LinkedList<Circle>();
 
 	public DynamicIconPanel2() throws IOException {
-		InputStream svgImage = this.getClass().getClassLoader().getResourceAsStream("map/switzerland_simple.svg");
+		final InputStream svgImage = this.getClass().getClassLoader().getResourceAsStream("map/switzerland_simple.svg");
 		this.uri = SVGCache.getSVGUniverse().loadSVG(svgImage, "map_switzerland_simple");
 
 		this.icon = new SVGIcon();
@@ -52,13 +52,13 @@ class DynamicIconPanel2 extends JPanel {
 	}
 
 	public void addCircle() {
-		SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(this.uri);
-		Group group = (Group) diagram.getElement("tspsolver.nodes");
+		final SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(this.uri);
+		final Group group = (Group) diagram.getElement("tspsolver.nodes");
 
-		Circle circle = new Circle();
+		final Circle circle = new Circle();
 		try {
-			int cx = (int) (Math.random() * 400);
-			int cy = (int) (Math.random() * 257);
+			final int cx = (int) (Math.random() * 400);
+			final int cy = (int) (Math.random() * 257);
 
 			circle.addAttribute("cx", AnimationElement.AT_XML, "" + cx);
 			circle.addAttribute("cy", AnimationElement.AT_XML, "" + cy);
@@ -75,28 +75,28 @@ class DynamicIconPanel2 extends JPanel {
 			// Keep track of circles so we can remove them later
 			this.extraElements.add(circle);
 		}
-		catch (SVGException e) {
+		catch (final SVGException e) {
 			e.printStackTrace();
 		}
 
 	}
 
 	public void removeElement() {
-		int size = this.extraElements.size();
+		final int size = this.extraElements.size();
 		if (size == 0) {
 			return;
 		}
 
-		int idx = (int) (Math.random() * size);
-		ShapeElement shapeElement = this.extraElements.remove(idx);
+		final int idx = (int) (Math.random() * size);
+		final ShapeElement shapeElement = this.extraElements.remove(idx);
 
-		SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(this.uri);
-		Group group = (Group) diagram.getElement("tspsolver.nodes");
+		final SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(this.uri);
+		final Group group = (Group) diagram.getElement("tspsolver.nodes");
 
 		try {
 			group.removeChild(shapeElement);
 		}
-		catch (SVGException e) {
+		catch (final SVGException e) {
 			e.printStackTrace();
 		}
 
@@ -201,7 +201,7 @@ public class MyTest extends javax.swing.JFrame {
 				try {
 					new MyTest().setVisible(true);
 				}
-				catch (Exception e) {
+				catch (final Exception e) {
 					e.printStackTrace();
 				}
 			}

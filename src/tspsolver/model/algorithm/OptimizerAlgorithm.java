@@ -13,16 +13,16 @@ public abstract class OptimizerAlgorithm extends Algorithm {
 		boolean validArguments = true;
 
 		// Add each node twice, because each node must touch exactly two edges
-		List<Node> nodes2Visit = new ArrayList<Node>();
-		for (Node node : this.getGrid().getNodes()) {
+		final List<Node> nodes2Visit = new ArrayList<Node>();
+		for (final Node node : this.getGrid().getNodes()) {
 			nodes2Visit.add(node);
 			nodes2Visit.add(node);
 		}
 
 		// Check if the path visits each node once
-		for (Edge edge : this.getPath().getEdges()) {
-			Node fistNode = edge.getFirstNode();
-			Node secondNode = edge.getSecondNode();
+		for (final Edge edge : this.getPath().getEdges()) {
+			final Node fistNode = edge.getFirstNode();
+			final Node secondNode = edge.getSecondNode();
 
 			if (!nodes2Visit.remove(fistNode)) {
 				validArguments = false;
@@ -34,7 +34,7 @@ public abstract class OptimizerAlgorithm extends Algorithm {
 			}
 		}
 
-		for (Node node : nodes2Visit) {
+		for (final Node node : nodes2Visit) {
 			validArguments = false;
 			System.err.println("This node gets visited less then two times: " + node);
 		}

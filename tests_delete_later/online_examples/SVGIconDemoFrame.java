@@ -33,29 +33,29 @@ class DynamicIconPanel extends JPanel {
 	LinkedList extraElements = new LinkedList();
 
 	public DynamicIconPanel() {
-		StringReader reader = new StringReader(makeDynamicSVG());
-		uri = SVGCache.getSVGUniverse().loadSVG(reader, "myImage");
-		icon = new SVGIcon();
-		icon.setAntiAlias(true);
-		icon.setSvgURI(uri);
+		final StringReader reader = new StringReader(this.makeDynamicSVG());
+		this.uri = SVGCache.getSVGUniverse().loadSVG(reader, "myImage");
+		this.icon = new SVGIcon();
+		this.icon.setAntiAlias(true);
+		this.icon.setSvgURI(this.uri);
 
-		setPreferredSize(new Dimension(400, 400));
+		this.setPreferredSize(new Dimension(400, 400));
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
-		final int width = getWidth();
-		final int height = getHeight();
+		final int width = this.getWidth();
+		final int height = this.getHeight();
 
-		g.setColor(getBackground());
+		g.setColor(this.getBackground());
 		g.fillRect(0, 0, width, height);
 
-		icon.paintIcon(this, g, 0, 0);
+		this.icon.paintIcon(this, g, 0, 0);
 	}
 
 	private String makeDynamicSVG() {
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw);
+		final StringWriter sw = new StringWriter();
+		final PrintWriter pw = new PrintWriter(sw);
 
 		pw.println("<svg width=\"400\" height=\"400\" style=\"fill:none;stroke-width:16\">");
 		pw.println("    <circle id=\"bigCircle\" cx=\"200\" cy=\"200\" r=\"200\" style=\"stroke:blue\"/>");
@@ -70,10 +70,10 @@ class DynamicIconPanel extends JPanel {
 	}
 
 	public void setCircleForeground(Color color) {
-		SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(uri);
-		Circle circle = (Circle) diagram.getElement("bigCircle");
+		final SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(this.uri);
+		final Circle circle = (Circle) diagram.getElement("bigCircle");
 
-		String colorStrn = Integer.toHexString(color.getRGB() & 0xffffff);
+		final String colorStrn = Integer.toHexString(color.getRGB() & 0xffffff);
 		try {
 			if (!circle.hasAttribute("stroke", AnimationElement.AT_CSS)) {
 				circle.addAttribute("stroke", AnimationElement.AT_CSS, "#" + colorStrn);
@@ -82,16 +82,16 @@ class DynamicIconPanel extends JPanel {
 				circle.setAttribute("stroke", AnimationElement.AT_CSS, "#" + colorStrn);
 			}
 		}
-		catch (SVGElementException e) {
+		catch (final SVGElementException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void setCircleBackground(Color color) {
-		SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(uri);
-		Circle circle = (Circle) diagram.getElement("bigCircle");
+		final SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(this.uri);
+		final Circle circle = (Circle) diagram.getElement("bigCircle");
 
-		String colorStrn = Integer.toHexString(color.getRGB() & 0xffffff);
+		final String colorStrn = Integer.toHexString(color.getRGB() & 0xffffff);
 		try {
 			if (!circle.hasAttribute("fill", AnimationElement.AT_CSS)) {
 				circle.addAttribute("fill", AnimationElement.AT_CSS, "#" + colorStrn);
@@ -100,35 +100,35 @@ class DynamicIconPanel extends JPanel {
 				circle.setAttribute("fill", AnimationElement.AT_CSS, "#" + colorStrn);
 			}
 		}
-		catch (SVGElementException e) {
+		catch (final SVGElementException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void setText(String text) {
-		SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(uri);
-		Tspan tspan = (Tspan) diagram.getElement("userText");
+		final SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(this.uri);
+		final Tspan tspan = (Tspan) diagram.getElement("userText");
 
 		tspan.setText(text);
 
-		Text textEle = (Text) diagram.getElement("userTextParent");
+		final Text textEle = (Text) diagram.getElement("userTextParent");
 
 		try {
 			textEle.rebuild();
 		}
-		catch (Exception e) {
+		catch (final Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void addCircle() {
-		SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(uri);
-		Group group = (Group) diagram.getElement("extraElementGroup");
+		final SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(this.uri);
+		final Group group = (Group) diagram.getElement("extraElementGroup");
 
-		Circle circle = new Circle();
+		final Circle circle = new Circle();
 		try {
-			int cx = (int) (Math.random() * 400);
-			int cy = (int) (Math.random() * 400);
+			final int cx = (int) (Math.random() * 400);
+			final int cy = (int) (Math.random() * 400);
 
 			circle.addAttribute("cx", AnimationElement.AT_XML, "" + cx);
 			circle.addAttribute("cy", AnimationElement.AT_XML, "" + cy);
@@ -143,22 +143,22 @@ class DynamicIconPanel extends JPanel {
 			group.updateTime(0.0);
 
 			// Keep track of circles so we can remove them later
-			extraElements.add(circle);
+			this.extraElements.add(circle);
 		}
-		catch (SVGException e) {
+		catch (final SVGException e) {
 			e.printStackTrace();
 		}
 
 	}
 
 	public void addText() {
-		SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(uri);
-		Group group = (Group) diagram.getElement("extraElementGroup");
+		final SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(this.uri);
+		final Group group = (Group) diagram.getElement("extraElementGroup");
 
-		Text text = new Text();
+		final Text text = new Text();
 		try {
-			int x = (int) (Math.random() * 300) + 50;
-			int y = (int) (Math.random() * 300) + 50;
+			final int x = (int) (Math.random() * 300) + 50;
+			final int y = (int) (Math.random() * 300) + 50;
 
 			text.addAttribute("x", AnimationElement.AT_XML, "" + x);
 			text.addAttribute("y", AnimationElement.AT_XML, "" + y);
@@ -166,7 +166,7 @@ class DynamicIconPanel extends JPanel {
 
 			// text.appendText("text");
 
-			Tspan tspan = new Tspan();
+			final Tspan tspan = new Tspan();
 			tspan.setText("text");
 			text.appendTspan(tspan);
 
@@ -180,29 +180,30 @@ class DynamicIconPanel extends JPanel {
 			group.updateTime(0.0);
 
 			// Keep track of circles so we can remove them later
-			extraElements.add(text);
+			this.extraElements.add(text);
 		}
-		catch (SVGException e) {
+		catch (final SVGException e) {
 			e.printStackTrace();
 		}
 
 	}
 
 	public void removeElement() {
-		int size = extraElements.size();
-		if (size == 0)
+		final int size = this.extraElements.size();
+		if (size == 0) {
 			return;
+		}
 
-		int idx = (int) (Math.random() * size);
-		ShapeElement shapeElement = (ShapeElement) extraElements.remove(idx);
+		final int idx = (int) (Math.random() * size);
+		final ShapeElement shapeElement = (ShapeElement) this.extraElements.remove(idx);
 
-		SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(uri);
-		Group group = (Group) diagram.getElement("extraElementGroup");
+		final SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(this.uri);
+		final Group group = (Group) diagram.getElement("extraElementGroup");
 
 		try {
 			group.removeChild(shapeElement);
 		}
-		catch (SVGException e) {
+		catch (final SVGException e) {
 			e.printStackTrace();
 		}
 
@@ -220,11 +221,11 @@ public class SVGIconDemoFrame extends javax.swing.JFrame {
 
 	/** Creates new form SVGIconDemo */
 	public SVGIconDemoFrame() {
-		initComponents();
+		this.initComponents();
 
-		panel_display.add(panel, BorderLayout.CENTER);
+		this.panel_display.add(this.panel, BorderLayout.CENTER);
 
-		pack();
+		this.pack();
 	}
 
 	/**
@@ -232,126 +233,126 @@ public class SVGIconDemoFrame extends javax.swing.JFrame {
 	 */
 	// <editor-fold defaultstate="collapsed" desc=" Generated Code ">
 	private void initComponents() {
-		panel_display = new javax.swing.JPanel();
-		jPanel2 = new javax.swing.JPanel();
-		jPanel3 = new javax.swing.JPanel();
-		bn_back = new javax.swing.JButton();
-		bn_front = new javax.swing.JButton();
-		bn_add = new javax.swing.JButton();
-		jButton1 = new javax.swing.JButton();
-		bn_remove = new javax.swing.JButton();
-		jPanel1 = new javax.swing.JPanel();
-		jLabel1 = new javax.swing.JLabel();
-		text_userText = new javax.swing.JTextField();
+		this.panel_display = new javax.swing.JPanel();
+		this.jPanel2 = new javax.swing.JPanel();
+		this.jPanel3 = new javax.swing.JPanel();
+		this.bn_back = new javax.swing.JButton();
+		this.bn_front = new javax.swing.JButton();
+		this.bn_add = new javax.swing.JButton();
+		this.jButton1 = new javax.swing.JButton();
+		this.bn_remove = new javax.swing.JButton();
+		this.jPanel1 = new javax.swing.JPanel();
+		this.jLabel1 = new javax.swing.JLabel();
+		this.text_userText = new javax.swing.JTextField();
 
-		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-		panel_display.setLayout(new java.awt.BorderLayout());
+		this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		this.panel_display.setLayout(new java.awt.BorderLayout());
 
-		getContentPane().add(panel_display, java.awt.BorderLayout.CENTER);
+		this.getContentPane().add(this.panel_display, java.awt.BorderLayout.CENTER);
 
-		jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.Y_AXIS));
+		this.jPanel2.setLayout(new javax.swing.BoxLayout(this.jPanel2, javax.swing.BoxLayout.Y_AXIS));
 
-		bn_back.setText("Background");
-		bn_back.addActionListener(new java.awt.event.ActionListener() {
+		this.bn_back.setText("Background");
+		this.bn_back.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				bn_backActionPerformed(evt);
+				SVGIconDemoFrame.this.bn_backActionPerformed(evt);
 			}
 		});
 
-		jPanel3.add(bn_back);
+		this.jPanel3.add(this.bn_back);
 
-		bn_front.setText("Foreground");
-		bn_front.addActionListener(new java.awt.event.ActionListener() {
+		this.bn_front.setText("Foreground");
+		this.bn_front.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				bn_frontActionPerformed(evt);
+				SVGIconDemoFrame.this.bn_frontActionPerformed(evt);
 			}
 		});
 
-		jPanel3.add(bn_front);
+		this.jPanel3.add(this.bn_front);
 
-		bn_add.setText("Add Circle");
-		bn_add.addActionListener(new java.awt.event.ActionListener() {
+		this.bn_add.setText("Add Circle");
+		this.bn_add.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				bn_addActionPerformed(evt);
+				SVGIconDemoFrame.this.bn_addActionPerformed(evt);
 			}
 		});
 
-		jPanel3.add(bn_add);
+		this.jPanel3.add(this.bn_add);
 
-		jButton1.setText("Add Text");
-		jButton1.addActionListener(new java.awt.event.ActionListener() {
+		this.jButton1.setText("Add Text");
+		this.jButton1.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jButton1ActionPerformed(evt);
+				SVGIconDemoFrame.this.jButton1ActionPerformed(evt);
 			}
 		});
 
-		jPanel3.add(jButton1);
+		this.jPanel3.add(this.jButton1);
 
-		bn_remove.setText("Remove");
-		bn_remove.addActionListener(new java.awt.event.ActionListener() {
+		this.bn_remove.setText("Remove");
+		this.bn_remove.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				bn_removeActionPerformed(evt);
+				SVGIconDemoFrame.this.bn_removeActionPerformed(evt);
 			}
 		});
 
-		jPanel3.add(bn_remove);
+		this.jPanel3.add(this.bn_remove);
 
-		jPanel2.add(jPanel3);
+		this.jPanel2.add(this.jPanel3);
 
-		jLabel1.setText("Text");
-		jPanel1.add(jLabel1);
+		this.jLabel1.setText("Text");
+		this.jPanel1.add(this.jLabel1);
 
-		text_userText.setText("Hello!");
-		text_userText.setPreferredSize(new java.awt.Dimension(200, 20));
-		text_userText.addActionListener(new java.awt.event.ActionListener() {
+		this.text_userText.setText("Hello!");
+		this.text_userText.setPreferredSize(new java.awt.Dimension(200, 20));
+		this.text_userText.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				text_userTextActionPerformed(evt);
+				SVGIconDemoFrame.this.text_userTextActionPerformed(evt);
 			}
 		});
 
-		jPanel1.add(text_userText);
+		this.jPanel1.add(this.text_userText);
 
-		jPanel2.add(jPanel1);
+		this.jPanel2.add(this.jPanel1);
 
-		getContentPane().add(jPanel2, java.awt.BorderLayout.SOUTH);
+		this.getContentPane().add(this.jPanel2, java.awt.BorderLayout.SOUTH);
 
-		pack();
+		this.pack();
 	}// </editor-fold>
 
 	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-		panel.addText();
-		repaint();
+		this.panel.addText();
+		this.repaint();
 	}
 
 	private void text_userTextActionPerformed(java.awt.event.ActionEvent evt) {
-		panel.setText(text_userText.getText());
-		repaint();
+		this.panel.setText(this.text_userText.getText());
+		this.repaint();
 	}
 
 	private void bn_removeActionPerformed(java.awt.event.ActionEvent evt) {
-		panel.removeElement();
-		repaint();
+		this.panel.removeElement();
+		this.repaint();
 	}
 
 	private void bn_addActionPerformed(java.awt.event.ActionEvent evt) {
-		panel.addCircle();
-		repaint();
+		this.panel.addCircle();
+		this.repaint();
 	}
 
 	private void bn_frontActionPerformed(java.awt.event.ActionEvent evt) {
-		panel.setCircleForeground(new Color((float) Math.random(), (float) Math.random(), (float) Math.random()));
-		repaint();
+		this.panel.setCircleForeground(new Color((float) Math.random(), (float) Math.random(), (float) Math.random()));
+		this.repaint();
 	}
 
 	private void bn_backActionPerformed(java.awt.event.ActionEvent evt) {
-		panel.setCircleBackground(new Color((float) Math.random(), (float) Math.random(), (float) Math.random()));
-		repaint();
+		this.panel.setCircleBackground(new Color((float) Math.random(), (float) Math.random(), (float) Math.random()));
+		this.repaint();
 	}
 
 	/**

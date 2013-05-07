@@ -26,29 +26,34 @@ public class Grid extends Observable implements Serializable, Observer {
 		final int prime = 31;
 		int result = 1;
 
-		result = prime * result + ((nodes == null) ? 0 : nodes.hashCode());
+		result = prime * result + ((this.nodes == null) ? 0 : this.nodes.hashCode());
 
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-
-		if (obj == null)
-			return false;
-
-		if (getClass() != obj.getClass())
-			return false;
-
-		Grid other = (Grid) obj;
-		if (nodes == null) {
-			if (other.nodes != null)
-				return false;
 		}
-		else if (!nodes.equals(other.nodes))
+
+		if (obj == null) {
 			return false;
+		}
+
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+
+		final Grid other = (Grid) obj;
+		if (this.nodes == null) {
+			if (other.nodes != null) {
+				return false;
+			}
+		}
+		else if (!this.nodes.equals(other.nodes)) {
+			return false;
+		}
 
 		return true;
 	}
@@ -78,7 +83,7 @@ public class Grid extends Observable implements Serializable, Observer {
 	protected synchronized void addNode(Node node, boolean link) {
 		if (!this.containsNode(node)) {
 			if (link) {
-				for (Node n : this.getNodes()) {
+				for (final Node n : this.getNodes()) {
 					n.addEdgeToNode(node);
 				}
 			}
@@ -91,7 +96,7 @@ public class Grid extends Observable implements Serializable, Observer {
 
 	protected synchronized void removeNode(Node node) {
 		if (this.containsNode(node)) {
-			for (Node n : this.getNodes()) {
+			for (final Node n : this.getNodes()) {
 				n.removeEdgeToNode(node);
 			}
 			node.deleteObserver(this);
@@ -102,13 +107,13 @@ public class Grid extends Observable implements Serializable, Observer {
 	}
 
 	protected synchronized void clear() {
-		for (Node node : this.getNodes()) {
+		for (final Node node : this.getNodes()) {
 			this.removeNode(node);
 		}
 	}
 
 	private void fireNodeUpdate(Node node, NodeUpdateAction action) {
-		NodeUpdate update = new NodeUpdate(node, action);
+		final NodeUpdate update = new NodeUpdate(node, action);
 
 		this.setChanged();
 		this.notifyObservers(update);

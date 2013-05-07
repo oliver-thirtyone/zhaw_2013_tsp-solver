@@ -31,8 +31,8 @@ public class EdgeView {
 
 	protected void createLine() {
 		try {
-			Node firstNode = this.edge.getFirstNode();
-			Node secondNode = this.edge.getSecondNode();
+			final Node firstNode = this.edge.getFirstNode();
+			final Node secondNode = this.edge.getSecondNode();
 
 			this.svgLine.addAttribute("x1", AnimationElement.AT_XML, String.valueOf(firstNode.getX()));
 			this.svgLine.addAttribute("y1", AnimationElement.AT_XML, String.valueOf(firstNode.getY()));
@@ -42,7 +42,7 @@ public class EdgeView {
 
 			this.svgGroup.loaderAddChild(null, this.svgLine);
 		}
-		catch (SVGException exception) {
+		catch (final SVGException exception) {
 			exception.printStackTrace();
 		}
 	}
@@ -51,7 +51,7 @@ public class EdgeView {
 		try {
 			this.svgGroup.removeChild(this.svgLine);
 		}
-		catch (SVGException exception) {
+		catch (final SVGException exception) {
 			exception.printStackTrace();
 		}
 	}
@@ -81,7 +81,7 @@ public class EdgeView {
 				}
 			}
 		}
-		catch (SVGException exception) {
+		catch (final SVGException exception) {
 			exception.printStackTrace();
 		}
 	}

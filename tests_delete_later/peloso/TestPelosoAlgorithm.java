@@ -48,19 +48,19 @@ public class TestPelosoAlgorithm extends JFrame {
 
 	public static void main(String[] args) throws Exception {
 		// Load a scenario
-		XMLScenarioLoader scenarioLoader = new XMLScenarioLoader();
-		InputStream inputStream = new FileInputStream("data/scenario/test_north_south_east_west.xml");
-		Scenario scenario = scenarioLoader.loadScenario(inputStream);
+		final XMLScenarioLoader scenarioLoader = new XMLScenarioLoader();
+		final InputStream inputStream = new FileInputStream("data/scenario/test_north_south_east_west.xml");
+		final Scenario scenario = scenarioLoader.loadScenario(inputStream);
 
-		TestPelosoAlgorithm testGridView = new TestPelosoAlgorithm(scenario);
+		final TestPelosoAlgorithm testGridView = new TestPelosoAlgorithm(scenario);
 		testGridView.setSize(800, 600);
 		testGridView.setLocationRelativeTo(null);
 		testGridView.setVisible(true);
 
 		// Run an algorithm
-		StartAlgorithm startAlgorithm = new MinimumSpanningTreeHeuristik();
-		OptimizerAlgorithm optimizerAlgorithm = new TwoOptHeuristik();
-		AlgorithmRunner runner = new AlgorithmRunner(new StartAlgorithm[] { startAlgorithm }, new OptimizerAlgorithm[] { optimizerAlgorithm });
+		final StartAlgorithm startAlgorithm = new MinimumSpanningTreeHeuristik();
+		final OptimizerAlgorithm optimizerAlgorithm = new TwoOptHeuristik();
+		final AlgorithmRunner runner = new AlgorithmRunner(new StartAlgorithm[] { startAlgorithm }, new OptimizerAlgorithm[] { optimizerAlgorithm });
 
 		runner.setSelectedScenario(scenario);
 		runner.setSelectedStartAlgorithm(startAlgorithm);

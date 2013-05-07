@@ -23,7 +23,7 @@ public abstract class StartAlgorithm extends Algorithm {
 			validArguments = false;
 		}
 
-		for (Node node : this.getGrid().getNodes()) {
+		for (final Node node : this.getGrid().getNodes()) {
 			if (node.getNumberOfEdges() < 2) {
 				System.err.println("Each node needs at least two edges");
 				validArguments = false;

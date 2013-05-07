@@ -21,7 +21,7 @@ public class NearestNeighborHeuristik extends StartAlgorithm {
 
 	@Override
 	protected void doInitialize() {
-		for (Node node : this.getGrid().getNodes()) {
+		for (final Node node : this.getGrid().getNodes()) {
 			this.nodesToVisit.add(node);
 		}
 		this.setCurrentNode(this.getStartingNode());
@@ -44,14 +44,14 @@ public class NearestNeighborHeuristik extends StartAlgorithm {
 			this.nodesToVisit.remove(this.getCurrentNode());
 
 			// Get all available edges from the current node
-			Edge[] edges = this.getCurrentNode().getEdges();
+			final Edge[] edges = this.getCurrentNode().getEdges();
 
 			// Get the shortest edge to a node that we still have to visit
-			for (Edge edge : edges) {
+			for (final Edge edge : edges) {
 
 				// Does this edge lead to a node that we still have to visit?
 				boolean validEdge = false;
-				for (Node nodeToVisit : this.nodesToVisit) {
+				for (final Node nodeToVisit : this.nodesToVisit) {
 					if (edge.getFirstNode() == nodeToVisit || edge.getSecondNode() == nodeToVisit) {
 						validEdge = true;
 						break;
@@ -89,7 +89,7 @@ public class NearestNeighborHeuristik extends StartAlgorithm {
 		}
 		else {
 			// Link the last node with the starting node
-			Edge lastEdge = this.getCurrentNode().getEdgeToNode(this.getStartingNode());
+			final Edge lastEdge = this.getCurrentNode().getEdgeToNode(this.getStartingNode());
 			if (lastEdge != null) {
 				this.getPathUpdater().addEdge(lastEdge);
 				this.setCurrentNode(this.getStartingNode());

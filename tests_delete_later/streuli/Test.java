@@ -19,26 +19,26 @@ class IconPanel2 extends JPanel {
 
 	public IconPanel2() throws IOException {
 
-		InputStream svgImage = this.getClass().getClassLoader().getResourceAsStream("map/switzerland.svg");
-		URI uri = SVGCache.getSVGUniverse().loadSVG(svgImage, "map_switzerland");
+		final InputStream svgImage = this.getClass().getClassLoader().getResourceAsStream("map/switzerland.svg");
+		final URI uri = SVGCache.getSVGUniverse().loadSVG(svgImage, "map_switzerland");
 
-		test = new SVGIcon();
-		test.setSvgURI(uri);
+		this.test = new SVGIcon();
+		this.test.setSvgURI(uri);
 
-		setPreferredSize(new Dimension(400, 400));
+		this.setPreferredSize(new Dimension(400, 400));
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
-		final int width = getWidth();
-		final int height = getHeight();
+		final int width = this.getWidth();
+		final int height = this.getHeight();
 
-		g.setColor(getBackground());
+		g.setColor(this.getBackground());
 		g.fillRect(0, 0, width, height);
 
-		test.setPreferredSize(new Dimension(400, 256));
-		test.setScaleToFit(true);
-		test.paintIcon(this, g, 0, 0);
+		this.test.setPreferredSize(new Dimension(400, 256));
+		this.test.setScaleToFit(true);
+		this.test.paintIcon(this, g, 0, 0);
 	}
 }
 
@@ -53,13 +53,13 @@ public class Test extends javax.swing.JFrame {
 	 * @throws IOException
 	 */
 	public Test() throws IOException {
-		panel = new IconPanel2();
+		this.panel = new IconPanel2();
 
-		initComponents();
+		this.initComponents();
 
-		this.getContentPane().add(panel, BorderLayout.CENTER);
+		this.getContentPane().add(this.panel, BorderLayout.CENTER);
 
-		pack();
+		this.pack();
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class Test extends javax.swing.JFrame {
 	 */
 	private void initComponents() {
 
-		setLayout(new java.awt.BorderLayout());
+		this.setLayout(new java.awt.BorderLayout());
 
 	}
 
@@ -78,7 +78,7 @@ public class Test extends javax.swing.JFrame {
 				try {
 					new Test().setVisible(true);
 				}
-				catch (IOException e) {
+				catch (final IOException e) {
 					e.printStackTrace();
 				}
 			}

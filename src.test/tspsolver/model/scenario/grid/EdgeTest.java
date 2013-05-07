@@ -5,11 +5,6 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import tspsolver.model.scenario.grid.Edge;
-import tspsolver.model.scenario.grid.Grid;
-import tspsolver.model.scenario.grid.GridFactory;
-import tspsolver.model.scenario.grid.Node;
-
 public class EdgeTest {
 
 	private Grid grid;
@@ -25,10 +20,10 @@ public class EdgeTest {
 		this.firstNode = GridFactory.createNode(2, 3);
 		this.secondNode = GridFactory.createNode(-2, -3);
 
-		GridFactory.addNode(this.grid, firstNode);
-		GridFactory.addNode(this.grid, secondNode);
+		GridFactory.addNode(this.grid, this.firstNode);
+		GridFactory.addNode(this.grid, this.secondNode);
 
-		this.edge = GridFactory.getEdge(firstNode, secondNode);
+		this.edge = GridFactory.getEdge(this.firstNode, this.secondNode);
 	}
 
 	@Test

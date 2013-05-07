@@ -28,47 +28,47 @@ public class Launcher {
 	public static final String SCENARIO_DIRECTORY = "data/scenario";
 
 	public static void main(String[] args) {
-		IScenarioLoader scenarioLoader = new XMLScenarioLoader();
+		final IScenarioLoader scenarioLoader = new XMLScenarioLoader();
 
 		// Check if the scenario directory exits
-		File scenarioDirectory = new File(Launcher.SCENARIO_DIRECTORY);
+		final File scenarioDirectory = new File(Launcher.SCENARIO_DIRECTORY);
 		if (!scenarioDirectory.exists() && !scenarioDirectory.isDirectory()) {
 			System.err.println("Scenario directory does not exit: " + Launcher.SCENARIO_DIRECTORY);
 			System.exit(1);
 		}
 
 		// Create the scenarios
-		List<Scenario> scenarioList = new ArrayList<Scenario>();
-		for (File scenarioFile : scenarioDirectory.listFiles()) {
+		final List<Scenario> scenarioList = new ArrayList<Scenario>();
+		for (final File scenarioFile : scenarioDirectory.listFiles()) {
 			if (scenarioFile.isDirectory()) {
 				continue;
 			}
 			try {
-				InputStream inputStream = new FileInputStream(scenarioFile);
-				Scenario scenario = scenarioLoader.loadScenario(inputStream);
+				final InputStream inputStream = new FileInputStream(scenarioFile);
+				final Scenario scenario = scenarioLoader.loadScenario(inputStream);
 				scenarioList.add(scenario);
 			}
-			catch (IllegalArgumentException exception) {
+			catch (final IllegalArgumentException exception) {
 				exception.printStackTrace();
 			}
-			catch (FileNotFoundException exception) {
+			catch (final FileNotFoundException exception) {
 				exception.printStackTrace();
 			}
 		}
-		Scenario[] scenarios = scenarioList.toArray(new Scenario[scenarioList.size()]);
+		final Scenario[] scenarios = scenarioList.toArray(new Scenario[scenarioList.size()]);
 
 		// Create the algorithm runners
-		AlgorithmRunner[] algorithmRunners = new AlgorithmRunner[Launcher.NUMBER_OF_ALGORITHM_RUNNERS];
+		final AlgorithmRunner[] algorithmRunners = new AlgorithmRunner[Launcher.NUMBER_OF_ALGORITHM_RUNNERS];
 		for (int i = 0; i < Launcher.NUMBER_OF_ALGORITHM_RUNNERS; i++) {
 			// Create the start-algorithms
-			StartAlgorithm[] startAlgorithms = new StartAlgorithm[4];
+			final StartAlgorithm[] startAlgorithms = new StartAlgorithm[4];
 			startAlgorithms[0] = new BruteForceAlgorithm();
 			startAlgorithms[1] = new NearestNeighborHeuristik();
 			startAlgorithms[2] = new MinimumSpanningTreeHeuristik();
 			startAlgorithms[3] = new RandomAlgorithm();
 
 			// Create the optimizer-algorithms
-			OptimizerAlgorithm[] optimizerAlgorithms = new OptimizerAlgorithm[2];
+			final OptimizerAlgorithm[] optimizerAlgorithms = new OptimizerAlgorithm[2];
 			optimizerAlgorithms[0] = new TwoOptHeuristik();
 			optimizerAlgorithms[1] = new LinKernighanHeuristik();
 
@@ -76,10 +76,10 @@ public class Launcher {
 		}
 
 		// Create the main runner
-		Controller controller = new Controller(scenarios, algorithmRunners);
+		final Controller controller = new Controller(scenarios, algorithmRunners);
 
 		// Create the main view
-		MainFrame mainFrame = new MainFrame(controller);
+		final MainFrame mainFrame = new MainFrame(controller);
 		mainFrame.setVisible(true);
 	}
 }

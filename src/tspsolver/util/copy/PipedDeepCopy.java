@@ -26,14 +26,14 @@ public class PipedDeepCopy {
 		Object obj = null;
 		try {
 			// Make a connected pair of piped streams
-			PipedInputStream in = new PipedInputStream();
-			PipedOutputStream pos = new PipedOutputStream(in);
+			final PipedInputStream in = new PipedInputStream();
+			final PipedOutputStream pos = new PipedOutputStream(in);
 
 			// Make a deserializer thread (see inner class below)
-			Deserializer des = new Deserializer(in);
+			final Deserializer des = new Deserializer(in);
 
 			// Write the object to the pipe
-			ObjectOutputStream out = new ObjectOutputStream(pos);
+			final ObjectOutputStream out = new ObjectOutputStream(pos);
 			out.writeObject(orig);
 			out.close();
 
@@ -41,10 +41,11 @@ public class PipedDeepCopy {
 			obj = des.getDeserializedObject();
 
 			// See if something went wrong
-			if (obj == ERROR)
+			if (obj == PipedDeepCopy.ERROR) {
 				obj = null;
+			}
 		}
-		catch (IOException ioe) {
+		catch (final IOException ioe) {
 			ioe.printStackTrace();
 		}
 
@@ -71,35 +72,37 @@ public class PipedDeepCopy {
 		private PipedInputStream in = null;
 
 		public Deserializer(PipedInputStream pin) throws IOException {
-			lock = new Object();
+			this.lock = new Object();
 			this.in = pin;
-			start();
+			this.start();
 		}
 
 		@Override
 		public void run() {
 			Object o = null;
 			try {
-				ObjectInputStream oin = new ObjectInputStream(in);
+				final ObjectInputStream oin = new ObjectInputStream(this.in);
 				o = oin.readObject();
 			}
-			catch (IOException e) {
+			catch (final IOException e) {
 				// This should never happen. If it does we make sure
 				// that a the object is set to a flag that indicates
 				// deserialization was not possible.
 				e.printStackTrace();
 			}
-			catch (ClassNotFoundException cnfe) {
+			catch (final ClassNotFoundException cnfe) {
 				// Same here...
 				cnfe.printStackTrace();
 			}
 
-			synchronized (lock) {
-				if (o == null)
-					obj = ERROR;
-				else
-					obj = o;
-				lock.notifyAll();
+			synchronized (this.lock) {
+				if (o == null) {
+					this.obj = PipedDeepCopy.ERROR;
+				}
+				else {
+					this.obj = o;
+				}
+				this.lock.notifyAll();
 			}
 		}
 
@@ -109,16 +112,16 @@ public class PipedDeepCopy {
 		public Object getDeserializedObject() {
 			// Wait for the object to show up
 			try {
-				synchronized (lock) {
-					while (obj == null) {
-						lock.wait();
+				synchronized (this.lock) {
+					while (this.obj == null) {
+						this.lock.wait();
 					}
 				}
 			}
-			catch (InterruptedException ie) {
+			catch (final InterruptedException ie) {
 				// If we are interrupted we just return null
 			}
-			return obj;
+			return this.obj;
 		}
 	}
 

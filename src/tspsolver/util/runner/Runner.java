@@ -44,7 +44,7 @@ public abstract class Runner extends Observable implements Runnable {
 				try {
 					Thread.sleep(Runner.PAUSE_SLEEP_MILLISECONDS);
 				}
-				catch (InterruptedException exception) {
+				catch (final InterruptedException exception) {
 					exception.printStackTrace();
 				}
 				continue;
@@ -55,7 +55,7 @@ public abstract class Runner extends Observable implements Runnable {
 				try {
 					Thread.sleep(this.getStepDelay());
 				}
-				catch (InterruptedException exception) {
+				catch (final InterruptedException exception) {
 					exception.printStackTrace();
 				}
 			}
@@ -256,10 +256,10 @@ public abstract class Runner extends Observable implements Runnable {
 	}
 
 	public final synchronized long getTimeElapsed() {
-		long timeCurrent = System.currentTimeMillis();
+		final long timeCurrent = System.currentTimeMillis();
 
-		long timeStarted = this.timeStarted != 0 ? this.timeStarted : timeCurrent;
-		long timeStopped = this.timeStopped != 0 ? this.timeStopped : timeCurrent;
+		final long timeStarted = this.timeStarted != 0 ? this.timeStarted : timeCurrent;
+		final long timeStopped = this.timeStopped != 0 ? this.timeStopped : timeCurrent;
 
 		return timeStopped - timeStarted;
 	}
@@ -273,7 +273,7 @@ public abstract class Runner extends Observable implements Runnable {
 	}
 
 	public final synchronized boolean isRunning() {
-		RunnerState state = this.getState();
+		final RunnerState state = this.getState();
 		return state == RunnerState.RUNNING || state == RunnerState.STEPPING || state == RunnerState.PAUSED;
 	}
 }

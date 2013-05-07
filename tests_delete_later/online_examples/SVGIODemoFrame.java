@@ -19,28 +19,28 @@ class IconPanel extends JPanel {
 	final SVGIcon icon;
 
 	public IconPanel() {
-		StringReader reader = new StringReader(makeDynamicSVG());
-		URI uri = SVGCache.getSVGUniverse().loadSVG(reader, "myImage");
-		icon = new SVGIcon();
-		icon.setSvgURI(uri);
+		final StringReader reader = new StringReader(this.makeDynamicSVG());
+		final URI uri = SVGCache.getSVGUniverse().loadSVG(reader, "myImage");
+		this.icon = new SVGIcon();
+		this.icon.setSvgURI(uri);
 
-		setPreferredSize(new Dimension(400, 400));
+		this.setPreferredSize(new Dimension(400, 400));
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
-		final int width = getWidth();
-		final int height = getHeight();
+		final int width = this.getWidth();
+		final int height = this.getHeight();
 
-		g.setColor(getBackground());
+		g.setColor(this.getBackground());
 		g.fillRect(0, 0, width, height);
 
-		icon.paintIcon(this, g, 0, 0);
+		this.icon.paintIcon(this, g, 0, 0);
 	}
 
 	private String makeDynamicSVG() {
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw);
+		final StringWriter sw = new StringWriter();
+		final PrintWriter pw = new PrintWriter(sw);
 
 		pw.println("<svg width=\"400\" height=\"400\" style=\"fill:none;stroke-width:4\">");
 		pw.println("    <circle cx=\"200\" cy=\"200\" r=\"200\" style=\"stroke:blue\"/>");
@@ -65,11 +65,11 @@ public class SVGIODemoFrame extends javax.swing.JFrame {
 
 	/** Creates new form SVGIconDemo */
 	public SVGIODemoFrame() {
-		initComponents();
+		this.initComponents();
 
-		this.getContentPane().add(panel, BorderLayout.CENTER);
+		this.getContentPane().add(this.panel, BorderLayout.CENTER);
 
-		pack();
+		this.pack();
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class SVGIODemoFrame extends javax.swing.JFrame {
 	 */
 	private void initComponents() {
 
-		setLayout(new java.awt.BorderLayout());
+		this.setLayout(new java.awt.BorderLayout());
 
 	}
 

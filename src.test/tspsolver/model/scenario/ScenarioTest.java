@@ -18,12 +18,12 @@ public class ScenarioTest {
 	@Before
 	public void setUp() {
 		this.scenario = new Scenario("ScenarioTest");
-		Grid grid = scenario.getGrid();
+		final Grid grid = this.scenario.getGrid();
 
-		Node nodeNorth = GridFactory.createNode(0, 5);
-		Node nodeEast = GridFactory.createNode(4, 0);
-		Node nodeSouth = GridFactory.createNode(0, -5);
-		Node nodeWest = GridFactory.createNode(-5, 0);
+		final Node nodeNorth = GridFactory.createNode(0, 5);
+		final Node nodeEast = GridFactory.createNode(4, 0);
+		final Node nodeSouth = GridFactory.createNode(0, -5);
+		final Node nodeWest = GridFactory.createNode(-5, 0);
 
 		GridFactory.addNode(grid, nodeNorth);
 		GridFactory.addNode(grid, nodeEast);
@@ -35,8 +35,8 @@ public class ScenarioTest {
 
 	@Test
 	public void testCopy() throws FileNotFoundException {
-		Scenario copyOfScenario = scenario.copy();
-		Assert.assertEquals(scenario, copyOfScenario);
+		final Scenario copyOfScenario = this.scenario.copy();
+		Assert.assertEquals(this.scenario, copyOfScenario);
 	}
 
 }

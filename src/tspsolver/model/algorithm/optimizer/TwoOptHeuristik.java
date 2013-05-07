@@ -24,15 +24,15 @@ public class TwoOptHeuristik extends OptimizerAlgorithm {
 
 		this.nodesInOrder.add(currentNode);
 
-		int numberOfEdges = this.getPath().getNumberOfEdges();
+		final int numberOfEdges = this.getPath().getNumberOfEdges();
 
-		HashSet<Edge> edges = new HashSet<Edge>();
-		for (Edge edge : this.getPath().getEdges()) {
+		final HashSet<Edge> edges = new HashSet<Edge>();
+		for (final Edge edge : this.getPath().getEdges()) {
 			edges.add(edge);
 		}
 
 		while (this.nodesInOrder.size() < numberOfEdges) {
-			for (Edge edge : edges) {
+			for (final Edge edge : edges) {
 				if (edge.getFirstNode() == currentNode) {
 
 					edges.remove(edge);
@@ -66,16 +66,16 @@ public class TwoOptHeuristik extends OptimizerAlgorithm {
 	protected boolean doStep() {
 		try {
 
-			int numberOfNodes = this.getPath().getNumberOfEdges();
+			final int numberOfNodes = this.getPath().getNumberOfEdges();
 
-			double lightestWeight = this.getPath().getWeight();
+			final double lightestWeight = this.getPath().getWeight();
 
 			for (int i = 0; i < numberOfNodes; i++) {
 				for (int k = i + 1; k < numberOfNodes - 1; k++) {
 
-					Path newPath = this.generateNewPath(i, k);
+					final Path newPath = this.generateNewPath(i, k);
 
-					double newWeight = newPath.getWeight();
+					final double newWeight = newPath.getWeight();
 
 					if (newWeight < lightestWeight) {
 
@@ -91,14 +91,14 @@ public class TwoOptHeuristik extends OptimizerAlgorithm {
 			return true;
 
 		}
-		catch (IllegalStateException ex) {
+		catch (final IllegalStateException ex) {
 			return false;
 		}
 	}
 
 	private Path generateNewPath(int i, int k) {
 
-		Vector<Node> newNodePath = new Vector<Node>();
+		final Vector<Node> newNodePath = new Vector<Node>();
 
 		for (int j = 0; j < i; j++) {
 			newNodePath.add(this.nodesInOrder.get(j));
@@ -117,14 +117,14 @@ public class TwoOptHeuristik extends OptimizerAlgorithm {
 
 	private Path convertNodesToPath(Vector<Node> nodePath) {
 
-		Path path = new Path();
-		PathUpdater pathUpdater = new PathUpdater(path);
+		final Path path = new Path();
+		final PathUpdater pathUpdater = new PathUpdater(path);
 
 		for (int j = 1; j <= this.nodesInOrder.size(); j++) {
-			Node firstNode = nodePath.get(j - 1);
-			Node secondNode = (j == this.nodesInOrder.size()) ? nodePath.get(0) : nodePath.get(j);
+			final Node firstNode = nodePath.get(j - 1);
+			final Node secondNode = (j == this.nodesInOrder.size()) ? nodePath.get(0) : nodePath.get(j);
 
-			Edge edge = firstNode.getEdgeToNode(secondNode);
+			final Edge edge = firstNode.getEdgeToNode(secondNode);
 			if (edge == null) {
 				// FIXME: this path does not work, what do we do now?
 				throw new IllegalStateException();

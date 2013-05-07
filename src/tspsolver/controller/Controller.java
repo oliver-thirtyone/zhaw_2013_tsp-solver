@@ -39,7 +39,7 @@ public class Controller extends MainRunner {
 	@Override
 	public synchronized boolean reset() {
 		// Select the first scenario by default
-		this.setSelectedScenario(scenarios[0]);
+		this.setSelectedScenario(this.scenarios[0]);
 
 		// Reset all runners
 		return super.reset();
@@ -65,10 +65,10 @@ public class Controller extends MainRunner {
 		}
 
 		// Set the scenario for all algorithm runners
-		for (AlgorithmRunner runner : this.getAlgorithmRunners()) {
-			Scenario copyOfScenario = scenario.copy();
+		for (final AlgorithmRunner runner : this.getAlgorithmRunners()) {
+			final Scenario copyOfScenario = scenario.copy();
 
-			boolean setSelectedScenario = runner.setSelectedScenario(copyOfScenario);
+			final boolean setSelectedScenario = runner.setSelectedScenario(copyOfScenario);
 			success = success ? setSelectedScenario : false;
 		}
 

@@ -51,7 +51,7 @@ public class Node extends Observable implements Serializable, Observer {
 			return false;
 		}
 
-		Node other = (Node) obj;
+		final Node other = (Node) obj;
 
 		if (this.x != other.x) {
 			return false;
@@ -66,7 +66,7 @@ public class Node extends Observable implements Serializable, Observer {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 
 		builder.append("(");
 		builder.append(this.getX());
@@ -92,7 +92,7 @@ public class Node extends Observable implements Serializable, Observer {
 	}
 
 	public Edge[] getEdges() {
-		Collection<Edge> edges = this.edges.values();
+		final Collection<Edge> edges = this.edges.values();
 		return edges.toArray(new Edge[edges.size()]);
 	}
 
@@ -109,12 +109,12 @@ public class Node extends Observable implements Serializable, Observer {
 	}
 
 	protected Edge addEdgeToNode(Node node) {
-		double weight = Edge.calcLinearDistance(this, node);
+		final double weight = Edge.calcLinearDistance(this, node);
 		return this.addEdgeToNode(node, weight);
 	}
 
 	protected synchronized Edge addEdgeToNode(Node node, double weight) {
-		Edge edge = new Edge(this, node, weight);
+		final Edge edge = new Edge(this, node, weight);
 
 		// Add the edge to this node
 		if (!this.hasEdgeToNode(node)) {
@@ -142,7 +142,7 @@ public class Node extends Observable implements Serializable, Observer {
 	}
 
 	protected synchronized void clearEdges() {
-		for (Node node : this.edges.keySet()) {
+		for (final Node node : this.edges.keySet()) {
 			this.removeEdgeToNode(node);
 		}
 	}
@@ -155,7 +155,7 @@ public class Node extends Observable implements Serializable, Observer {
 	}
 
 	private void removeEdge(Node toNode) {
-		Edge edge = this.edges.get(toNode);
+		final Edge edge = this.edges.get(toNode);
 		edge.deleteObserver(this);
 
 		this.edges.remove(toNode);
@@ -163,7 +163,7 @@ public class Node extends Observable implements Serializable, Observer {
 	}
 
 	private void fireEdgeUpdate(Edge edge, EdgeUpdateAction action) {
-		EdgeUpdate update = new EdgeUpdate(edge, action);
+		final EdgeUpdate update = new EdgeUpdate(edge, action);
 
 		this.setChanged();
 		this.notifyObservers(update);

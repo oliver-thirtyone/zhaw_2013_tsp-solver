@@ -76,7 +76,7 @@ public class ControllerView extends JPanel implements Observer, ActionListener {
 		this.scenarios = new JComboBox<Scenario>();
 		this.scenarios.setEditable(false);
 
-		for (Scenario scenario : this.controller.getScenarios()) {
+		for (final Scenario scenario : this.controller.getScenarios()) {
 			this.scenarios.addItem(scenario);
 		}
 		this.scenarios.setActionCommand("select_scenario");
@@ -85,7 +85,7 @@ public class ControllerView extends JPanel implements Observer, ActionListener {
 
 		this.components();
 
-		TitledBorder titledBorder = BorderFactory.createTitledBorder("");
+		final TitledBorder titledBorder = BorderFactory.createTitledBorder("");
 		titledBorder.setTitlePosition(TitledBorder.ABOVE_TOP);
 		this.setBorder(titledBorder);
 
@@ -148,12 +148,12 @@ public class ControllerView extends JPanel implements Observer, ActionListener {
 				stepDelay = Integer.parseInt(this.stepDelay.getText());
 			}
 		}
-		catch (NumberFormatException exception) {
+		catch (final NumberFormatException exception) {
 			// Nothing to do here
 		}
 
 		if (actionCommand.equals("select_scenario")) {
-			Scenario scenario = (Scenario) this.scenarios.getSelectedItem();
+			final Scenario scenario = (Scenario) this.scenarios.getSelectedItem();
 			this.controller.setSelectedScenario(scenario);
 		}
 		else if (actionCommand.equals("initialize")) {
@@ -177,7 +177,7 @@ public class ControllerView extends JPanel implements Observer, ActionListener {
 	}
 
 	private synchronized void doUpdate(Object argument) {
-		String stepDelay = String.valueOf(this.controller.getStepDelay());
+		final String stepDelay = String.valueOf(this.controller.getStepDelay());
 		this.stepDelay.setText(stepDelay);
 
 		this.scenarios.setEnabled(this.controller.canInitialize());

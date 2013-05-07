@@ -36,8 +36,8 @@ public class NearestNeighborHeuristikTest {
 	@Before
 	public void setUp() {
 		this.scenario = new Scenario("NearestNeighborHeuristikTest");
-		this.grid = scenario.getGrid();
-		this.path = scenario.getPath();
+		this.grid = this.scenario.getGrid();
+		this.path = this.scenario.getPath();
 
 		this.nodeNorth = GridFactory.createNode(0, 5);
 		this.nodeEast = GridFactory.createNode(4, 0); // Nearest node to the node in the north
@@ -49,7 +49,7 @@ public class NearestNeighborHeuristikTest {
 		GridFactory.addNode(this.grid, this.nodeSouth);
 		GridFactory.addNode(this.grid, this.nodeWest);
 
-		this.scenario.setStartingNode(nodeNorth);
+		this.scenario.setStartingNode(this.nodeNorth);
 
 		this.edgeNorthEast = GridFactory.getEdge(this.nodeNorth, this.nodeEast);
 		this.edgeNorthSouth = GridFactory.getEdge(this.nodeNorth, this.nodeSouth);

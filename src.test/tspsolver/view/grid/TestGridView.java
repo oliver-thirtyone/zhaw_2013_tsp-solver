@@ -51,21 +51,21 @@ public class TestGridView extends JFrame {
 
 	public static void main(String[] args) throws Exception {
 		// Load a scenario
-		XMLScenarioLoader scenarioLoader = new XMLScenarioLoader();
-		InputStream inputStream = new FileInputStream("data/scenario/test_north_south_east_west.xml");
-		Scenario scenario = scenarioLoader.loadScenario(inputStream);
+		final XMLScenarioLoader scenarioLoader = new XMLScenarioLoader();
+		final InputStream inputStream = new FileInputStream("data/scenario/test_north_south_east_west.xml");
+		final Scenario scenario = scenarioLoader.loadScenario(inputStream);
 
-		TestGridView testGridView = new TestGridView(scenario);
+		final TestGridView testGridView = new TestGridView(scenario);
 		testGridView.setSize(800, 600);
 		testGridView.setLocationRelativeTo(null);
 		testGridView.setVisible(true);
 
 		// Run an algorithm
-		StartAlgorithm algorithm = new NearestNeighborHeuristik();
-		AlgorithmRunner runner = new AlgorithmRunner(new StartAlgorithm[] { algorithm }, new OptimizerAlgorithm[] {});
+		final StartAlgorithm algorithm = new NearestNeighborHeuristik();
+		final AlgorithmRunner runner = new AlgorithmRunner(new StartAlgorithm[] { algorithm }, new OptimizerAlgorithm[] {});
 
 		// Scenario copyOfScenario = scenario;
-		Scenario copyOfScenario = scenario.copy();
+		final Scenario copyOfScenario = scenario.copy();
 
 		// This does not work:
 		// Scenario copyOfScenario = (Scenario) PipedDeepCopy.copy(scenario);

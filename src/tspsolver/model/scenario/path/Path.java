@@ -28,7 +28,7 @@ public class Path extends Observable implements Serializable {
 
 		result = prime * result + ((this.edges == null) ? 0 : this.edges.hashCode());
 
-		long temp = Double.doubleToLongBits(this.weight);
+		final long temp = Double.doubleToLongBits(this.weight);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 
 		return result;
@@ -48,7 +48,7 @@ public class Path extends Observable implements Serializable {
 			return false;
 		}
 
-		Path other = (Path) obj;
+		final Path other = (Path) obj;
 
 		if (this.edges == null) {
 			if (other.edges != null) {
@@ -99,7 +99,7 @@ public class Path extends Observable implements Serializable {
 	}
 
 	protected void firePathUpdate(Edge edge, PathUpdateAction action) {
-		PathUpdate update = new PathUpdate(edge, action);
+		final PathUpdate update = new PathUpdate(edge, action);
 
 		this.setChanged();
 		this.notifyObservers(update);

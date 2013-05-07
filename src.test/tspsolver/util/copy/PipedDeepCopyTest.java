@@ -19,12 +19,12 @@ public class PipedDeepCopyTest {
 	@Before
 	public void setUp() {
 		this.scenario = new Scenario("PipedDeepCopyTest");
-		Grid grid = scenario.getGrid();
+		final Grid grid = this.scenario.getGrid();
 
-		Node nodeNorth = GridFactory.createNode(0, 5);
-		Node nodeEast = GridFactory.createNode(4, 0);
-		Node nodeSouth = GridFactory.createNode(0, -5);
-		Node nodeWest = GridFactory.createNode(-5, 0);
+		final Node nodeNorth = GridFactory.createNode(0, 5);
+		final Node nodeEast = GridFactory.createNode(4, 0);
+		final Node nodeSouth = GridFactory.createNode(0, -5);
+		final Node nodeWest = GridFactory.createNode(-5, 0);
 
 		GridFactory.addNode(grid, nodeNorth);
 		GridFactory.addNode(grid, nodeEast);
@@ -36,9 +36,9 @@ public class PipedDeepCopyTest {
 
 	@Test
 	public void testCopy() throws FileNotFoundException {
-		Scenario copyOfScenario = (Scenario) PipedDeepCopy.copy(scenario);
+		final Scenario copyOfScenario = (Scenario) PipedDeepCopy.copy(this.scenario);
 
-		Assert.assertEquals(scenario, copyOfScenario);
+		Assert.assertEquals(this.scenario, copyOfScenario);
 	}
 
 }

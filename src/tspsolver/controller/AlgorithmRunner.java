@@ -62,7 +62,7 @@ public class AlgorithmRunner extends Runner implements Runnable {
 	@Override
 	protected synchronized boolean doStep() {
 		// Take the next step in the algorithm
-		boolean successfulStep = this.getRunningAlgorithm().step();
+		final boolean successfulStep = this.getRunningAlgorithm().step();
 
 		// Stop if there was an error
 		if (!successfulStep) {
