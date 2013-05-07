@@ -55,7 +55,8 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 
 	@Override
 	protected boolean doStep() {
-		final boolean successfulStep = true;
+		boolean successfullStep = true;
+		boolean validNewPath = true;
 
 		// Swap the node indexes
 		final int temp = this.nodeIndexes[this.outerLoopIndex];
@@ -74,24 +75,26 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 			final Node firstNode = this.nodes[firstIndex];
 			final Node secondNode = this.nodes[secondIndex];
 
-			final Edge edge = firstNode.getEdgeToNode(secondNode);
-			if (edge == null) {
-				// FIXME: this path does not work, what do we do now?
-				return false;
+			if (firstNode.hasEdgeToNode(secondNode)) {
+				Edge edge = firstNode.getEdgeToNode(secondNode);
+				newPathUpdater.addEdge(edge);
 			}
-			newPathUpdater.addEdge(edge);
+			else {
+				validNewPath = false;
+				break;
+			}
 		}
 		newPathUpdater.updatePath();
 
 		// Check if the new path is lighter
-		if (this.lightestPath.isEmpty() || newPath.getWeight() < this.lightestPath.getWeight()) {
-			this.getPathUpdater().removePath(this.lightestPath);
-			this.getPathUpdater().addPath(newPath);
-
+		if (validNewPath && (this.lightestPath.isEmpty() || newPath.getWeight() < this.lightestPath.getWeight())) {
 			// Set the new lightest path
 			this.lightestPathUpdater.clearPath();
 			this.lightestPathUpdater.addPath(newPath);
 			this.lightestPathUpdater.updatePath();
+
+			this.getPathUpdater().clearPath();
+			this.getPathUpdater().addPath(this.lightestPath);
 		}
 
 		// Increase the inner loop index
@@ -105,13 +108,16 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 
 		// Finish the algorithm if we are done with the outer loop
 		if (this.outerLoopIndex >= this.nodeCount) {
-			this.getPathUpdater().clearPath();
-			this.getPathUpdater().addPath(this.lightestPath);
-			this.finishedSuccessfully();
+			// If we have found a path, we were successful
+			if (!this.getPath().isEmpty()) {
+				this.finishedSuccessfully();
+			}
+			else {
+				successfullStep = false;
+			}
 		}
 
 		this.getPathUpdater().updatePath();
-		return successfulStep;
+		return successfullStep;
 	}
-
 }

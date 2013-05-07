@@ -131,12 +131,12 @@ public class Node extends Observable implements Serializable, Observer {
 
 	protected synchronized void removeEdgeToNode(Node node) {
 		// Remove the edge from this node
-		if (!this.hasEdgeToNode(node)) {
+		if (this.hasEdgeToNode(node)) {
 			this.removeEdge(node);
 		}
 
-		// Remove the edge from the oder node
-		if (!node.hasEdgeToNode(this)) {
+		// Remove the edge from the other node
+		if (node.hasEdgeToNode(this)) {
 			node.removeEdge(this);
 		}
 	}
