@@ -91,6 +91,6 @@ public class BruteForceAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(this.edgeEastWest));
 
 		// Check if we tested all possibilities
-		Assert.assertEquals(16 / 2, stepCounter);
+		Assert.assertEquals(16, stepCounter);
 	}
 }

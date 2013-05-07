@@ -24,7 +24,7 @@ import tspsolver.view.MainFrame;
 
 public class Launcher {
 
-	public static final int NUMBER_OF_ALGORITHM_RUNNERS = 2;
+	public static final int NUMBER_OF_ALGORITHM_RUNNERS = 1;
 	public static final String SCENARIO_DIRECTORY = "data/scenario";
 
 	public static void main(String[] args) {

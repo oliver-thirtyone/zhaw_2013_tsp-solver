@@ -93,11 +93,6 @@ public class GridView extends JPanel implements Observer {
 
 	@Override
 	public void update(Observable observable, final Object argument) {
-		if (observable != this.scenario) {
-			System.out.println("THIS SHOULD NEVER HAPPEN"); // TODO: REMOVE DEBUG OUTPUT
-			return;
-		}
-
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -234,8 +229,6 @@ public class GridView extends JPanel implements Observer {
 	}
 
 	private synchronized void doUpdateScenario(Scenario scenario) {
-		System.out.println(">>> doUpdateScenario"); // TODO: REMOVE
-
 		// Clear the current grid
 		if (this.scenario != null) {
 			this.clearGrid();

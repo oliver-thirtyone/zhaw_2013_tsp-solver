@@ -216,14 +216,6 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 	}
 
 	private void doUpdate(Object argument) {
-		// TODO: REMOVE
-		if (argument != null) {
-			System.out.println("argument = " + argument.getClass());
-		}
-		else {
-			System.out.println("argument = null");
-		}
-
 		// The runner step-counter changed
 		if (argument == null || argument instanceof Long) {
 			// Update the runner statistics
@@ -293,7 +285,6 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 	@Override
 	public void update(Observable observable, final Object argument) {
 		if (observable != this.algorithmRunner) {
-			System.out.println("THIS SHOULD NEVE HAPPEN");
 			return;
 		}
 

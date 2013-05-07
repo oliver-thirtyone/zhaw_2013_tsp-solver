@@ -8,11 +8,8 @@ import tspsolver.model.scenario.path.PathUpdater;
 
 public class BruteForceAlgorithm extends StartAlgorithm {
 
-	private final Path currentLightestPath;
-	private final PathUpdater currentLightestPathUpdater;
-
-	private final Path currentNewPath;
-	private final PathUpdater currentNewPathUpdater;
+	private final Path lightestPath;
+	private final PathUpdater lightestPathUpdater;
 
 	private int nodeCount;
 	private Node[] nodes;
@@ -22,18 +19,14 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 	private int innerLoopIndex;
 
 	public BruteForceAlgorithm() {
-		this.currentLightestPath = new Path();
-		this.currentLightestPathUpdater = new PathUpdater(this.currentLightestPath);
-
-		this.currentNewPath = new Path();
-		this.currentNewPathUpdater = new PathUpdater(this.currentNewPath);
+		this.lightestPath = new Path();
+		this.lightestPathUpdater = new PathUpdater(this.lightestPath);
 
 		this.reset();
 	}
 
 	@Override
 	protected void doInitialize() {
-
 		this.nodeCount = this.getGrid().getNumberOfNodes();
 		this.nodes = this.getGrid().getNodes();
 		this.nodeIndexes = new int[this.nodeCount];
@@ -49,11 +42,8 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 
 	@Override
 	protected void doReset() {
-		this.currentLightestPathUpdater.clearPath();
-		this.currentLightestPathUpdater.updatePath();
-
-		this.currentNewPathUpdater.clearPath();
-		this.currentNewPathUpdater.updatePath();
+		this.lightestPathUpdater.clearPath();
+		this.lightestPathUpdater.updatePath();
 
 		this.nodeCount = 0;
 		this.nodes = null;
@@ -73,7 +63,10 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 		this.nodeIndexes[this.innerLoopIndex] = temp;
 
 		// Create the new path
-		this.currentNewPathUpdater.clearPath();
+		Path newPath = new Path();
+		PathUpdater newPathUpdater = new PathUpdater(newPath);
+
+		newPathUpdater.clearPath();
 		for (int i = 1; i <= this.nodeCount; i++) {
 			final int firstIndex = this.nodeIndexes[i - 1];
 			final int secondIndex = (i == this.nodeCount) ? this.nodeIndexes[0] : this.nodeIndexes[i];
@@ -86,21 +79,19 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 				// FIXME: this path does not work, what do we do now?
 				return false;
 			}
-
-			this.currentNewPathUpdater.addEdge(edge);
+			newPathUpdater.addEdge(edge);
 		}
-		this.currentNewPathUpdater.updatePath();
-
-		// Add the lightest and the new path to the current path (for the GUI)
-		this.getPathUpdater().clearPath();
-		this.getPathUpdater().addPath(this.currentLightestPath);
-		this.getPathUpdater().addPath(this.currentNewPath);
+		newPathUpdater.updatePath();
 
 		// Check if the new path is lighter
-		if (this.currentLightestPath.isEmpty() || this.currentNewPath.getWeight() < this.currentLightestPath.getWeight()) {
-			this.currentLightestPathUpdater.clearPath();
-			this.currentLightestPathUpdater.addPath(this.currentNewPath);
-			this.currentLightestPathUpdater.updatePath();
+		if (this.lightestPath.isEmpty() || newPath.getWeight() < this.lightestPath.getWeight()) {
+			this.getPathUpdater().removePath(this.lightestPath);
+			this.getPathUpdater().addPath(newPath);
+
+			// Set the new lightest path
+			this.lightestPathUpdater.clearPath();
+			this.lightestPathUpdater.addPath(newPath);
+			this.lightestPathUpdater.updatePath();
 		}
 
 		// Increase the inner loop index
@@ -109,18 +100,13 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 		// Increase the outer loop index if we are done with the inner loop
 		if (this.innerLoopIndex >= this.nodeCount) {
 			this.outerLoopIndex++;
-			this.innerLoopIndex = this.outerLoopIndex + 1; // Skip the combinations that we've already tried
-
-			// Prevent an "index out of bounds"-exception
-			if (this.innerLoopIndex >= this.nodeCount) {
-				this.innerLoopIndex = this.nodeCount - 1;
-			}
+			this.innerLoopIndex = 0;
 		}
 
 		// Finish the algorithm if we are done with the outer loop
 		if (this.outerLoopIndex >= this.nodeCount) {
 			this.getPathUpdater().clearPath();
-			this.getPathUpdater().addPath(this.currentLightestPath);
+			this.getPathUpdater().addPath(this.lightestPath);
 			this.finishedSuccessfully();
 		}
 

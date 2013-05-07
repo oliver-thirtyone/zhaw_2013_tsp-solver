@@ -74,9 +74,7 @@ public class RandomAlgorithmTest {
 		// DEBUG OUTPUT
 		// System.out.println("Path: ");
 		// for (Edge edge : this.path.getEdges()) {
-		// Node n1 = edge.getFirstNode();
-		// Node n2 = edge.getSecondNode();
-		// System.out.println("(" + n1.getX() + "," + n1.getY() + ")" + " -> " + "(" + n2.getX() + "," + n2.getY() + ")");
+		// System.out.println(edge.toString());
 		// }
 		// System.out.println();
 
