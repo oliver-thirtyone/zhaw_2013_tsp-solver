@@ -6,7 +6,6 @@ import java.util.Stack;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.comparators.grid.EdgeWeightComparator;
 import tspsolver.model.scenario.grid.Edge;
@@ -18,20 +17,20 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 		CREATE_SPANNING_TREE, DO_EULERIAN_TRAIL
 	}
 
-	private Phase phase;
-
 	private final Vector<Edge> spanningTreeEdges;
 	private final Set<Node> spanningTreeNodes;
 	private final TreeSet<Edge> spanningTreePossibleEdges;
+	private final Stack<Node> brancheNodes;
 
+	private Phase phase;
 	private Node currentNode;
-	private Stack<Node> brancheNodes;
 
 	public MinimumSpanningTreeHeuristik() {
 		this.spanningTreeEdges = new Vector<Edge>();
 		this.spanningTreeNodes = new HashSet<Node>();
 
 		this.spanningTreePossibleEdges = new TreeSet<Edge>(new EdgeWeightComparator());
+		this.brancheNodes = new Stack<Node>();
 
 		this.reset();
 	}
@@ -54,33 +53,33 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 		this.spanningTreeEdges.clear();
 
 		this.spanningTreePossibleEdges.clear();
+		this.brancheNodes.clear();
 
 		this.phase = null;
+		this.currentNode = null;
 	}
 
 	@Override
 	public boolean doStep() {
-
+		boolean success = false;
 		switch (this.phase) {
 			case CREATE_SPANNING_TREE:
-				return this.doStepCreateSpanningTree();
-
+				success = this.doStepCreateSpanningTree();
+				break;
 			case DO_EULERIAN_TRAIL:
-				return this.doStepEulerianTrail();
-
+				success = this.doStepEulerianTrail();
+				break;
 			default:
-				throw new NotImplementedException();
+				break;
 		}
-
+		return success;
 	}
 
 	private boolean doStepCreateSpanningTree() {
-
 		boolean successfulStep = true;
 
 		// Take the lowest one, that not build a circle and add it to the tree.
 		for (Edge edge : this.spanningTreePossibleEdges) {
-
 			if (this.spanningTreeNodes.contains(edge.getFirstNode()) == false) {
 
 				// Add the edge to the spanning tree.
@@ -102,7 +101,6 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 					// The edge is used now.
 					this.spanningTreePossibleEdges.remove(edge);
-
 				}
 				else {
 					// finish create spanning tree
@@ -110,7 +108,6 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 				}
 
 				break;
-
 			}
 			else if (this.spanningTreeNodes.contains(edge.getSecondNode()) == false) {
 
@@ -133,7 +130,6 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 					// The edge is used now.
 					this.spanningTreePossibleEdges.remove(edge);
-
 				}
 				else {
 					// finish create spanning tree
@@ -159,13 +155,9 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 	}
 
 	private void initEulerianTrail() {
-
-		this.currentNode = this.getStartingNode();
-
-		this.brancheNodes = new Stack<Node>();
-		this.brancheNodes.push(this.currentNode);
-
 		this.phase = Phase.DO_EULERIAN_TRAIL;
+		this.currentNode = this.getStartingNode();
+		this.brancheNodes.push(this.currentNode);
 	}
 
 	private boolean doStepEulerianTrail() {
@@ -173,8 +165,8 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 		Node brancheNode = this.brancheNodes.pop();
 
 		int i = 1;
-		while (spanningTreeEdges.isEmpty() == false) {
-			Edge edge = spanningTreeEdges.elementAt(spanningTreeEdges.size() - i);
+		while (this.spanningTreeEdges.isEmpty() == false) {
+			Edge edge = this.spanningTreeEdges.elementAt(this.spanningTreeEdges.size() - i);
 
 			// Find the next edge in the spanning tree that is connected to the
 			// current branch node.
@@ -188,7 +180,7 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 				// Remove the edge from the spanning tree, because this edge is
 				// used
-				spanningTreeEdges.remove(edge);
+				this.spanningTreeEdges.remove(edge);
 
 				this.getPathUpdater().removeEdge(edge);
 
@@ -215,7 +207,7 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 				// Remove the edge from the spanning tree, because this edge is
 				// used
-				spanningTreeEdges.remove(edge);
+				this.spanningTreeEdges.remove(edge);
 
 				this.getPathUpdater().removeEdge(edge);
 
@@ -232,12 +224,12 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 				return true;
 
 			}
-			else if (i < spanningTreeEdges.size()) {
+			else if (i < this.spanningTreeEdges.size()) {
 				// A leaf from the spanning tree
 				// Nothing happen to the path, so recall the step.
 
 				// FIXME: Remove the recursion
-				return doStepEulerianTrail();
+				return this.doStepEulerianTrail();
 			}
 			else {
 				i++;
