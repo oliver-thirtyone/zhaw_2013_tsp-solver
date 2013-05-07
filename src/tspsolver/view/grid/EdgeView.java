@@ -11,11 +11,16 @@ import com.kitfox.svg.animation.AnimationElement;
 
 public class EdgeView {
 
-	public static final int CIRCLE_RADIUS = 5;
-	public static final String EDGE_COLOR = "#000000";
-	public static final String PATH_COLOR = "#0000ff";
-	public static final String NEW_PATH_COLOR = "#00ff00";
-	public static final String OLD_PATH_COLOR = "#ff0000";
+	public static final String LINE_STROKE_EDGE = "#000000";
+	public static final String LINE_STROKE_PATH = "#0000ff";
+	public static final String LINE_STROKE_PATH_NEW = "#00ff00";
+	public static final String LINE_STROKE_PATH_OLD = "#ff0000";
+
+	public static final String LINE_STROKE_WIDTH_EDGE = "1";
+	public static final String LINE_STROKE_WIDTH_PATH = "3";
+
+	public static final String LINE_STROKE_DASHARRAY_EDGE = "2, 8";
+	public static final String LINE_STROKE_DASHARRAY_PATH = "2, 2";
 
 	private final Edge edge;
 
@@ -38,7 +43,7 @@ public class EdgeView {
 			this.svgLine.addAttribute("y1", AnimationElement.AT_XML, String.valueOf(firstNode.getY()));
 			this.svgLine.addAttribute("x2", AnimationElement.AT_XML, String.valueOf(secondNode.getX()));
 			this.svgLine.addAttribute("y2", AnimationElement.AT_XML, String.valueOf(secondNode.getY()));
-			this.svgLine.addAttribute("stroke-dasharray", AnimationElement.AT_CSS, "2, 4");
+			this.svgLine.addAttribute("stroke-dasharray", AnimationElement.AT_CSS, "2, 8");
 
 			this.svgGroup.loaderAddChild(null, this.svgLine);
 		}
@@ -56,23 +61,31 @@ public class EdgeView {
 		}
 	}
 
-	protected void updateLine(String color, boolean dashedLine) {
+	protected void updateLine(String lineStroke, String lineWidth, String lineDashArray) {
 		try {
-			// Set the color
+			// Set the stroke
 			if (this.svgLine.hasAttribute("stroke", AnimationElement.AT_CSS)) {
-				this.svgLine.setAttribute("stroke", AnimationElement.AT_CSS, color);
+				this.svgLine.setAttribute("stroke", AnimationElement.AT_CSS, lineStroke);
 			}
 			else {
-				this.svgLine.addAttribute("stroke", AnimationElement.AT_CSS, color);
+				this.svgLine.addAttribute("stroke", AnimationElement.AT_CSS, lineStroke);
 			}
 
-			// Set dashed line or not
-			if (dashedLine) {
+			// Set the stroke width
+			if (this.svgLine.hasAttribute("stroke-width", AnimationElement.AT_CSS)) {
+				this.svgLine.setAttribute("stroke-width", AnimationElement.AT_CSS, lineWidth);
+			}
+			else {
+				this.svgLine.addAttribute("stroke-width", AnimationElement.AT_CSS, lineWidth);
+			}
+
+			// Set the stroke dasharray
+			if (!lineDashArray.isEmpty()) {
 				if (this.svgLine.hasAttribute("stroke-dasharray", AnimationElement.AT_CSS)) {
-					this.svgLine.setAttribute("stroke-dasharray", AnimationElement.AT_CSS, "2, 4");
+					this.svgLine.setAttribute("stroke-dasharray", AnimationElement.AT_CSS, lineDashArray);
 				}
 				else {
-					this.svgLine.addAttribute("stroke-dasharray", AnimationElement.AT_CSS, "2, 4");
+					this.svgLine.addAttribute("stroke-dasharray", AnimationElement.AT_CSS, lineDashArray);
 				}
 			}
 			else {

@@ -123,10 +123,10 @@ public class GridView extends JPanel implements Observer {
 			if (nodeView != null) {
 				switch (action) {
 					case ADD_STARTING_NODE:
-						nodeView.updateCircle(NodeView.STARTING_NODE_COLOR);
+						nodeView.updateCircle(NodeView.CIRCLE_FILL_STARTINGNODE);
 						break;
 					case REMOVE_STARTING_NODE:
-						nodeView.updateCircle(NodeView.NORMAL_NODE_COLOR);
+						nodeView.updateCircle(NodeView.CIRCLE_FILL_NODE);
 						break;
 					default:
 						break;
@@ -173,16 +173,16 @@ public class GridView extends JPanel implements Observer {
 			if (edgeView != null) {
 				switch (action) {
 					case PATH_ELEMENT:
-						edgeView.updateLine(EdgeView.PATH_COLOR, false);
+						edgeView.updateLine(EdgeView.LINE_STROKE_PATH, EdgeView.LINE_STROKE_WIDTH_PATH, "");
 						break;
 					case NEW_PATH_ELEMENT:
-						edgeView.updateLine(EdgeView.NEW_PATH_COLOR, false);
+						edgeView.updateLine(EdgeView.LINE_STROKE_PATH_NEW, EdgeView.LINE_STROKE_WIDTH_PATH, "");
 						break;
 					case OLD_PATH_ELEMENT:
-						edgeView.updateLine(EdgeView.OLD_PATH_COLOR, true);
+						edgeView.updateLine(EdgeView.LINE_STROKE_PATH_OLD, EdgeView.LINE_STROKE_WIDTH_PATH, EdgeView.LINE_STROKE_DASHARRAY_PATH);
 						break;
 					case NON_PATH_ELEMENT:
-						edgeView.updateLine(EdgeView.EDGE_COLOR, true);
+						edgeView.updateLine(EdgeView.LINE_STROKE_EDGE, EdgeView.LINE_STROKE_WIDTH_EDGE, EdgeView.LINE_STROKE_DASHARRAY_EDGE);
 						break;
 					default:
 						break;
