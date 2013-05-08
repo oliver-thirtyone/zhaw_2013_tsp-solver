@@ -224,7 +224,7 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 				return true;
 
 			}
-			else if (i < this.spanningTreeEdges.size()) {
+			else if (i >= this.spanningTreeEdges.size()) {
 				// A leaf from the spanning tree
 				// Nothing happen to the path, so recall the step.
 
