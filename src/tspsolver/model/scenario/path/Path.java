@@ -15,10 +15,12 @@ public class Path extends Observable implements Serializable {
 
 	private final Set<Edge> edges;
 	private double weight;
+	private boolean weightNeedsUpdate;
 
 	public Path() {
 		this.edges = new HashSet<Edge>();
 		this.weight = 0.0;
+		this.weightNeedsUpdate = false;
 	}
 
 	@Override
@@ -26,7 +28,8 @@ public class Path extends Observable implements Serializable {
 		final int prime = 31;
 		int result = 1;
 
-		result = prime * result + ((this.edges == null) ? 0 : this.edges.hashCode());
+		result = prime * result
+				+ ((this.edges == null) ? 0 : this.edges.hashCode());
 
 		final long temp = Double.doubleToLongBits(this.weight);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -54,12 +57,12 @@ public class Path extends Observable implements Serializable {
 			if (other.edges != null) {
 				return false;
 			}
-		}
-		else if (!this.edges.equals(other.edges)) {
+		} else if (!this.edges.equals(other.edges)) {
 			return false;
 		}
 
-		if (Double.doubleToLongBits(this.weight) != Double.doubleToLongBits(other.weight)) {
+		if (Double.doubleToLongBits(this.weight) != Double
+				.doubleToLongBits(other.weight)) {
 			return false;
 		}
 
@@ -67,6 +70,10 @@ public class Path extends Observable implements Serializable {
 	}
 
 	public double getWeight() {
+		if (this.weightNeedsUpdate) {
+			this.updateWeight();
+		}
+
 		return this.weight;
 	}
 
@@ -88,14 +95,25 @@ public class Path extends Observable implements Serializable {
 
 	protected synchronized void addEdge(Edge edge) {
 		if (this.edges.add(edge)) {
-			this.weight += edge.getWeight();
+			this.weightNeedsUpdate = true;
 		}
 	}
 
 	protected synchronized void removeEdge(Edge edge) {
 		if (this.edges.remove(edge)) {
-			this.weight -= edge.getWeight();
+			this.weightNeedsUpdate = true;
 		}
+	}
+
+	private void updateWeight() {
+
+		this.weight = 0.0;
+
+		for (Edge edge : this.edges) {
+			this.weight += edge.getWeight();
+		}
+
+		this.weightNeedsUpdate = false;
 	}
 
 	protected void firePathUpdate(Edge edge, PathUpdateAction action) {
