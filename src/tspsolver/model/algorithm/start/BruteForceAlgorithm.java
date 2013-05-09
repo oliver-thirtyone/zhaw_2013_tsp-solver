@@ -1,5 +1,7 @@
 package tspsolver.model.algorithm.start;
 
+import java.util.Vector;
+
 import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.scenario.grid.Edge;
 import tspsolver.model.scenario.grid.Node;
@@ -8,116 +10,157 @@ import tspsolver.model.scenario.path.PathUpdater;
 
 public class BruteForceAlgorithm extends StartAlgorithm {
 
-	private final Path lightestPath;
-	private final PathUpdater lightestPathUpdater;
-
-	private int nodeCount;
-	private Node[] nodes;
-	private int[] nodeIndexes;
-
-	private int outerLoopIndex;
-	private int innerLoopIndex;
+	private Path lightestPath;
+	private Vector<Node> startPath;
+	private Vector<Node> currentPath;
 
 	public BruteForceAlgorithm() {
-		this.lightestPath = new Path();
-		this.lightestPathUpdater = new PathUpdater(this.lightestPath);
 
-		this.reset();
+		this.startPath = new Vector<Node>();
+		this.currentPath = new Vector<Node>();
+		this.lightestPath = new Path();
+
 	}
 
 	@Override
 	protected void doInitialize() {
-		this.nodeCount = this.getGrid().getNumberOfNodes();
-		this.nodes = this.getGrid().getNodes();
-		this.nodeIndexes = new int[this.nodeCount];
 
-		// Initialize the node indexes
-		for (int i = 0; i < this.nodeCount; i++) {
-			this.nodeIndexes[i] = i;
+		this.getPathUpdater().addPath(new Path());
+
+		// convert to node path
+		Node startingNode = this.getStartingNode();
+
+		for (Node node : this.getGrid().getNodes()) {
+			if (startingNode != node) {
+				this.startPath.add(node);
+			}
 		}
 
-		this.outerLoopIndex = 0;
-		this.innerLoopIndex = 0;
+		this.currentPath = (Vector<Node>) this.startPath.clone();
+
 	}
 
 	@Override
 	protected void doReset() {
-		this.lightestPathUpdater.clearPath();
-		this.lightestPathUpdater.updatePath();
 
-		this.nodeCount = 0;
-		this.nodes = null;
-		this.nodeIndexes = null;
+		this.startPath.clear();
+		this.currentPath.clear();
 
-		this.outerLoopIndex = 0;
-		this.innerLoopIndex = 0;
 	}
 
 	@Override
 	protected boolean doStep() {
-		boolean successfullStep = true;
-		boolean validNewPath = true;
 
-		// Swap the node indexes
-		final int temp = this.nodeIndexes[this.outerLoopIndex];
-		this.nodeIndexes[this.outerLoopIndex] = this.nodeIndexes[this.innerLoopIndex];
-		this.nodeIndexes[this.innerLoopIndex] = temp;
+		boolean isNotLastPermutation = next_permutation();
 
-		// Create the new path
-		Path newPath = new Path();
-		PathUpdater newPathUpdater = new PathUpdater(newPath);
+		Path newPath = convertToPath(this.currentPath);
 
-		newPathUpdater.clearPath();
-		for (int i = 1; i <= this.nodeCount; i++) {
-			final int firstIndex = this.nodeIndexes[i - 1];
-			final int secondIndex = (i == this.nodeCount) ? this.nodeIndexes[0] : this.nodeIndexes[i];
+		this.getPathUpdater().clearPath();
+		this.getPathUpdater().addPath(this.lightestPath);
+		this.getPathUpdater().addPath(newPath);
 
-			final Node firstNode = this.nodes[firstIndex];
-			final Node secondNode = this.nodes[secondIndex];
-
-			if (firstNode.hasEdgeToNode(secondNode)) {
-				Edge edge = firstNode.getEdgeToNode(secondNode);
-				newPathUpdater.addEdge(edge);
-			}
-			else {
-				validNewPath = false;
-				break;
-			}
+		if (newPath.getWeight() < this.lightestPath.getWeight()
+				|| this.lightestPath.getWeight() == 0.0) {
+			this.lightestPath = newPath;
 		}
-		newPathUpdater.updatePath();
 
-		// Check if the new path is lighter
-		if (validNewPath && (this.lightestPath.isEmpty() || newPath.getWeight() < this.lightestPath.getWeight())) {
-			// Set the new lightest path
-			this.lightestPathUpdater.clearPath();
-			this.lightestPathUpdater.addPath(newPath);
-			this.lightestPathUpdater.updatePath();
+		if (isNotLastPermutation == false) {
 
 			this.getPathUpdater().clearPath();
 			this.getPathUpdater().addPath(this.lightestPath);
-		}
 
-		// Increase the inner loop index
-		this.innerLoopIndex++;
-
-		// Increase the outer loop index if we are done with the inner loop
-		if (this.innerLoopIndex >= this.nodeCount) {
-			this.outerLoopIndex++;
-			this.innerLoopIndex = 0;
-		}
-
-		// Finish the algorithm if we are done with the outer loop
-		if (this.outerLoopIndex >= this.nodeCount) {
-			// If we have found a path, we were successful
-			if (!this.getPath().isEmpty()) {
-				this.finishedSuccessfully();
-			}
-			else {
-				successfullStep = false;
-			}
+			this.finishedSuccessfully();
 		}
 
 		this.getPathUpdater().updatePath();
-		return successfullStep;
+		return true;
 	}
+
+	private boolean next_permutation() {
+
+		// letztes Element; man arbeitet sich von hinten nach vorne durch
+		int i = this.currentPath.size() - 1; //
+
+		// keine Endlosschleife, da i dekrementiert wird und damit irgendwann 0
+		// wird
+		while (true) {
+			if (i <= 0) {
+				// a ist letzte Permutation
+				return false;
+			}
+			i -= 1;
+			// FIXME: Dies könnte optimiert werden jedes Node müsste einen
+			// spezfische reihenfolge, ändlich dem eines alphabet, die grösse
+			// funktioniert nicht weil nicht eindeutig
+			// lexikogr. Nachfolger hat größeres a[i]
+			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath
+					.indexOf(this.currentPath.get(i + 1))) {
+				break;
+			}
+		}
+		int j = this.currentPath.size();
+		while (true) {
+			j -= 1;
+			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath
+					.indexOf(this.currentPath.get(j))) {
+				break;
+			}
+		}
+
+		swap(i, j);
+		// sortiere aufsteigend zwischen a[i] und Ende
+		// zur Zeit absteigend sortiert => invertieren
+
+		i += 1;
+		j = this.currentPath.size() - 1;
+
+		while (i < j) {
+			swap(i, j);
+			i += 1;
+			j -= 1;
+		}
+		return true;
+		// eine weitere Permutation gefunden
+	}
+
+	private void swap(int first, int second) {
+		Node temp = this.currentPath.get(first);
+
+		this.currentPath.set(first, this.currentPath.get(second));
+
+		this.currentPath.set(second, temp);
+	}
+
+	private Path convertToPath(Vector<Node> nodes) {
+
+		Node currentNode = this.getStartingNode();
+
+		PathUpdater pathUpdater = new PathUpdater(new Path());
+
+		for (Node node : nodes) {
+
+			Edge edge = currentNode.getEdgeToNode(node);
+			if (edge == null) {
+				// FIXME: this path does not work, what do we do now?
+				throw new IllegalStateException();
+			}
+
+			pathUpdater.addEdge(edge);
+			
+			currentNode = node;
+		}
+
+		Edge edge = currentNode.getEdgeToNode(this.getStartingNode());
+		if (edge == null) {
+			// FIXME: this path does not work, what do we do now?
+			throw new IllegalStateException();
+		}
+		
+		pathUpdater.addEdge(edge);
+		
+		pathUpdater.updatePath();
+		
+		return pathUpdater.getPath();
+	}
+
 }
