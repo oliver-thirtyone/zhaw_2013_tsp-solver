@@ -126,7 +126,7 @@ public class Scenario extends Observable implements Serializable, Observer {
 		// Copy the nodes
 		final Map<Node, Node> nodeCopies = new HashMap<Node, Node>();
 		for (final Node node : this.grid.getNodes()) {
-			// Create copy of each node
+			// Create a copy of each node
 			final Node nodeCopy = GridFactory.createNode(node.getX(), node.getY());
 
 			// Add the copied node to the copied grid
@@ -140,6 +140,7 @@ public class Scenario extends Observable implements Serializable, Observer {
 		final Map<Edge, Edge> edgeCopies = new HashMap<Edge, Edge>();
 		for (final Node node : this.grid.getNodes()) {
 			for (final Edge edge : node.getEdges()) {
+				// Get the copied nodes
 				final Node firstNodeCopy = nodeCopies.get(edge.getFirstNode());
 				final Node secondNodeCopy = nodeCopies.get(edge.getSecondNode());
 
