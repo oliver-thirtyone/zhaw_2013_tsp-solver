@@ -37,11 +37,11 @@ public class NearestNeighborHeuristik extends StartAlgorithm {
 	protected boolean doStep() {
 		boolean successfulStep = true;
 
-		if (this.nodesToVisit.size() > 1) {
-			Edge shortestEdge = null;
+		// Remove the current node from the set of nodes to visit
+		this.nodesToVisit.remove(this.getCurrentNode());
 
-			// Remove the current node from the set of nodes to visit
-			this.nodesToVisit.remove(this.getCurrentNode());
+		if (this.nodesToVisit.size() > 0) {
+			Edge shortestEdge = null;
 
 			// Get all available edges from the current node
 			final Edge[] edges = this.getCurrentNode().getEdges();
@@ -88,8 +88,9 @@ public class NearestNeighborHeuristik extends StartAlgorithm {
 			}
 		}
 		else {
-			// Link the last node with the starting node
 			final Edge lastEdge = this.getCurrentNode().getEdgeToNode(this.getStartingNode());
+
+			// Link the last node with the starting node
 			if (lastEdge != null) {
 				this.getPathUpdater().addEdge(lastEdge);
 				this.setCurrentNode(this.getStartingNode());
@@ -97,8 +98,8 @@ public class NearestNeighborHeuristik extends StartAlgorithm {
 				this.finishedSuccessfully();
 			}
 			else {
-				// FIXME: If the last node has no accessible edge to the starting node we fail here
-				System.err.println("Jetzt hämmer es Problem...");
+				// There is no edge to the starting node
+				// The algorithm fails
 				successfulStep = false;
 			}
 		}

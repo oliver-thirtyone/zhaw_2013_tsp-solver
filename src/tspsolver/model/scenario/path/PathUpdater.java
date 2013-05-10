@@ -27,6 +27,83 @@ public class PathUpdater {
 		this.removedEdges = new LinkedList<Edge>();
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+
+		result = prime * result + ((this.addedEdges == null) ? 0 : this.addedEdges.hashCode());
+		result = prime * result + ((this.edgesToAdd == null) ? 0 : this.edgesToAdd.hashCode());
+		result = prime * result + ((this.edgesToRemove == null) ? 0 : this.edgesToRemove.hashCode());
+		result = prime * result + ((this.path == null) ? 0 : this.path.hashCode());
+		result = prime * result + ((this.removedEdges == null) ? 0 : this.removedEdges.hashCode());
+
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (obj == null) {
+			return false;
+		}
+
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+
+		PathUpdater other = (PathUpdater) obj;
+		if (this.addedEdges == null) {
+			if (other.addedEdges != null) {
+				return false;
+			}
+		}
+		else if (!this.addedEdges.equals(other.addedEdges)) {
+			return false;
+		}
+
+		if (this.edgesToAdd == null) {
+			if (other.edgesToAdd != null) {
+				return false;
+			}
+		}
+		else if (!this.edgesToAdd.equals(other.edgesToAdd)) {
+			return false;
+		}
+
+		if (this.edgesToRemove == null) {
+			if (other.edgesToRemove != null) {
+				return false;
+			}
+		}
+		else if (!this.edgesToRemove.equals(other.edgesToRemove)) {
+			return false;
+		}
+
+		if (this.path == null) {
+			if (other.path != null) {
+				return false;
+			}
+		}
+		else if (!this.path.equals(other.path)) {
+			return false;
+		}
+
+		if (this.removedEdges == null) {
+			if (other.removedEdges != null) {
+				return false;
+			}
+		}
+		else if (!this.removedEdges.equals(other.removedEdges)) {
+			return false;
+		}
+
+		return true;
+	}
+
 	public synchronized void updatePath() {
 		// Mark the added edges as a path element
 		for (final Edge edge : this.addedEdges) {
@@ -99,15 +176,15 @@ public class PathUpdater {
 		}
 	}
 
-	public synchronized void addPath(Path path) {
+	public void addPath(Path path) {
 		this.addEdges(path.getEdges());
 	}
 
-	public synchronized void removePath(Path path) {
+	public void removePath(Path path) {
 		this.removeEdges(path.getEdges());
 	}
 
-	public synchronized void clearPath() {
+	public void clearPath() {
 		this.removePath(this.path);
 	}
 

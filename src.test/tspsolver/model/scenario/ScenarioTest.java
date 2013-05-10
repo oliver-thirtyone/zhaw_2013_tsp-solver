@@ -7,9 +7,12 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import tspsolver.model.scenario.grid.Edge;
 import tspsolver.model.scenario.grid.Grid;
 import tspsolver.model.scenario.grid.GridFactory;
 import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.path.Path;
+import tspsolver.model.scenario.path.PathUpdater;
 
 public class ScenarioTest {
 
@@ -19,6 +22,8 @@ public class ScenarioTest {
 	public void setUp() {
 		this.scenario = new Scenario("ScenarioTest");
 		final Grid grid = this.scenario.getGrid();
+		final Path path = this.scenario.getPath();
+		final PathUpdater pathUpdater = new PathUpdater(path);
 
 		final Node nodeNorth = GridFactory.createNode(0, 5);
 		final Node nodeEast = GridFactory.createNode(4, 0);
@@ -29,6 +34,17 @@ public class ScenarioTest {
 		GridFactory.addNode(grid, nodeEast);
 		GridFactory.addNode(grid, nodeSouth);
 		GridFactory.addNode(grid, nodeWest);
+
+		Edge edgeNorthEast = GridFactory.getEdge(nodeNorth, nodeEast);
+		Edge edgeNorthWest = GridFactory.getEdge(nodeNorth, nodeWest);
+		Edge edgeEastSouth = GridFactory.getEdge(nodeEast, nodeSouth);
+		Edge edgeSouthWest = GridFactory.getEdge(nodeSouth, nodeWest);
+
+		pathUpdater.addEdge(edgeNorthEast);
+		pathUpdater.addEdge(edgeEastSouth);
+		pathUpdater.addEdge(edgeSouthWest);
+		pathUpdater.addEdge(edgeNorthWest);
+		pathUpdater.updatePath();
 
 		this.scenario.setStartingNode(nodeNorth);
 	}

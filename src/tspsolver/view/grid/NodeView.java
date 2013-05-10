@@ -10,9 +10,10 @@ import com.kitfox.svg.animation.AnimationElement;
 
 public class NodeView {
 
-	public static final int CIRCLE_RADIUS = 5;
-	public static final String NORMAL_NODE_COLOR = "#000000";
-	public static final String STARTING_NODE_COLOR = "#0000ff";
+	public static final String CIRCLE_RADIUS = "8";
+
+	public static final String CIRCLE_FILL_NODE = "#000000";
+	public static final String CIRCLE_FILL_STARTINGNODE = "#0000ff";
 
 	private final Node node;
 
@@ -30,7 +31,7 @@ public class NodeView {
 		try {
 			this.svgCircle.addAttribute("cx", AnimationElement.AT_XML, String.valueOf(this.node.getX()));
 			this.svgCircle.addAttribute("cy", AnimationElement.AT_XML, String.valueOf(this.node.getY()));
-			this.svgCircle.addAttribute("r", AnimationElement.AT_XML, String.valueOf(NodeView.CIRCLE_RADIUS));
+			this.svgCircle.addAttribute("r", AnimationElement.AT_XML, NodeView.CIRCLE_RADIUS);
 
 			this.svgGroup.loaderAddChild(null, this.svgCircle);
 		}
@@ -48,13 +49,13 @@ public class NodeView {
 		}
 	}
 
-	protected void updateCircle(String color) {
+	protected void updateCircle(String circleFill) {
 		try {
 			if (this.svgCircle.hasAttribute("fill", AnimationElement.AT_CSS)) {
-				this.svgCircle.setAttribute("fill", AnimationElement.AT_CSS, color);
+				this.svgCircle.setAttribute("fill", AnimationElement.AT_CSS, circleFill);
 			}
 			else {
-				this.svgCircle.addAttribute("fill", AnimationElement.AT_CSS, color);
+				this.svgCircle.addAttribute("fill", AnimationElement.AT_CSS, circleFill);
 			}
 		}
 		catch (final SVGException exception) {
