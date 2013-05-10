@@ -11,7 +11,7 @@ import tspsolver.model.scenario.path.PathUpdater;
 public class BruteForceAlgorithm extends StartAlgorithm {
 
 	private Path lightestPath;
-	private Vector<Node> startPath;
+	private final Vector<Node> startPath;
 	private Vector<Node> currentPath;
 
 	public BruteForceAlgorithm() {
@@ -51,16 +51,15 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 	@Override
 	protected boolean doStep() {
 
-		boolean isNotLastPermutation = next_permutation();
+		boolean isNotLastPermutation = this.next_permutation();
 
-		Path newPath = convertToPath(this.currentPath);
+		Path newPath = this.convertToPath(this.currentPath);
 
 		this.getPathUpdater().clearPath();
 		this.getPathUpdater().addPath(this.lightestPath);
 		this.getPathUpdater().addPath(newPath);
 
-		if (newPath.getWeight() < this.lightestPath.getWeight()
-				|| this.lightestPath.getWeight() == 0.0) {
+		if (newPath.getWeight() < this.lightestPath.getWeight() || this.lightestPath.getWeight() == 0.0) {
 			this.lightestPath = newPath;
 		}
 
@@ -93,21 +92,19 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 			// spezfische reihenfolge, ändlich dem eines alphabet, die grösse
 			// funktioniert nicht weil nicht eindeutig
 			// lexikogr. Nachfolger hat größeres a[i]
-			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath
-					.indexOf(this.currentPath.get(i + 1))) {
+			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath.indexOf(this.currentPath.get(i + 1))) {
 				break;
 			}
 		}
 		int j = this.currentPath.size();
 		while (true) {
 			j -= 1;
-			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath
-					.indexOf(this.currentPath.get(j))) {
+			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath.indexOf(this.currentPath.get(j))) {
 				break;
 			}
 		}
 
-		swap(i, j);
+		this.swap(i, j);
 		// sortiere aufsteigend zwischen a[i] und Ende
 		// zur Zeit absteigend sortiert => invertieren
 
@@ -115,7 +112,7 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 		j = this.currentPath.size() - 1;
 
 		while (i < j) {
-			swap(i, j);
+			this.swap(i, j);
 			i += 1;
 			j -= 1;
 		}
@@ -146,7 +143,7 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 			}
 
 			pathUpdater.addEdge(edge);
-			
+
 			currentNode = node;
 		}
 
@@ -155,11 +152,11 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 			// FIXME: this path does not work, what do we do now?
 			throw new IllegalStateException();
 		}
-		
+
 		pathUpdater.addEdge(edge);
-		
+
 		pathUpdater.updatePath();
-		
+
 		return pathUpdater.getPath();
 	}
 

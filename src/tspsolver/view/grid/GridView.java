@@ -2,6 +2,7 @@ package tspsolver.view.grid;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +30,7 @@ import tspsolver.model.updates.path.PathUpdate;
 import tspsolver.model.updates.path.PathUpdateAction;
 import tspsolver.model.updates.scenario.StartingNodeUpdate;
 import tspsolver.model.updates.scenario.StartingNodeUpdateAction;
+import tspsolver.util.copy.FileCopy;
 
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.SVGDiagram;
@@ -57,10 +59,14 @@ public class GridView extends JPanel implements Observer {
 	public GridView() {
 		URI svgURI = null;
 		try {
-			final InputStream svgImage = new FileInputStream(GridView.DATA_MAP_SWITZERLAND);
-			svgURI = SVGCache.getSVGUniverse().loadSVG(svgImage, GridView.DATA_MAP_SWITZERLAND);
+			File mapFile = new File(GridView.DATA_MAP_SWITZERLAND);
+			File tempFile = File.createTempFile("tspsolver_map_switzerland", ".svg");
+			FileCopy.copy(mapFile, tempFile);
+
+			InputStream svgImage = new FileInputStream(tempFile);
+			svgURI = SVGCache.getSVGUniverse().loadSVG(svgImage, tempFile.getName());
 		}
-		catch (final IOException exception) {
+		catch (IOException exception) {
 			JOptionPane.showMessageDialog(null, "Unable to load svg image: " + GridView.DATA_MAP_SWITZERLAND, "Error loading svg image", JOptionPane.ERROR_MESSAGE);
 			exception.printStackTrace();
 		}

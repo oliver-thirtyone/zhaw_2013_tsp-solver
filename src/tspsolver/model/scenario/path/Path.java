@@ -28,8 +28,7 @@ public class Path extends Observable implements Serializable {
 		final int prime = 31;
 		int result = 1;
 
-		result = prime * result
-				+ ((this.edges == null) ? 0 : this.edges.hashCode());
+		result = prime * result + ((this.edges == null) ? 0 : this.edges.hashCode());
 
 		final long temp = Double.doubleToLongBits(this.weight);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -57,12 +56,12 @@ public class Path extends Observable implements Serializable {
 			if (other.edges != null) {
 				return false;
 			}
-		} else if (!this.edges.equals(other.edges)) {
+		}
+		else if (!this.edges.equals(other.edges)) {
 			return false;
 		}
 
-		if (Double.doubleToLongBits(this.weight) != Double
-				.doubleToLongBits(other.weight)) {
+		if (Double.doubleToLongBits(this.weight) != Double.doubleToLongBits(other.weight)) {
 			return false;
 		}
 
