@@ -10,21 +10,16 @@ import tspsolver.model.scenario.path.PathUpdater;
 
 public class BruteForceAlgorithm extends StartAlgorithm {
 
-	private Path lightestPath;
 	private final Vector<Node> startPath;
-	private Vector<Node> currentPath;
+	private final Vector<Node> currentPath;
 
 	public BruteForceAlgorithm() {
-
 		this.startPath = new Vector<Node>();
 		this.currentPath = new Vector<Node>();
-		this.lightestPath = new Path();
-
 	}
 
 	@Override
 	protected void doInitialize() {
-
 		this.getPathUpdater().addPath(new Path());
 
 		// convert to node path
@@ -36,43 +31,41 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 			}
 		}
 
-		this.currentPath = (Vector<Node>) this.startPath.clone();
-
+		this.currentPath.addAll(this.startPath);
 	}
 
 	@Override
 	protected void doReset() {
-
 		this.startPath.clear();
 		this.currentPath.clear();
-
 	}
 
 	@Override
 	protected boolean doStep() {
+		boolean successfulStep = true;
+		boolean isLastPermutation = this.next_permutation();
 
-		boolean isNotLastPermutation = this.next_permutation();
-
+		// Create the new path
 		Path newPath = this.convertToPath(this.currentPath);
 
-		this.getPathUpdater().clearPath();
-		this.getPathUpdater().addPath(this.lightestPath);
-		this.getPathUpdater().addPath(newPath);
-
-		if (newPath.getWeight() < this.lightestPath.getWeight() || this.lightestPath.getWeight() == 0.0) {
-			this.lightestPath = newPath;
+		// Check if the new path is lighter
+		if (this.getPath().isEmpty() || (!newPath.isEmpty() && newPath.getWeight() < this.getPath().getWeight())) {
+			this.getPathUpdater().clearPath();
+			this.getPathUpdater().addPath(newPath);
 		}
 
-		if (isNotLastPermutation == false) {
-
-			this.getPathUpdater().clearPath();
-			this.getPathUpdater().addPath(this.lightestPath);
-
-			this.finishedSuccessfully();
+		// Check if we are finished
+		if (isLastPermutation) {
+			if (!this.getPath().isEmpty()) {
+				this.finishedSuccessfully();
+			}
+			else {
+				successfulStep = false;
+			}
 		}
 
 		this.getPathUpdater().updatePath();
-		return true;
+		return successfulStep;
 	}
 
 	private boolean next_permutation() {
@@ -85,7 +78,7 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 		while (true) {
 			if (i <= 0) {
 				// a ist letzte Permutation
-				return false;
+				return true;
 			}
 			i -= 1;
 			// FIXME: Dies könnte optimiert werden jedes Node müsste einen
@@ -116,8 +109,9 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 			i += 1;
 			j -= 1;
 		}
-		return true;
+
 		// eine weitere Permutation gefunden
+		return false;
 	}
 
 	private void swap(int first, int second) {
@@ -129,35 +123,39 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 	}
 
 	private Path convertToPath(Vector<Node> nodes) {
+		Path newPath = new Path();
+		PathUpdater newPathUpdater = new PathUpdater(newPath);
 
+		boolean isNewPathValid = true;
 		Node currentNode = this.getStartingNode();
 
-		PathUpdater pathUpdater = new PathUpdater(new Path());
-
+		// Link all nodes
 		for (Node node : nodes) {
-
 			Edge edge = currentNode.getEdgeToNode(node);
-			if (edge == null) {
-				// FIXME: this path does not work, what do we do now?
-				throw new IllegalStateException();
+
+			if (edge != null) {
+				newPathUpdater.addEdge(edge);
+				currentNode = node;
 			}
-
-			pathUpdater.addEdge(edge);
-
-			currentNode = node;
+			else {
+				isNewPathValid = false;
+			}
 		}
 
+		// Link the last node with the starting node
 		Edge edge = currentNode.getEdgeToNode(this.getStartingNode());
-		if (edge == null) {
-			// FIXME: this path does not work, what do we do now?
-			throw new IllegalStateException();
+		if (edge != null) {
+			newPathUpdater.addEdge(edge);
+		}
+		else {
+			isNewPathValid = false;
 		}
 
-		pathUpdater.addEdge(edge);
+		// Update the path if it is valid
+		if (isNewPathValid) {
+			newPathUpdater.updatePath();
+		}
 
-		pathUpdater.updatePath();
-
-		return pathUpdater.getPath();
+		return newPath;
 	}
-
 }
