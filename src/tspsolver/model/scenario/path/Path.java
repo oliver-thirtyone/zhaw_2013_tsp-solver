@@ -15,12 +15,10 @@ public class Path extends Observable implements Serializable {
 
 	private final Set<Edge> edges;
 	private double weight;
-	private boolean weightNeedsUpdate;
 
 	public Path() {
 		this.edges = new HashSet<Edge>();
 		this.weight = 0.0;
-		this.weightNeedsUpdate = false;
 	}
 
 	@Override
@@ -69,10 +67,6 @@ public class Path extends Observable implements Serializable {
 	}
 
 	public double getWeight() {
-		if (this.weightNeedsUpdate) {
-			this.updateWeight();
-		}
-
 		return this.weight;
 	}
 
@@ -94,25 +88,14 @@ public class Path extends Observable implements Serializable {
 
 	protected synchronized void addEdge(Edge edge) {
 		if (this.edges.add(edge)) {
-			this.weightNeedsUpdate = true;
+			this.updateWeight();
 		}
 	}
 
 	protected synchronized void removeEdge(Edge edge) {
 		if (this.edges.remove(edge)) {
-			this.weightNeedsUpdate = true;
+			this.updateWeight();
 		}
-	}
-
-	private void updateWeight() {
-
-		this.weight = 0.0;
-
-		for (Edge edge : this.edges) {
-			this.weight += edge.getWeight();
-		}
-
-		this.weightNeedsUpdate = false;
 	}
 
 	protected void firePathUpdate(Edge edge, PathUpdateAction action) {
@@ -120,5 +103,13 @@ public class Path extends Observable implements Serializable {
 
 		this.setChanged();
 		this.notifyObservers(update);
+	}
+
+	private void updateWeight() {
+		this.weight = 0.0;
+
+		for (Edge edge : this.getEdges()) {
+			this.weight += edge.getWeight();
+		}
 	}
 }
