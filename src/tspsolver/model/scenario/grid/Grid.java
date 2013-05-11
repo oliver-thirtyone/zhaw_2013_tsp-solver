@@ -1,10 +1,10 @@
 package tspsolver.model.scenario.grid;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Set;
 
 import tspsolver.model.updates.grid.NodeUpdate;
 import tspsolver.model.updates.grid.NodeUpdateAction;
@@ -15,10 +15,10 @@ public class Grid extends Observable implements Serializable, Observer {
 
 	public static final boolean LINK_ADDED_NODE = true;
 
-	private final Set<Node> nodes;
+	private final Map<String, Node> nodes;
 
 	public Grid() {
-		this.nodes = new HashSet<Node>();
+		this.nodes = new HashMap<String, Node>();
 	}
 
 	@Override
@@ -65,18 +65,22 @@ public class Grid extends Observable implements Serializable, Observer {
 	}
 
 	public Node[] getNodes() {
-		return this.nodes.toArray(new Node[this.nodes.size()]);
+		return this.nodes.values().toArray(new Node[this.nodes.size()]);
 	}
 
 	public int getNumberOfNodes() {
 		return this.nodes.size();
 	}
 
-	public boolean containsNode(Node node) {
-		return this.nodes.contains(node);
+	protected Node getNode(String name) {
+		return this.nodes.get(name);
 	}
 
-	protected synchronized void addNode(Node node) {
+	protected boolean containsNode(Node node) {
+		return this.nodes.containsKey(node.getName());
+	}
+
+	protected void addNode(Node node) {
 		this.addNode(node, Grid.LINK_ADDED_NODE);
 	}
 
@@ -89,7 +93,7 @@ public class Grid extends Observable implements Serializable, Observer {
 			}
 			node.addObserver(this);
 
-			this.nodes.add(node);
+			this.nodes.put(node.getName(), node);
 			this.fireNodeUpdate(node, NodeUpdateAction.ADD_NODE);
 		}
 	}

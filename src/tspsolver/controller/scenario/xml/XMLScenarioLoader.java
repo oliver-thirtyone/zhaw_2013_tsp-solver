@@ -119,7 +119,7 @@ public class XMLScenarioLoader implements IScenarioLoader {
 		}
 
 		// Create the node
-		final tspsolver.model.scenario.grid.Node node = GridFactory.createNode(Integer.parseInt(x), Integer.parseInt(y));
+		final tspsolver.model.scenario.grid.Node node = GridFactory.createNode(name, Integer.parseInt(x), Integer.parseInt(y));
 
 		// Add the node to the grid
 		if (!link.isEmpty()) {

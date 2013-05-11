@@ -2,8 +2,16 @@ package tspsolver.model.scenario.grid;
 
 public abstract class GridFactory {
 
-	public static Node createNode(int x, int y) {
-		return new Node(x, y);
+	public static Node createNode(String name, int x, int y) {
+		return new Node(name, x, y);
+	}
+
+	public static Node getNode(Grid grid, String name) {
+		return grid.getNode(name);
+	}
+
+	public static boolean containsNode(Grid grid, Node node) {
+		return grid.containsNode(node);
 	}
 
 	public static void addNode(Grid grid, Node node) {

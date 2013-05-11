@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<scenario name="North, East, South, West">
+	<node name="north" x="350" y="25" link="false" />
+	<node name="east" x="550" y="250" link="false" />
+	<node name="south" x="350" y="500" link="false" />
+	<node name="west" x="125" y="250" link="false" />
+
+	<add-edge first-node="north" second-node="east" />
+	<add-edge first-node="north" second-node="south" weight="9999.99" />
+	<add-edge first-node="north" second-node="west" />
+	<add-edge first-node="east" second-node="south" />
+	<add-edge first-node="east" second-node="west" />
+	<add-edge first-node="south" second-node="west" />
+
+	<starting-node name="north" />
+</scenario>

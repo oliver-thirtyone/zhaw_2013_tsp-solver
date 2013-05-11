@@ -127,7 +127,7 @@ public class Scenario extends Observable implements Serializable, Observer {
 		final Map<Node, Node> nodeCopies = new HashMap<Node, Node>();
 		for (final Node node : this.grid.getNodes()) {
 			// Create a copy of each node
-			final Node nodeCopy = GridFactory.createNode(node.getX(), node.getY());
+			final Node nodeCopy = GridFactory.createNode(node.getName(), node.getX(), node.getY());
 
 			// Add the copied node to the copied grid
 			GridFactory.addNode(gridCopy, nodeCopy, false);

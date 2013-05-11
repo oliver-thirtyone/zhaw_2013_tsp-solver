@@ -40,10 +40,10 @@ public class LinKernighanHeuristikTest {
 		this.grid = this.scenario.getGrid();
 		this.path = this.scenario.getPath();
 
-		this.nodeNorth = GridFactory.createNode(3, 1);
-		this.nodeEast = GridFactory.createNode(4, 2);
-		this.nodeSouth = GridFactory.createNode(1, 3);
-		this.nodeWest = GridFactory.createNode(2, 4);
+		this.nodeNorth = GridFactory.createNode("north", 3, 1);
+		this.nodeEast = GridFactory.createNode("east", 4, 2);
+		this.nodeSouth = GridFactory.createNode("south", 1, 3);
+		this.nodeWest = GridFactory.createNode("west", 2, 4);
 
 		GridFactory.addNode(this.grid, this.nodeNorth);
 		GridFactory.addNode(this.grid, this.nodeEast);

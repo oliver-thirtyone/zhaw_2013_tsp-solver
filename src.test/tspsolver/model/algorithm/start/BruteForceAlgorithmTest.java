@@ -3,72 +3,34 @@ package tspsolver.model.algorithm.start;
 import junit.framework.Assert;
 
 import org.junit.Before;
-import org.junit.Test;
 
-import tspsolver.model.algorithm.StartAlgorithm;
-import tspsolver.model.scenario.Scenario;
+import tspsolver.model.algorithm.StartAlgorithmTest;
 import tspsolver.model.scenario.grid.Edge;
-import tspsolver.model.scenario.grid.Grid;
 import tspsolver.model.scenario.grid.GridFactory;
 import tspsolver.model.scenario.grid.Node;
-import tspsolver.model.scenario.path.Path;
 
-public class BruteForceAlgorithmTest {
+public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 
-	private Scenario scenario;
-	private Grid grid;
-	private Path path;
-
-	private Node nodeNorth;
-	private Node nodeEast;
-	private Node nodeSouth;
-	private Node nodeWest;
-
-	private Edge edgeNorthEast;
-	private Edge edgeNorthSouth;
-	private Edge edgeNorthWest;
-	private Edge edgeEastSouth;
-	private Edge edgeEastWest;
-	private Edge edgeSouthWest;
-
-	private StartAlgorithm algorithm;
-
+	@Override
 	@Before
 	public void setUp() {
-		this.scenario = new Scenario("MinimumSpanningTreeHeuristikTest");
-		this.grid = this.scenario.getGrid();
-		this.path = this.scenario.getPath();
-
-		this.nodeNorth = GridFactory.createNode(0, 5);
-		this.nodeEast = GridFactory.createNode(4, 0); // Nearest node to the node in the north
-		this.nodeSouth = GridFactory.createNode(0, -5);
-		this.nodeWest = GridFactory.createNode(-5, 0);
-
-		GridFactory.addNode(this.grid, this.nodeNorth);
-		GridFactory.addNode(this.grid, this.nodeEast);
-		GridFactory.addNode(this.grid, this.nodeSouth);
-		GridFactory.addNode(this.grid, this.nodeWest);
-
-		this.scenario.setStartingNode(this.nodeNorth);
-
-		this.edgeNorthEast = GridFactory.getEdge(this.nodeNorth, this.nodeEast);
-		this.edgeNorthSouth = GridFactory.getEdge(this.nodeNorth, this.nodeSouth);
-		this.edgeNorthWest = GridFactory.getEdge(this.nodeNorth, this.nodeWest);
-		this.edgeEastSouth = GridFactory.getEdge(this.nodeEast, this.nodeSouth);
-		this.edgeEastWest = GridFactory.getEdge(this.nodeEast, this.nodeWest);
-		this.edgeSouthWest = GridFactory.getEdge(this.nodeSouth, this.nodeWest);
-
 		this.algorithm = new BruteForceAlgorithm();
+		super.setUp();
 	}
 
-	@Test
-	public void test() {
-		// Make sure that we can not take a step yet
-		Assert.assertFalse(this.algorithm.step());
+	@Override
+	protected void doTestScenarioNorthEastSouthWest() {
+		Node nodeNorth = GridFactory.getNode(this.grid, "north");
+		Node nodeEast = GridFactory.getNode(this.grid, "east");
+		Node nodeSouth = GridFactory.getNode(this.grid, "south");
+		Node nodeWest = GridFactory.getNode(this.grid, "west");
 
-		// Initialize the algorithm
-		this.algorithm.initialize(this.scenario);
-		Assert.assertTrue(this.algorithm.hasValidArguments());
+		Edge edgeNorthEast = GridFactory.getEdge(nodeNorth, nodeEast);
+		Edge edgeNorthSouth = GridFactory.getEdge(nodeNorth, nodeSouth);
+		Edge edgeNorthWest = GridFactory.getEdge(nodeNorth, nodeWest);
+		Edge edgeEastSouth = GridFactory.getEdge(nodeEast, nodeSouth);
+		Edge edgeEastWest = GridFactory.getEdge(nodeEast, nodeWest);
+		Edge edgeSouthWest = GridFactory.getEdge(nodeSouth, nodeWest);
 
 		// Step through the algorithm
 		int stepCounter = 0;
@@ -81,16 +43,37 @@ public class BruteForceAlgorithmTest {
 		Assert.assertEquals(4, this.path.getNumberOfEdges());
 
 		// Check if we went the right path
-		Assert.assertTrue(this.path.containsEdge(this.edgeNorthEast));
-		Assert.assertTrue(this.path.containsEdge(this.edgeEastSouth));
-		Assert.assertTrue(this.path.containsEdge(this.edgeSouthWest));
-		Assert.assertTrue(this.path.containsEdge(this.edgeNorthWest));
+		Assert.assertTrue(this.path.containsEdge(edgeNorthEast));
+		Assert.assertTrue(this.path.containsEdge(edgeEastSouth));
+		Assert.assertTrue(this.path.containsEdge(edgeSouthWest));
+		Assert.assertTrue(this.path.containsEdge(edgeNorthWest));
 
 		// Check if these edges are not part of the path
-		Assert.assertFalse(this.path.containsEdge(this.edgeNorthSouth));
-		Assert.assertFalse(this.path.containsEdge(this.edgeEastWest));
+		Assert.assertFalse(this.path.containsEdge(edgeNorthSouth));
+		Assert.assertFalse(this.path.containsEdge(edgeEastWest));
 
 		// Check if we tested all possibilities
 		Assert.assertEquals(6, stepCounter);
 	}
+
+	@Override
+	protected void doTestScenarioFiveNodes() {
+		Assert.fail();
+	}
+
+	@Override
+	protected void doTestScenarioFiveNodesOneNonAccessibleEdge() {
+		Assert.fail();
+	}
+
+	@Override
+	protected void doTestScenarioUnsolvable() {
+		Assert.fail();
+	}
+
+	@Override
+	protected void doTestScenarioFortyoneNode() {
+		Assert.fail();
+	}
+
 }

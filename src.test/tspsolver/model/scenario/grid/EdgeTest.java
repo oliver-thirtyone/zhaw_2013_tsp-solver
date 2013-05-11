@@ -17,8 +17,8 @@ public class EdgeTest {
 	public void setUp() {
 		this.grid = new Grid();
 
-		this.firstNode = GridFactory.createNode(2, 3);
-		this.secondNode = GridFactory.createNode(-2, -3);
+		this.firstNode = GridFactory.createNode("firstNode", 2, 3);
+		this.secondNode = GridFactory.createNode("secondNode", -2, -3);
 
 		GridFactory.addNode(this.grid, this.firstNode);
 		GridFactory.addNode(this.grid, this.secondNode);

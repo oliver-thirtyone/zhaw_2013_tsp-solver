@@ -1,5 +1,6 @@
 package tspsolver.model.algorithm;
 
+import tspsolver.model.scenario.grid.GridFactory;
 import tspsolver.model.scenario.grid.Node;
 
 public abstract class StartAlgorithm extends Algorithm {
@@ -13,7 +14,7 @@ public abstract class StartAlgorithm extends Algorithm {
 			validArguments = false;
 		}
 
-		if (!this.getGrid().containsNode(this.getStartingNode())) {
+		if (!GridFactory.containsNode(this.getGrid(), this.getStartingNode())) {
 			System.err.println("The starting node must be in the node set");
 			validArguments = false;
 		}

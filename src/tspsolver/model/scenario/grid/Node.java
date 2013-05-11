@@ -14,12 +14,14 @@ public class Node extends Observable implements Serializable, Observer {
 
 	private static final long serialVersionUID = -5593471052000934706L;
 
+	private final String name;
 	private final int x;
 	private final int y;
 
 	private final Map<Node, Edge> edges;
 
-	protected Node(int x, int y) {
+	protected Node(String name, int x, int y) {
+		this.name = name;
 		this.x = x;
 		this.y = y;
 
@@ -68,6 +70,8 @@ public class Node extends Observable implements Serializable, Observer {
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();
 
+		builder.append(this.getName());
+		builder.append(": ");
 		builder.append("(");
 		builder.append(this.getX());
 		builder.append(", ");
@@ -81,6 +85,10 @@ public class Node extends Observable implements Serializable, Observer {
 	public void update(Observable observable, Object argument) {
 		this.setChanged();
 		this.notifyObservers(argument);
+	}
+
+	public String getName() {
+		return this.name;
 	}
 
 	public int getX() {

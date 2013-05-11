@@ -21,10 +21,10 @@ public class PipedDeepCopyTest {
 		this.scenario = new Scenario("PipedDeepCopyTest");
 		final Grid grid = this.scenario.getGrid();
 
-		final Node nodeNorth = GridFactory.createNode(0, 5);
-		final Node nodeEast = GridFactory.createNode(4, 0);
-		final Node nodeSouth = GridFactory.createNode(0, -5);
-		final Node nodeWest = GridFactory.createNode(-5, 0);
+		final Node nodeNorth = GridFactory.createNode("north", 0, 5);
+		final Node nodeEast = GridFactory.createNode("east", 4, 0);
+		final Node nodeSouth = GridFactory.createNode("south", 0, -5);
+		final Node nodeWest = GridFactory.createNode("west", -5, 0);
 
 		GridFactory.addNode(grid, nodeNorth);
 		GridFactory.addNode(grid, nodeEast);
