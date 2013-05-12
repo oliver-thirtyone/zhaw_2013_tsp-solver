@@ -1,5 +1,6 @@
 package tspsolver.model.algorithm.start;
 
+import java.math.BigInteger;
 import java.util.Vector;
 
 import tspsolver.model.algorithm.StartAlgorithm;
@@ -12,6 +13,9 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 
 	private final Vector<Node> startPath;
 	private final Vector<Node> currentPath;
+
+	private int steps;
+	private int maxSteps;
 
 	public BruteForceAlgorithm() {
 		this.startPath = new Vector<Node>();
@@ -32,34 +36,51 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 		}
 
 		this.currentPath.addAll(this.startPath);
+
+		this.steps = 0;
+		this.maxSteps = factorial(this.startPath.size()).intValue() / 2;
+	}
+
+	public BigInteger factorial(int n) {
+		BigInteger ret = BigInteger.ONE;
+		for (int i = 1; i <= n; ++i)
+			ret = ret.multiply(BigInteger.valueOf(i));
+		return ret;
 	}
 
 	@Override
 	protected void doReset() {
 		this.startPath.clear();
 		this.currentPath.clear();
+
+		this.steps = 0;
+		this.maxSteps = 0;
 	}
 
 	@Override
 	protected boolean doStep() {
 		boolean successfulStep = true;
-		boolean isLastPermutation = this.next_permutation();
+
+		steps++;
+
+		this.next_permutation();
 
 		// Create the new path
 		Path newPath = this.convertToPath(this.currentPath);
 
 		// Check if the new path is lighter
-		if (this.getPath().isEmpty() || (!newPath.isEmpty() && newPath.getWeight() < this.getPath().getWeight())) {
+		if (this.getPath().isEmpty()
+				|| (!newPath.isEmpty() && newPath.getWeight() < this.getPath()
+						.getWeight())) {
 			this.getPathUpdater().clearPath();
 			this.getPathUpdater().addPath(newPath);
 		}
 
 		// Check if we are finished
-		if (isLastPermutation) {
+		if (steps >= maxSteps) {
 			if (!this.getPath().isEmpty()) {
 				this.finishedSuccessfully();
-			}
-			else {
+			} else {
 				successfulStep = false;
 			}
 		}
@@ -85,14 +106,16 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 			// spezfische reihenfolge, ändlich dem eines alphabet, die grösse
 			// funktioniert nicht weil nicht eindeutig
 			// lexikogr. Nachfolger hat größeres a[i]
-			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath.indexOf(this.currentPath.get(i + 1))) {
+			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath
+					.indexOf(this.currentPath.get(i + 1))) {
 				break;
 			}
 		}
 		int j = this.currentPath.size();
 		while (true) {
 			j -= 1;
-			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath.indexOf(this.currentPath.get(j))) {
+			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath
+					.indexOf(this.currentPath.get(j))) {
 				break;
 			}
 		}
@@ -136,8 +159,7 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 			if (edge != null) {
 				newPathUpdater.addEdge(edge);
 				currentNode = node;
-			}
-			else {
+			} else {
 				isNewPathValid = false;
 			}
 		}
@@ -146,8 +168,7 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 		Edge edge = currentNode.getEdgeToNode(this.getStartingNode());
 		if (edge != null) {
 			newPathUpdater.addEdge(edge);
-		}
-		else {
+		} else {
 			isNewPathValid = false;
 		}
 
