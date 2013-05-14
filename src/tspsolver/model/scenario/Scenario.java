@@ -14,24 +14,27 @@ import tspsolver.model.scenario.path.Path;
 import tspsolver.model.scenario.path.PathUpdater;
 import tspsolver.model.updates.scenario.StartingNodeUpdate;
 import tspsolver.model.updates.scenario.StartingNodeUpdateAction;
+import tspsolver.model.validator.Validator;
 
 public class Scenario extends Observable implements Serializable, Observer {
 
 	private static final long serialVersionUID = -7758506719837963384L;
 
-	private final String name;
+	private final Validator validator;
 
 	private final Grid grid;
 	private final Path path;
 
+	private String name;
 	private Node startingNode;
 
-	public Scenario(String name) {
-		this.name = name;
+	public Scenario(Validator validator) {
+		this.validator = validator;
 
 		this.grid = new Grid();
 		this.path = new Path();
 
+		this.name = "";
 		this.startingNode = null;
 
 		this.grid.addObserver(this);
@@ -40,9 +43,10 @@ public class Scenario extends Observable implements Serializable, Observer {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		int prime = 31;
 		int result = 1;
 
+		result = prime * result + ((this.validator == null) ? 0 : this.validator.hashCode());
 		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
 		result = prime * result + ((this.grid == null) ? 0 : this.grid.hashCode());
 		result = prime * result + ((this.path == null) ? 0 : this.path.hashCode());
@@ -65,13 +69,13 @@ public class Scenario extends Observable implements Serializable, Observer {
 			return false;
 		}
 
-		final Scenario other = (Scenario) obj;
-		if (this.name == null) {
-			if (other.name != null) {
+		Scenario other = (Scenario) obj;
+		if (this.validator == null) {
+			if (other.validator != null) {
 				return false;
 			}
 		}
-		else if (!this.name.equals(other.name)) {
+		else if (!this.validator.equals(other.validator)) {
 			return false;
 		}
 
@@ -90,6 +94,15 @@ public class Scenario extends Observable implements Serializable, Observer {
 			}
 		}
 		else if (!this.path.equals(other.path)) {
+			return false;
+		}
+
+		if (this.name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		}
+		else if (!this.name.equals(other.name)) {
 			return false;
 		}
 
@@ -118,16 +131,16 @@ public class Scenario extends Observable implements Serializable, Observer {
 
 	public Scenario copy() {
 		// Create the scenario copy
-		final Scenario scenarioCopy = new Scenario(this.getName());
+		Scenario scenarioCopy = new Scenario(this.validator);
 
 		// Copy the gird
-		final Grid gridCopy = scenarioCopy.getGrid();
+		Grid gridCopy = scenarioCopy.getGrid();
 
 		// Copy the nodes
-		final Map<Node, Node> nodeCopies = new HashMap<Node, Node>();
-		for (final Node node : this.grid.getNodes()) {
+		Map<Node, Node> nodeCopies = new HashMap<Node, Node>();
+		for (Node node : this.grid.getNodes()) {
 			// Create a copy of each node
-			final Node nodeCopy = GridFactory.createNode(node.getName(), node.getX(), node.getY());
+			Node nodeCopy = GridFactory.createNode(node.getName(), node.getX(), node.getY());
 
 			// Add the copied node to the copied grid
 			GridFactory.addNode(gridCopy, nodeCopy, false);
@@ -137,16 +150,16 @@ public class Scenario extends Observable implements Serializable, Observer {
 		}
 
 		// Copy the edges
-		final Map<Edge, Edge> edgeCopies = new HashMap<Edge, Edge>();
-		for (final Node node : this.grid.getNodes()) {
-			for (final Edge edge : node.getEdges()) {
+		Map<Edge, Edge> edgeCopies = new HashMap<Edge, Edge>();
+		for (Node node : this.grid.getNodes()) {
+			for (Edge edge : node.getEdges()) {
 				// Get the copied nodes
-				final Node firstNodeCopy = nodeCopies.get(edge.getFirstNode());
-				final Node secondNodeCopy = nodeCopies.get(edge.getSecondNode());
+				Node firstNodeCopy = nodeCopies.get(edge.getFirstNode());
+				Node secondNodeCopy = nodeCopies.get(edge.getSecondNode());
 
 				if (!GridFactory.hasEdge(firstNodeCopy, secondNodeCopy)) {
 					// Add the copied edge to the nodes
-					final Edge edgeCopy = GridFactory.addEdge(firstNodeCopy, secondNodeCopy, edge.getWeight());
+					Edge edgeCopy = GridFactory.addEdge(firstNodeCopy, secondNodeCopy, edge.getWeight());
 
 					// Add the copied node to the reference map
 					edgeCopies.put(edge, edgeCopy);
@@ -155,12 +168,15 @@ public class Scenario extends Observable implements Serializable, Observer {
 		}
 
 		// Copy the path
-		final Path pathCopy = scenarioCopy.getPath();
-		final PathUpdater pathCopyUpdater = new PathUpdater(pathCopy);
-		for (final Edge edge : this.path.getEdges()) {
+		Path pathCopy = scenarioCopy.getPath();
+		PathUpdater pathCopyUpdater = new PathUpdater(pathCopy);
+		for (Edge edge : this.path.getEdges()) {
 			pathCopyUpdater.addEdge(edgeCopies.get(edge));
 		}
 		pathCopyUpdater.updatePath();
+
+		// Copy the name
+		scenarioCopy.setName(this.getName());
 
 		// Copy the starting node
 		scenarioCopy.setStartingNode(nodeCopies.get(this.getStartingNode()));
@@ -168,8 +184,16 @@ public class Scenario extends Observable implements Serializable, Observer {
 		return scenarioCopy;
 	}
 
-	public String getName() {
-		return this.name;
+	public boolean isScenarioValid() {
+		return this.validator.validateScenario(this);
+	}
+
+	public boolean isGridValid() {
+		return this.validator.validateGrid(this);
+	}
+
+	public boolean isPathValid() {
+		return this.validator.validatePath(this);
 	}
 
 	public Grid getGrid() {
@@ -178,6 +202,14 @@ public class Scenario extends Observable implements Serializable, Observer {
 
 	public Path getPath() {
 		return this.path;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Node getStartingNode() {
@@ -197,7 +229,7 @@ public class Scenario extends Observable implements Serializable, Observer {
 	}
 
 	private void fireStartingNodeUpdate(Node node, StartingNodeUpdateAction action) {
-		final StartingNodeUpdate update = new StartingNodeUpdate(node, action);
+		StartingNodeUpdate update = new StartingNodeUpdate(node, action);
 
 		this.setChanged();
 		this.notifyObservers(update);

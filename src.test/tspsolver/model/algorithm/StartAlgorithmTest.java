@@ -12,6 +12,8 @@ import tspsolver.controller.scenario.xml.XMLScenarioLoader;
 import tspsolver.model.scenario.Scenario;
 import tspsolver.model.scenario.grid.Grid;
 import tspsolver.model.scenario.path.Path;
+import tspsolver.model.validator.TSPValidator;
+import tspsolver.model.validator.Validator;
 
 public abstract class StartAlgorithmTest {
 
@@ -20,6 +22,8 @@ public abstract class StartAlgorithmTest {
 	public static final String SCENARIO_FIVE_NODES_ONE_NON_ACCESSIBLE_EDGE = "data.test/scenario/test_five_nodes_one_non-accessible_edge.xml";
 	public static final String SCENARIO_UNSOLVABLE = "data.test/scenario/test_unsolvable_scenario.xml";
 	public static final String SCENARIO_FORTYONE_NODES = "data.test/scenario/test_fortyone_nodes.xml";
+
+	private static final Validator VALIDATOR = new TSPValidator();
 
 	protected Scenario scenarioNorthEastSouthWest;
 	protected Scenario scenarioFiveNodes;
@@ -36,13 +40,19 @@ public abstract class StartAlgorithmTest {
 	public void setUp() {
 		XMLScenarioLoader scenarioLoader = new XMLScenarioLoader();
 
+		this.scenarioNorthEastSouthWest = new Scenario(StartAlgorithmTest.VALIDATOR);
+		this.scenarioFiveNodes = new Scenario(StartAlgorithmTest.VALIDATOR);
+		this.scenarioFiveNodesOneNonAccessibleEdge = new Scenario(StartAlgorithmTest.VALIDATOR);
+		this.scenarioUnsolvable = new Scenario(StartAlgorithmTest.VALIDATOR);
+		this.scenarioFortyoneNodes = new Scenario(StartAlgorithmTest.VALIDATOR);
+
 		// Load all scenarios
 		try {
-			this.scenarioNorthEastSouthWest = scenarioLoader.loadScenario(new FileInputStream(StartAlgorithmTest.SCENARIO_NORTH_EAST_SOUTH_WEST));
-			this.scenarioFiveNodes = scenarioLoader.loadScenario(new FileInputStream(StartAlgorithmTest.SCENARIO_FIVE_NODES));
-			this.scenarioFiveNodesOneNonAccessibleEdge = scenarioLoader.loadScenario(new FileInputStream(StartAlgorithmTest.SCENARIO_FIVE_NODES_ONE_NON_ACCESSIBLE_EDGE));
-			this.scenarioUnsolvable = scenarioLoader.loadScenario(new FileInputStream(StartAlgorithmTest.SCENARIO_UNSOLVABLE));
-			this.scenarioFortyoneNodes = scenarioLoader.loadScenario(new FileInputStream(StartAlgorithmTest.SCENARIO_FORTYONE_NODES));
+			scenarioLoader.loadScenario(this.scenarioNorthEastSouthWest, new FileInputStream(StartAlgorithmTest.SCENARIO_NORTH_EAST_SOUTH_WEST));
+			scenarioLoader.loadScenario(this.scenarioFiveNodes, new FileInputStream(StartAlgorithmTest.SCENARIO_FIVE_NODES));
+			scenarioLoader.loadScenario(this.scenarioFiveNodesOneNonAccessibleEdge, new FileInputStream(StartAlgorithmTest.SCENARIO_FIVE_NODES_ONE_NON_ACCESSIBLE_EDGE));
+			scenarioLoader.loadScenario(this.scenarioUnsolvable, new FileInputStream(StartAlgorithmTest.SCENARIO_UNSOLVABLE));
+			scenarioLoader.loadScenario(this.scenarioFortyoneNodes, new FileInputStream(StartAlgorithmTest.SCENARIO_FORTYONE_NODES));
 		}
 		catch (IllegalArgumentException exception) {
 			exception.printStackTrace();

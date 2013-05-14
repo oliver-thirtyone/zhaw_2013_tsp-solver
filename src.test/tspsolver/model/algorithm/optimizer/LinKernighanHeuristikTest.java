@@ -13,6 +13,7 @@ import tspsolver.model.scenario.grid.GridFactory;
 import tspsolver.model.scenario.grid.Node;
 import tspsolver.model.scenario.path.Path;
 import tspsolver.model.scenario.path.PathUpdater;
+import tspsolver.model.validator.TSPValidator;
 
 public class LinKernighanHeuristikTest {
 
@@ -36,7 +37,7 @@ public class LinKernighanHeuristikTest {
 
 	@Before
 	public void setUp() {
-		this.scenario = new Scenario("LinKernighanHeuristikTest");
+		this.scenario = new Scenario(new TSPValidator());
 		this.grid = this.scenario.getGrid();
 		this.path = this.scenario.getPath();
 

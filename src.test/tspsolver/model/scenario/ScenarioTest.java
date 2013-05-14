@@ -13,6 +13,7 @@ import tspsolver.model.scenario.grid.GridFactory;
 import tspsolver.model.scenario.grid.Node;
 import tspsolver.model.scenario.path.Path;
 import tspsolver.model.scenario.path.PathUpdater;
+import tspsolver.model.validator.TSPValidator;
 
 public class ScenarioTest {
 
@@ -20,7 +21,9 @@ public class ScenarioTest {
 
 	@Before
 	public void setUp() {
-		this.scenario = new Scenario("ScenarioTest");
+		this.scenario = new Scenario(new TSPValidator());
+		this.scenario.setName("ScenarioTest");
+
 		final Grid grid = this.scenario.getGrid();
 		final Path path = this.scenario.getPath();
 		final PathUpdater pathUpdater = new PathUpdater(path);
