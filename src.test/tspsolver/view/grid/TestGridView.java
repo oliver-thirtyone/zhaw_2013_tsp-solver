@@ -14,6 +14,7 @@ import tspsolver.model.algorithm.OptimizerAlgorithm;
 import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.algorithm.start.NearestNeighborHeuristik;
 import tspsolver.model.scenario.Scenario;
+import tspsolver.model.validator.TSPValidator;
 import tspsolver.util.view.layout.LayoutManager;
 
 public class TestGridView extends JFrame {
@@ -50,22 +51,24 @@ public class TestGridView extends JFrame {
 	}
 
 	public static void main(String[] args) throws Exception {
-		// Load a scenario
-		final XMLScenarioLoader scenarioLoader = new XMLScenarioLoader();
-		final InputStream inputStream = new FileInputStream("data/scenario/test_north_south_east_west.xml");
-		final Scenario scenario = scenarioLoader.loadScenario(inputStream);
+		XMLScenarioLoader scenarioLoader = new XMLScenarioLoader();
+		InputStream inputStream = new FileInputStream("data/scenario/test_north_south_east_west.xml");
+		Scenario scenario = new Scenario(new TSPValidator());
 
-		final TestGridView testGridView = new TestGridView(scenario);
+		// Load a scenario
+		scenarioLoader.loadScenario(scenario, inputStream);
+
+		TestGridView testGridView = new TestGridView(scenario);
 		testGridView.setSize(800, 600);
 		testGridView.setLocationRelativeTo(null);
 		testGridView.setVisible(true);
 
 		// Run an algorithm
-		final StartAlgorithm algorithm = new NearestNeighborHeuristik();
-		final AlgorithmRunner runner = new AlgorithmRunner(new StartAlgorithm[] { algorithm }, new OptimizerAlgorithm[] {});
+		StartAlgorithm algorithm = new NearestNeighborHeuristik();
+		AlgorithmRunner runner = new AlgorithmRunner(new StartAlgorithm[] { algorithm }, new OptimizerAlgorithm[] {});
 
 		// Scenario copyOfScenario = scenario;
-		final Scenario copyOfScenario = scenario.copy();
+		Scenario copyOfScenario = scenario.copy();
 
 		// This does not work:
 		// Scenario copyOfScenario = (Scenario) PipedDeepCopy.copy(scenario);

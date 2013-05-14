@@ -21,57 +21,56 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import tspsolver.controller.scenario.IScenarioLoader;
+import tspsolver.controller.scenario.ScenarioLoader;
 import tspsolver.model.scenario.Scenario;
 import tspsolver.model.scenario.grid.Grid;
 import tspsolver.model.scenario.grid.GridFactory;
 
-public class XMLScenarioLoader implements IScenarioLoader {
+public class XMLScenarioLoader implements ScenarioLoader {
 
 	private DocumentBuilder documentBuilder;
 	private Validator validator;
 
 	public XMLScenarioLoader() {
 		try {
-			final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
 
-			final InputStream schema = new FileInputStream(XMLScenario.XML_SCHEMA);
-			final Source source = new StreamSource(schema);
+			InputStream schema = new FileInputStream(XMLScenario.XML_SCHEMA);
+			Source source = new StreamSource(schema);
 
-			final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			this.validator = schemaFactory.newSchema(source).newValidator();
 		}
-		catch (final Exception exception) {
+		catch (Exception exception) {
 			exception.printStackTrace();
 		}
 	}
 
 	private boolean isXMLValid(Document document) throws SAXException, IOException {
-		final DOMSource domSource = new DOMSource(document);
+		DOMSource domSource = new DOMSource(document);
 		this.validator.validate(domSource);
 		return true;
 	}
 
 	@Override
-	public Scenario loadScenario(InputStream inputStream) throws IllegalArgumentException {
-		Scenario scenario = null;
+	public void loadScenario(Scenario scenario, InputStream inputStream) throws IllegalArgumentException {
 		try {
-			final Document document = this.documentBuilder.parse(inputStream);
+			Document document = this.documentBuilder.parse(inputStream);
 			document.getDocumentElement().normalize();
 
-			final Map<String, tspsolver.model.scenario.grid.Node> nodes = new HashMap<String, tspsolver.model.scenario.grid.Node>();
+			Map<String, tspsolver.model.scenario.grid.Node> nodes = new HashMap<String, tspsolver.model.scenario.grid.Node>();
 
 			if (this.isXMLValid(document)) {
-				final NodeList rootXMLNodes = document.getChildNodes();
+				NodeList rootXMLNodes = document.getChildNodes();
 				for (int x = 0; x < rootXMLNodes.getLength(); x++) {
-					final Node rootXMLNode = rootXMLNodes.item(x);
+					Node rootXMLNode = rootXMLNodes.item(x);
 					if (rootXMLNode.getNodeName().equals(XMLScenario.ELEMENT_SCENARIO.toString())) {
-						scenario = this.parseScenario(rootXMLNode);
+						this.parseScenario(scenario, rootXMLNode);
 
-						final NodeList xmlNodes = rootXMLNode.getChildNodes();
+						NodeList xmlNodes = rootXMLNode.getChildNodes();
 						for (int y = 0; y < xmlNodes.getLength(); y++) {
-							final Node xmlNode = xmlNodes.item(y);
+							Node xmlNode = xmlNodes.item(y);
 							if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_NODE.toString())) {
 								this.parseNode(scenario.getGrid(), nodes, xmlNode);
 							}
@@ -89,29 +88,28 @@ public class XMLScenarioLoader implements IScenarioLoader {
 				}
 			}
 		}
-		catch (final SAXException exception) {
+		catch (SAXException exception) {
 			throw new IllegalArgumentException(exception);
 		}
-		catch (final IOException exception) {
+		catch (IOException exception) {
 			throw new IllegalArgumentException(exception);
 		}
-
-		return scenario;
 	}
 
-	private Scenario parseScenario(Node xmlNode) {
-		final Element scenarioElement = (Element) xmlNode;
-		final String name = scenarioElement.getAttribute(XMLScenario.ELEMENT_SCENARIO_ATTRIBUTE_NAME.toString());
-		return new Scenario(name);
+	private void parseScenario(Scenario scenario, Node xmlNode) {
+		Element scenarioElement = (Element) xmlNode;
+		String name = scenarioElement.getAttribute(XMLScenario.ELEMENT_SCENARIO_ATTRIBUTE_NAME.toString());
+
+		scenario.setName(name);
 	}
 
 	private void parseNode(Grid grid, Map<String, tspsolver.model.scenario.grid.Node> nodes, Node xmlNode) {
-		final Element nodeElement = (Element) xmlNode;
+		Element nodeElement = (Element) xmlNode;
 
-		final String name = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_NAME.toString());
-		final String x = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_X.toString());
-		final String y = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_Y.toString());
-		final String link = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_LINK.toString());
+		String name = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_NAME.toString());
+		String x = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_X.toString());
+		String y = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_Y.toString());
+		String link = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_LINK.toString());
 
 		// Check if this node already exists
 		if (nodes.containsKey(name)) {
@@ -119,7 +117,7 @@ public class XMLScenarioLoader implements IScenarioLoader {
 		}
 
 		// Create the node
-		final tspsolver.model.scenario.grid.Node node = GridFactory.createNode(name, Integer.parseInt(x), Integer.parseInt(y));
+		tspsolver.model.scenario.grid.Node node = GridFactory.createNode(name, Integer.parseInt(x), Integer.parseInt(y));
 
 		// Add the node to the grid
 		if (!link.isEmpty()) {
@@ -134,11 +132,11 @@ public class XMLScenarioLoader implements IScenarioLoader {
 	}
 
 	private void parseAddEdge(Grid grid, Map<String, tspsolver.model.scenario.grid.Node> nodes, Node xmlNode) {
-		final Element addEdgeElement = (Element) xmlNode;
+		Element addEdgeElement = (Element) xmlNode;
 
-		final String firstNodeName = addEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_FIRSTNODE.toString());
-		final String secondNodeName = addEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_SECONDNODE.toString());
-		final String weight = addEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_WEIGHT.toString());
+		String firstNodeName = addEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_FIRSTNODE.toString());
+		String secondNodeName = addEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_SECONDNODE.toString());
+		String weight = addEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_WEIGHT.toString());
 
 		// Check if the referred nodes do exist
 		if (!nodes.containsKey(firstNodeName)) {
@@ -149,8 +147,8 @@ public class XMLScenarioLoader implements IScenarioLoader {
 		}
 
 		// Get the nodes
-		final tspsolver.model.scenario.grid.Node firstNode = nodes.get(firstNodeName);
-		final tspsolver.model.scenario.grid.Node secondNode = nodes.get(secondNodeName);
+		tspsolver.model.scenario.grid.Node firstNode = nodes.get(firstNodeName);
+		tspsolver.model.scenario.grid.Node secondNode = nodes.get(secondNodeName);
 
 		// Check if this edge already exists
 		if (firstNode.hasEdgeToNode(secondNode)) {
@@ -167,10 +165,10 @@ public class XMLScenarioLoader implements IScenarioLoader {
 	}
 
 	private void parseRemoveEdge(Grid grid, Map<String, tspsolver.model.scenario.grid.Node> nodes, Node xmlNode) {
-		final Element removeEdgeElement = (Element) xmlNode;
+		Element removeEdgeElement = (Element) xmlNode;
 
-		final String firstNodeName = removeEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_FIRSTNODE.toString());
-		final String secondNodeName = removeEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_SECONDNODE.toString());
+		String firstNodeName = removeEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_FIRSTNODE.toString());
+		String secondNodeName = removeEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_SECONDNODE.toString());
 
 		// Check if the referred nodes do exist
 		if (!nodes.containsKey(firstNodeName)) {
@@ -181,8 +179,8 @@ public class XMLScenarioLoader implements IScenarioLoader {
 		}
 
 		// Get the nodes
-		final tspsolver.model.scenario.grid.Node firstNode = nodes.get(firstNodeName);
-		final tspsolver.model.scenario.grid.Node secondNode = nodes.get(secondNodeName);
+		tspsolver.model.scenario.grid.Node firstNode = nodes.get(firstNodeName);
+		tspsolver.model.scenario.grid.Node secondNode = nodes.get(secondNodeName);
 
 		// Check if this edge exists
 		if (!firstNode.hasEdgeToNode(secondNode)) {
@@ -194,9 +192,9 @@ public class XMLScenarioLoader implements IScenarioLoader {
 	}
 
 	private void parseStartingNode(Scenario scenario, Map<String, tspsolver.model.scenario.grid.Node> nodes, Node xmlNode) {
-		final Element nodeElement = (Element) xmlNode;
+		Element nodeElement = (Element) xmlNode;
 
-		final String name = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_NAME.toString());
+		String name = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_NAME.toString());
 
 		// Check if this node exists
 		if (!nodes.containsKey(name)) {
@@ -204,7 +202,7 @@ public class XMLScenarioLoader implements IScenarioLoader {
 		}
 
 		// Get the node
-		final tspsolver.model.scenario.grid.Node node = nodes.get(name);
+		tspsolver.model.scenario.grid.Node node = nodes.get(name);
 
 		// Set the starting node for this scenario
 		scenario.setStartingNode(node);

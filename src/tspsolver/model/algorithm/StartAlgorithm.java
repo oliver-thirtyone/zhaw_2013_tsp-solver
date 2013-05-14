@@ -1,7 +1,6 @@
 package tspsolver.model.algorithm;
 
-import tspsolver.model.scenario.grid.GridFactory;
-import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.Scenario;
 
 public abstract class StartAlgorithm extends Algorithm {
 
@@ -9,27 +8,17 @@ public abstract class StartAlgorithm extends Algorithm {
 	public final synchronized void validateArguments() {
 		boolean validArguments = true;
 
-		if (this.getStartingNode() == null) {
-			System.err.println("The starting node cannot be null");
-			validArguments = false;
-		}
-
-		if (!GridFactory.containsNode(this.getGrid(), this.getStartingNode())) {
-			System.err.println("The starting node must be in the node set");
-			validArguments = false;
-		}
-
-		if (this.getGrid().getNumberOfNodes() < 3) {
-			System.err.println("We need at least three nodes in the node set");
-			validArguments = false;
-		}
-
-		for (final Node node : this.getGrid().getNodes()) {
-			if (node.getNumberOfEdges() < 2) {
-				System.err.println("Each node needs at least two edges");
+		Scenario scenario = this.getScenario();
+		if (scenario != null) {
+			if (!scenario.isScenarioValid()) {
 				validArguments = false;
-				break;
 			}
+			if (!scenario.isGridValid()) {
+				validArguments = false;
+			}
+		}
+		else {
+			validArguments = false;
 		}
 
 		this.setValidArguments(validArguments);

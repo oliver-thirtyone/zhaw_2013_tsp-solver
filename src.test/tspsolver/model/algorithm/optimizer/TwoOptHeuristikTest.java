@@ -13,6 +13,7 @@ import tspsolver.model.scenario.grid.GridFactory;
 import tspsolver.model.scenario.grid.Node;
 import tspsolver.model.scenario.path.Path;
 import tspsolver.model.scenario.path.PathUpdater;
+import tspsolver.model.validator.TSPValidator;
 
 public class TwoOptHeuristikTest {
 
@@ -36,7 +37,7 @@ public class TwoOptHeuristikTest {
 
 	@Before
 	public void setUp() {
-		this.scenario = new Scenario("TwoOptHeuristikTest");
+		this.scenario = new Scenario(new TSPValidator());
 		this.grid = this.scenario.getGrid();
 		this.path = this.scenario.getPath();
 
@@ -67,9 +68,9 @@ public class TwoOptHeuristikTest {
 		// Create a valid path that is too heavy
 		final PathUpdater pathUpdater = new PathUpdater(this.path);
 		pathUpdater.addEdge(this.edgeNorthSouth);
-		pathUpdater.addEdge(this.edgeSouthWest);
+		pathUpdater.addEdge(this.edgeNorthWest);
 		pathUpdater.addEdge(this.edgeEastWest);
-		pathUpdater.addEdge(this.edgeNorthEast);
+		pathUpdater.addEdge(this.edgeEastSouth);
 		pathUpdater.updatePath();
 
 		// Make sure that we can not take a step yet
@@ -83,6 +84,13 @@ public class TwoOptHeuristikTest {
 		do {
 			Assert.assertTrue(this.algorithm.step());
 		} while (!this.algorithm.hasFinishedSuccessfully());
+
+		// DEBUG OUTPUT
+		System.out.println("Path: ");
+		for (Edge edge : this.path.getEdges()) {
+			System.out.println(edge.toString());
+		}
+		System.out.println();
 
 		// Check if we have four edges
 		Assert.assertEquals(4, this.path.getNumberOfEdges());

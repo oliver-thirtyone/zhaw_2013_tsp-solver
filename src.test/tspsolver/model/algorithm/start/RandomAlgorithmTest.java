@@ -50,7 +50,17 @@ public class RandomAlgorithmTest extends StartAlgorithmTest {
 
 	@Override
 	protected void doTestScenarioFortyoneNode() {
-		Assert.fail();
-	}
+		// Take forty steps
+		for (int i = 0; i < 40; i++) {
+			Assert.assertTrue(this.algorithm.step());
+			Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
+		}
 
+		// Take the last step
+		Assert.assertTrue(this.algorithm.step());
+		Assert.assertTrue(this.algorithm.hasFinishedSuccessfully());
+
+		// Make sure that we can not take an other step
+		Assert.assertFalse(this.algorithm.step());
+	}
 }
