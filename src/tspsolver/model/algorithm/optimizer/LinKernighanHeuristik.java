@@ -1,6 +1,8 @@
 package tspsolver.model.algorithm.optimizer;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Vector;
 
 import tspsolver.model.algorithm.OptimizerAlgorithm;
@@ -8,6 +10,7 @@ import tspsolver.model.scenario.grid.Edge;
 import tspsolver.model.scenario.grid.Node;
 import tspsolver.model.scenario.path.Path;
 import tspsolver.model.scenario.path.PathUpdater;
+import tspsolver.model.validator.TSPValidator;
 
 public class LinKernighanHeuristik extends OptimizerAlgorithm {
 
@@ -161,7 +164,8 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 									if (newPath.getNumberOfEdges() == this
 											.getPath().getNumberOfEdges()
 											&& newPath.getWeight() < this
-													.getPath().getWeight()) {
+													.getPath().getWeight()
+											&& isTour(newPath)) {
 										this.getPathUpdater().clearPath();
 										this.getPathUpdater().addPath(newPath);
 										this.getPathUpdater().updatePath();
@@ -255,7 +259,8 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 														.getNumberOfEdges()
 														&& newPath.getWeight() < this
 																.getPath()
-																.getWeight()) {
+																.getWeight()
+														&& isTour(newPath)) {
 													this.getPathUpdater()
 															.clearPath();
 													this.getPathUpdater()
@@ -414,6 +419,77 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 		pathUpdater.updatePath();
 
 		return pathUpdater.getPath();
+	}
+
+	// Check if the configuration builts a tour.
+	private boolean isTour(Path newPath) {
+
+		boolean validPath = true;
+
+		Node startingNode = newPath.getEdges()[0].getFirstNode();
+		Path path = newPath;
+
+		List<Node> nodes2Visit = new ArrayList<Node>();
+		for (final Node node : this.getGrid().getNodes()) {
+			nodes2Visit.add(node);
+		}
+
+		Node currentNode = null;
+		Node nextNode = startingNode;
+
+		// Check if we visit each node
+		while (validPath && nextNode != null) {
+			currentNode = nextNode;
+			nextNode = null;
+
+			// Remove the current node from the nodes to visit
+			nodes2Visit.remove(currentNode);
+
+			// Check if there are still nodes to visit
+			if (nodes2Visit.size() < 1) {
+				break;
+			}
+
+			int pathOccurencesCount = 0;
+			for (Edge edge : currentNode.getEdges()) {
+
+				// Check if an edge of this node belongs to the path
+				if (path.containsEdge(edge)) {
+					pathOccurencesCount++;
+
+					if (nextNode == null) {
+						Node fistNode = edge.getFirstNode();
+						Node secondNode = edge.getSecondNode();
+
+						// Set the next node
+						if (nodes2Visit.contains(fistNode)
+								&& !nodes2Visit.contains(secondNode)) {
+							nextNode = fistNode;
+						} else if (nodes2Visit.contains(secondNode)
+								&& !nodes2Visit.contains(fistNode)) {
+							nextNode = secondNode;
+						}
+					}
+				}
+			}
+
+			// Check if each node has two edges
+			if (pathOccurencesCount != TSPValidator.REQUIRED_PATH_OCCURENCES) {
+				validPath = false;
+			}
+		}
+
+		// Check if we have visited all nodes
+		if (nodes2Visit.size() != 0 || currentNode == null) {
+			validPath = false;
+		}
+		// Check if we can connect the last node to the starting node
+		else if (!currentNode.hasEdgeToNode(startingNode)
+				|| !path.containsEdge(currentNode.getEdgeToNode(startingNode))) {
+			validPath = false;
+		}
+
+		return validPath;
 	}
 
 }
