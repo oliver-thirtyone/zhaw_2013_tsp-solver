@@ -34,7 +34,6 @@ import tspsolver.util.copy.FileCopy;
 
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.SVGDiagram;
-import com.kitfox.svg.SVGException;
 import com.kitfox.svg.app.beans.SVGIcon;
 
 public class GridView extends JPanel implements Observer {
@@ -49,6 +48,7 @@ public class GridView extends JPanel implements Observer {
 	private final static long serialVersionUID = -5210001067574218993L;
 
 	private final SVGDiagram svgDiagram;
+	private final SVGDiagramUpdater svgDiagramUpdater;
 	private final SVGIcon svgIcon;
 
 	private final Map<Vertex, VertexView> vertexViews;
@@ -73,6 +73,7 @@ public class GridView extends JPanel implements Observer {
 
 		// Create the diagram
 		this.svgDiagram = SVGCache.getSVGUniverse().getDiagram(svgURI);
+		this.svgDiagramUpdater = new SVGDiagramUpdater(this, this.svgDiagram);
 
 		// Create the map
 		this.svgIcon = new SVGIcon();
@@ -94,7 +95,13 @@ public class GridView extends JPanel implements Observer {
 	@Override
 	public void paintComponent(Graphics graphics) {
 		super.paintComponent(graphics);
-		this.svgIcon.paintIcon(this, graphics, 0, 0);
+
+		try {
+			this.svgIcon.paintIcon(this, graphics, 0, 0);
+		}
+		catch (NullPointerException exception) {
+			// No problem, we will paint it later...
+		}
 	}
 
 	@Override
@@ -225,13 +232,7 @@ public class GridView extends JPanel implements Observer {
 		}
 
 		// Update the diagram
-		try {
-			this.svgDiagram.updateTime(0.0);
-			this.repaint();
-		}
-		catch (SVGException exception) {
-			exception.printStackTrace();
-		}
+		this.svgDiagramUpdater.update();
 	}
 
 	private synchronized void doUpdateScenario(Scenario scenario) {
@@ -250,14 +251,7 @@ public class GridView extends JPanel implements Observer {
 			this.paintGrid();
 		}
 
-		// Update the diagram
-		try {
-			this.svgDiagram.updateTime(0.0);
-			this.repaint();
-		}
-		catch (SVGException exception) {
-			exception.printStackTrace();
-		}
+		this.svgDiagramUpdater.update();
 	}
 
 	private void paintGrid() {

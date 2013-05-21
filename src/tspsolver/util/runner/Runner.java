@@ -264,11 +264,11 @@ public abstract class Runner extends Observable implements Runnable {
 		return timeStopped - timeStarted;
 	}
 
-	public synchronized int getStepDelay() {
+	public int getStepDelay() {
 		return this.stepDelay;
 	}
 
-	public synchronized long getStepCounter() {
+	public long getStepCounter() {
 		return this.stepCounter;
 	}
 

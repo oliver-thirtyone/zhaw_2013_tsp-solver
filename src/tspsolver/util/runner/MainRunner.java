@@ -7,12 +7,16 @@ public abstract class MainRunner extends Observable implements Observer {
 
 	private final Runner[] runners;
 
+	private int stepDelay;
+
 	public MainRunner(Runner[] runners) {
 		this.runners = runners;
 
 		for (Runner runner : runners) {
 			runner.addObserver(this);
 		}
+
+		this.stepDelay = Runner.DEFAULT_STEP_DELAY;
 	}
 
 	@Override
@@ -43,9 +47,11 @@ public abstract class MainRunner extends Observable implements Observer {
 	}
 
 	public boolean initialize(int stepDelay) {
+		this.stepDelay = stepDelay;
+
 		boolean successful = true;
 		for (Runner runner : this.runners) {
-			if (!runner.initialize(stepDelay)) {
+			if (!runner.initialize(this.stepDelay)) {
 				successful = false;
 			}
 		}
@@ -157,17 +163,12 @@ public abstract class MainRunner extends Observable implements Observer {
 		return successful;
 	}
 
-	public synchronized Runner[] getRunners() {
+	public Runner[] getRunners() {
 		return this.runners;
 	}
 
-	public synchronized int getStepDelay() {
-		int stepDelay = Runner.DEFAULT_STEP_DELAY;
-
-		if (this.runners[0] != null) {
-			stepDelay = this.runners[0].getStepDelay();
-		}
-		return stepDelay;
+	public int getStepDelay() {
+		return this.stepDelay;
 	}
 
 }
