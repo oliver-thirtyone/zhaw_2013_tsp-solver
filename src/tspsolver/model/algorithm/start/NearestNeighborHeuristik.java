@@ -83,7 +83,7 @@ public class NearestNeighborHeuristik extends StartAlgorithm {
 				}
 			}
 			else {
-				System.err.println("No edge found, we stop here...");
+				// No edge found, we stop here...
 				successfulStep = false;
 			}
 		}

@@ -54,6 +54,9 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 
 		// Check if we tested all possibilities
 		Assert.assertEquals(3, stepCounter);
+
+		// Check if the path is valid
+		Assert.assertTrue(this.scenarioNorthEastSouthWest.isPathValid());
 	}
 
 	@Override
@@ -101,6 +104,9 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 
 		// Check if we tested all possibilities
 		Assert.assertEquals(12, stepCounter);
+
+		// Check if the path is valid
+		Assert.assertTrue(this.scenarioFiveNodes.isPathValid());
 	}
 
 	@Override
@@ -137,20 +143,24 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 		Assert.assertEquals(5, this.path.getNumberOfEdges());
 
 		// Check if we went the right path
-		Assert.assertTrue(this.path.containsEdge(edge13));
-		Assert.assertTrue(this.path.containsEdge(edge23));
-		Assert.assertTrue(this.path.containsEdge(edge24));
-		Assert.assertTrue(this.path.containsEdge(edge45));
 		Assert.assertTrue(this.path.containsEdge(edge15));
+		Assert.assertTrue(this.path.containsEdge(edge25));
+		Assert.assertTrue(this.path.containsEdge(edge23));
+		Assert.assertTrue(this.path.containsEdge(edge34));
+		Assert.assertTrue(this.path.containsEdge(edge14));
 
 		// Check if these edges are not part of the path
-		Assert.assertFalse(this.path.containsEdge(edge14));
-		Assert.assertFalse(this.path.containsEdge(edge25));
-		Assert.assertFalse(this.path.containsEdge(edge34));
+		Assert.assertFalse(this.path.containsEdge(edge12));
+		Assert.assertFalse(this.path.containsEdge(edge13));
+		Assert.assertFalse(this.path.containsEdge(edge24));
 		Assert.assertFalse(this.path.containsEdge(edge35));
+		Assert.assertFalse(this.path.containsEdge(edge45));
 
 		// Check if we tested all possibilities
 		Assert.assertEquals(12, stepCounter);
+
+		// Check if the path is valid
+		Assert.assertTrue(this.scenarioFiveNodesOneNonAccessibleEdge.isPathValid());
 	}
 
 	@Override
@@ -171,12 +181,18 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 
 		// Check if the path is empty
 		Assert.assertTrue(this.path.isEmpty());
+
+		// Check if the path is invalid
+		Assert.assertFalse(this.scenarioUnsolvable.isPathValid());
 	}
 
 	@Override
 	protected void doTestScenarioFortyoneNode() {
 		// not testable
 		Assert.assertTrue(true);
+
+		// Check if the path is invalid
+		Assert.assertFalse(this.scenarioFortyoneNodes.isPathValid());
 	}
 
 }

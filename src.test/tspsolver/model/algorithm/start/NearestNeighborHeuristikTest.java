@@ -58,6 +58,9 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 		// Check if these edges are not part of the path
 		Assert.assertFalse(this.path.containsEdge(edgeNorthSouth));
 		Assert.assertFalse(this.path.containsEdge(edgeEastWest));
+
+		// Check if the path is valid
+		Assert.assertTrue(this.scenarioNorthEastSouthWest.isPathValid());
 	}
 
 	@Override
@@ -113,6 +116,9 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(edge24));
 		Assert.assertFalse(this.path.containsEdge(edge25));
 		Assert.assertFalse(this.path.containsEdge(edge35));
+
+		// Check if the path is valid
+		Assert.assertTrue(this.scenarioFiveNodes.isPathValid());
 	}
 
 	@Override
@@ -171,6 +177,9 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(edge24));
 		Assert.assertFalse(this.path.containsEdge(edge25));
 		Assert.assertFalse(this.path.containsEdge(edge35));
+
+		// Check if the path is invalid
+		Assert.assertFalse(this.scenarioFiveNodesOneNonAccessibleEdge.isPathValid());
 	}
 
 	@Override
@@ -211,11 +220,14 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(edgeSouthEast2));
 		Assert.assertFalse(this.path.containsEdge(edgeSouthWest2));
 		Assert.assertFalse(this.path.containsEdge(edgeEast2West2));
+
+		// Check if the path is invalid
+		Assert.assertFalse(this.scenarioUnsolvable.isPathValid());
 	}
 
 	@Override
 	protected void doTestScenarioFortyoneNode() {
-		// Take forty steps
+		// Take 39 steps
 		for (int i = 0; i < 40; i++) {
 			Assert.assertTrue(this.algorithm.step());
 			Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
@@ -227,6 +239,9 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 
 		// Make sure that we can not take an other step
 		Assert.assertFalse(this.algorithm.step());
+
+		// Check if the path is valid
+		Assert.assertTrue(this.scenarioFortyoneNodes.isPathValid());
 	}
 
 }

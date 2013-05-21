@@ -34,6 +34,9 @@ public class RandomAlgorithmTest extends StartAlgorithmTest {
 
 		// Check if we have four edges
 		Assert.assertEquals(4, this.path.getNumberOfEdges());
+
+		// Check if the path is valid
+		Assert.assertTrue(this.scenarioNorthEastSouthWest.isPathValid());
 	}
 
 	@Override
@@ -52,12 +55,15 @@ public class RandomAlgorithmTest extends StartAlgorithmTest {
 
 		// Check if we have four edges
 		Assert.assertEquals(5, this.path.getNumberOfEdges());
+
+		// Check if the path is valid
+		Assert.assertTrue(this.scenarioFiveNodes.isPathValid());
 	}
 
 	@Override
 	protected void doTestScenarioFiveNodesOneNonAccessibleEdge() {
 		// not testable
-		Assert.assertTrue(true);
+		Assert.assertFalse(this.scenarioFiveNodesOneNonAccessibleEdge.isPathValid());
 	}
 
 	@Override
@@ -98,11 +104,14 @@ public class RandomAlgorithmTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(edgeSouthEast2));
 		Assert.assertFalse(this.path.containsEdge(edgeSouthWest2));
 		Assert.assertFalse(this.path.containsEdge(edgeEast2West2));
+
+		// Check if the path is invalid
+		Assert.assertFalse(this.scenarioUnsolvable.isPathValid());
 	}
 
 	@Override
 	protected void doTestScenarioFortyoneNode() {
-		// Take forty steps
+		// Take 39 steps
 		for (int i = 0; i < 40; i++) {
 			Assert.assertTrue(this.algorithm.step());
 			Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
@@ -114,5 +123,8 @@ public class RandomAlgorithmTest extends StartAlgorithmTest {
 
 		// Make sure that we can not take an other step
 		Assert.assertFalse(this.algorithm.step());
+
+		// Check if the path is valid
+		Assert.assertTrue(this.scenarioFortyoneNodes.isPathValid());
 	}
 }

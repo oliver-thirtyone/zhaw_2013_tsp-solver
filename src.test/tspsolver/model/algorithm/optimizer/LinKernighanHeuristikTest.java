@@ -104,5 +104,8 @@ public class LinKernighanHeuristikTest {
 		// Check if these edges are not part of the path
 		Assert.assertFalse(this.path.containsEdge(this.edgeNorthSouth));
 		Assert.assertFalse(this.path.containsEdge(this.edgeEastWest));
+
+		// Check if the path is valid
+		Assert.assertTrue(this.scenario.isPathValid());
 	}
 }
