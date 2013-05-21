@@ -146,11 +146,42 @@ public class MinimumSpanningTreeHeuristikTest extends StartAlgorithmTest {
 
 	@Override
 	protected void doTestScenarioUnsolvable() {
-		// TODO: implement this test
-		Assert.fail();
+		Vertex north = GridFactory.getVertex(this.grid, "north");
+		Vertex east1 = GridFactory.getVertex(this.grid, "east1");
+		Vertex east2 = GridFactory.getVertex(this.grid, "east2");
+		Vertex south = GridFactory.getVertex(this.grid, "south");
+		Vertex west1 = GridFactory.getVertex(this.grid, "west1");
+		Vertex west2 = GridFactory.getVertex(this.grid, "west2");
 
-		// Check if the path is invalid
-		Assert.assertFalse(this.scenarioUnsolvable.isPathValid());
+		Edge edgeNorthEast1 = GridFactory.getEdge(north, east1);
+		Edge edgeNorthWest1 = GridFactory.getEdge(north, west1);
+		Edge edgeEast1West1 = GridFactory.getEdge(east1, west1);
+		Edge edgeSouthEast2 = GridFactory.getEdge(south, east2);
+		Edge edgeSouthWest2 = GridFactory.getEdge(south, west2);
+		Edge edgeEast2West2 = GridFactory.getEdge(east2, west2);
+
+		// Take the first step
+		Assert.assertTrue(this.algorithm.step());
+		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
+		Assert.assertTrue(this.path.containsEdge(edgeNorthEast1));
+
+		// Take the second step
+		Assert.assertTrue(this.algorithm.step());
+		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
+		Assert.assertTrue(this.path.containsEdge(edgeNorthWest1));
+
+		// Take the third step
+		Assert.assertFalse(this.algorithm.step());
+		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
+
+		// Make sure that we can not take an other step
+		Assert.assertFalse(this.algorithm.step());
+
+		// Check if these edges are not part of the path
+		Assert.assertFalse(this.path.containsEdge(edgeEast1West1));
+		Assert.assertFalse(this.path.containsEdge(edgeSouthEast2));
+		Assert.assertFalse(this.path.containsEdge(edgeSouthWest2));
+		Assert.assertFalse(this.path.containsEdge(edgeEast2West2));
 	}
 
 	@Override

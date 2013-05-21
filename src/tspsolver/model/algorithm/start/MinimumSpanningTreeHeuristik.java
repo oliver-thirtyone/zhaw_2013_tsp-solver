@@ -76,7 +76,8 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 	}
 
 	private boolean doStepCreateSpanningTree() {
-		boolean successfulStep = true;
+		boolean successfulStep = true; // FIXME: default should be false
+		// FIXME: return false if we could not add a new edge
 
 		// Take the lowest one, that not build a circle and add it to the tree.
 		for (Edge edge : this.spanningTreePossibleEdges) {

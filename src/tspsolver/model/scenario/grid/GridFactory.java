@@ -34,7 +34,7 @@ public abstract class GridFactory {
 		return firstVertex.addEdgeToVertex(secondVertex);
 	}
 
-	public static Edge addEdge(Vertex firstVertex, Vertex secondVertex, double weight) {
+	public static Edge addEdge(Vertex firstVertex, Vertex secondVertex, int weight) {
 		return firstVertex.addEdgeToVertex(secondVertex, weight);
 	}
 

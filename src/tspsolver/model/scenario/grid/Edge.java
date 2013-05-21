@@ -9,9 +9,9 @@ public class Edge extends Observable implements Serializable {
 
 	private final Vertex firstVertex;
 	private final Vertex secondVertex;
-	private final double weight;
+	private final int weight;
 
-	protected Edge(Vertex firstVertex, Vertex secondVertex, double weight) throws IllegalArgumentException {
+	protected Edge(Vertex firstVertex, Vertex secondVertex, int weight) throws IllegalArgumentException {
 		if (firstVertex.equals(secondVertex)) {
 			throw new IllegalArgumentException("The vertices must not be equal");
 		}
@@ -28,9 +28,7 @@ public class Edge extends Observable implements Serializable {
 
 		result = prime * result + ((this.firstVertex == null) ? 0 : this.firstVertex.hashCode());
 		result = prime * result + ((this.secondVertex == null) ? 0 : this.secondVertex.hashCode());
-
-		long temp = Double.doubleToLongBits(this.weight);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + this.weight;
 
 		return result;
 	}
@@ -49,6 +47,10 @@ public class Edge extends Observable implements Serializable {
 
 		Edge other = (Edge) obj;
 
+		if (this.weight != other.weight) {
+			return false;
+		}
+
 		if (this.firstVertex == null) {
 			if (other.firstVertex != null) {
 				return false;
@@ -64,10 +66,6 @@ public class Edge extends Observable implements Serializable {
 			}
 		}
 		else if (!this.secondVertex.equals(other.secondVertex) && !this.secondVertex.equals(other.firstVertex)) {
-			return false;
-		}
-
-		if (Double.doubleToLongBits(this.weight) != Double.doubleToLongBits(other.weight)) {
 			return false;
 		}
 
@@ -93,11 +91,11 @@ public class Edge extends Observable implements Serializable {
 		return this.secondVertex;
 	}
 
-	public double getWeight() {
+	public int getWeight() {
 		return this.weight;
 	}
 
-	protected static double calcLinearDistance(Vertex firstVertex, Vertex secondVertex) {
+	protected static int calcLinearDistance(Vertex firstVertex, Vertex secondVertex) {
 		int deltaX = secondVertex.getX() - firstVertex.getX();
 		int deltaY = secondVertex.getY() - firstVertex.getY();
 
@@ -111,7 +109,11 @@ public class Edge extends Observable implements Serializable {
 			deltaY *= -1;
 		}
 
-		return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+		// Calculate the linear distance and round it to an integer
+		double linearDistance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+		int returnValue = (int) (linearDistance + 0.5);
+
+		return returnValue;
 	}
 
 }

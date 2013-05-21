@@ -117,11 +117,11 @@ public class Vertex extends Observable implements Serializable, Observer {
 	}
 
 	protected Edge addEdgeToVertex(Vertex vertex) {
-		double weight = Edge.calcLinearDistance(this, vertex);
+		int weight = Edge.calcLinearDistance(this, vertex);
 		return this.addEdgeToVertex(vertex, weight);
 	}
 
-	protected synchronized Edge addEdgeToVertex(Vertex vertex, double weight) {
+	protected synchronized Edge addEdgeToVertex(Vertex vertex, int weight) {
 		Edge edge = new Edge(this, vertex, weight);
 
 		// Add the edge to this vertex

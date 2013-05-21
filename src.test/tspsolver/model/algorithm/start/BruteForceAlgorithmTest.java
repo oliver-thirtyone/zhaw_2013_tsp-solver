@@ -53,7 +53,7 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(edgeEastWest));
 
 		// Check if we tested all possibilities
-		Assert.assertEquals(3, stepCounter);
+		Assert.assertEquals(6, stepCounter);
 
 		// Check if the path is valid
 		Assert.assertTrue(this.scenarioNorthEastSouthWest.isPathValid());
@@ -103,7 +103,7 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(edge35));
 
 		// Check if we tested all possibilities
-		Assert.assertEquals(12, stepCounter);
+		Assert.assertEquals(24, stepCounter);
 
 		// Check if the path is valid
 		Assert.assertTrue(this.scenarioFiveVertices.isPathValid());
@@ -157,7 +157,7 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(edge45));
 
 		// Check if we tested all possibilities
-		Assert.assertEquals(12, stepCounter);
+		Assert.assertEquals(24, stepCounter);
 
 		// Check if the path is valid
 		Assert.assertTrue(this.scenarioFiveVerticesOneNonAccessibleEdge.isPathValid());
@@ -165,12 +165,12 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 
 	@Override
 	protected void doTestScenarioUnsolvable() {
-		// Step through the algorithm (59 steps)
-		for (int i = 0; i < 59; i++) {
+		// Step through the algorithm (119 steps)
+		for (int i = 0; i < 119; i++) {
 			Assert.assertTrue(this.algorithm.step());
 		}
 
-		// Check if the 60. step fails
+		// Check if the 120. step fails
 		Assert.assertFalse(this.algorithm.step());
 
 		// Check if we are still not finished

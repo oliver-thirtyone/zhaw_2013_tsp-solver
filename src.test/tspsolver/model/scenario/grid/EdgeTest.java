@@ -28,7 +28,10 @@ public class EdgeTest {
 
 	@Test
 	public void testGetWeight() {
-		Assert.assertEquals(Math.sqrt(16 + 36), this.edge.getWeight());
+		double sqrt = Math.sqrt(16 + 36);
+		int intValue = (int) (sqrt + 0.5);
+
+		Assert.assertEquals(intValue, this.edge.getWeight());
 	}
 
 	@Test

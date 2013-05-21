@@ -158,7 +158,7 @@ public class XMLScenarioLoader implements ScenarioLoader {
 
 		// Add the vertex to the grid
 		if (!weight.isEmpty()) {
-			GridFactory.addEdge(firstVertex, secondVertex, Double.parseDouble(weight));
+			GridFactory.addEdge(firstVertex, secondVertex, Integer.parseInt(weight));
 		}
 		else {
 			GridFactory.addEdge(firstVertex, secondVertex);

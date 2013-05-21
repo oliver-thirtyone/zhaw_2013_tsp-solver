@@ -7,7 +7,7 @@
 	<vertex name="west" x="125" y="250" link="false" />
 
 	<add-edge first-vertex="north" second-vertex="east" />
-	<add-edge first-vertex="north" second-vertex="south" weight="9999.99" />
+	<add-edge first-vertex="north" second-vertex="south" weight="9999" />
 	<add-edge first-vertex="north" second-vertex="west" />
 	<add-edge first-vertex="east" second-vertex="south" />
 	<add-edge first-vertex="east" second-vertex="west" />

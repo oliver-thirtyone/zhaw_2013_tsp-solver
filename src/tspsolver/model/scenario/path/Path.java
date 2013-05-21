@@ -14,11 +14,11 @@ public class Path extends Observable implements Serializable {
 	private static final long serialVersionUID = 8102936507138748772L;
 
 	private final Set<Edge> edges;
-	private double weight;
+	private int weight;
 
 	public Path() {
 		this.edges = new HashSet<Edge>();
-		this.weight = 0.0;
+		this.weight = 0;
 	}
 
 	@Override
@@ -27,9 +27,7 @@ public class Path extends Observable implements Serializable {
 		int result = 1;
 
 		result = prime * result + ((this.edges == null) ? 0 : this.edges.hashCode());
-
-		long temp = Double.doubleToLongBits(this.weight);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + this.weight;
 
 		return result;
 	}
@@ -50,6 +48,10 @@ public class Path extends Observable implements Serializable {
 
 		Path other = (Path) obj;
 
+		if (this.weight != other.weight) {
+			return false;
+		}
+
 		if (this.edges == null) {
 			if (other.edges != null) {
 				return false;
@@ -59,14 +61,10 @@ public class Path extends Observable implements Serializable {
 			return false;
 		}
 
-		if (Double.doubleToLongBits(this.weight) != Double.doubleToLongBits(other.weight)) {
-			return false;
-		}
-
 		return true;
 	}
 
-	public double getWeight() {
+	public int getWeight() {
 		return this.weight;
 	}
 
@@ -88,13 +86,13 @@ public class Path extends Observable implements Serializable {
 
 	protected synchronized void addEdge(Edge edge) {
 		if (this.edges.add(edge)) {
-			this.updateWeight();
+			this.weight += edge.getWeight();
 		}
 	}
 
 	protected synchronized void removeEdge(Edge edge) {
 		if (this.edges.remove(edge)) {
-			this.updateWeight();
+			this.weight -= edge.getWeight();
 		}
 	}
 
@@ -105,11 +103,4 @@ public class Path extends Observable implements Serializable {
 		this.notifyObservers(update);
 	}
 
-	private void updateWeight() {
-		this.weight = 0.0;
-
-		for (Edge edge : this.getEdges()) {
-			this.weight += edge.getWeight();
-		}
-	}
 }
