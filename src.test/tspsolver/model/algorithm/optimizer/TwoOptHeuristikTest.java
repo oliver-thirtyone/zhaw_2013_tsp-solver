@@ -41,9 +41,9 @@ public class TwoOptHeuristikTest {
 		this.grid = this.scenario.getGrid();
 		this.path = this.scenario.getPath();
 
-		this.nodeNorth = GridFactory.createNode("north", 3, 1);
-		this.nodeEast = GridFactory.createNode("east", 4, 2);
-		this.nodeSouth = GridFactory.createNode("south", 1, 3);
+		this.nodeNorth = GridFactory.createNode("north", 4, 2);
+		this.nodeEast = GridFactory.createNode("east", 6, 4);
+		this.nodeSouth = GridFactory.createNode("south", 4, 6);
 		this.nodeWest = GridFactory.createNode("west", 2, 4);
 
 		GridFactory.addNode(this.grid, this.nodeNorth);
@@ -86,11 +86,11 @@ public class TwoOptHeuristikTest {
 		} while (!this.algorithm.hasFinishedSuccessfully());
 
 		// DEBUG OUTPUT
-		System.out.println("Path: ");
-		for (Edge edge : this.path.getEdges()) {
-			System.out.println(edge.toString());
-		}
-		System.out.println();
+		// System.out.println("Path: ");
+		// for (Edge edge : this.path.getEdges()) {
+		// System.out.println(edge.toString());
+		// }
+		// System.out.println();
 
 		// Check if we have four edges
 		Assert.assertEquals(4, this.path.getNumberOfEdges());

@@ -187,7 +187,7 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 		Edge edgeEast1West1 = GridFactory.getEdge(east1, west1);
 		Edge edgeSouthEast2 = GridFactory.getEdge(south, east2);
 		Edge edgeSouthWest2 = GridFactory.getEdge(south, west2);
-		Edge edgeedgeEast2West2 = GridFactory.getEdge(east2, west2);
+		Edge edgeEast2West2 = GridFactory.getEdge(east2, west2);
 
 		// Take the first step
 		Assert.assertTrue(this.algorithm.step());
@@ -210,7 +210,7 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(edgeNorthWest1));
 		Assert.assertFalse(this.path.containsEdge(edgeSouthEast2));
 		Assert.assertFalse(this.path.containsEdge(edgeSouthWest2));
-		Assert.assertFalse(this.path.containsEdge(edgeedgeEast2West2));
+		Assert.assertFalse(this.path.containsEdge(edgeEast2West2));
 	}
 
 	@Override

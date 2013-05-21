@@ -53,22 +53,124 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(edgeEastWest));
 
 		// Check if we tested all possibilities
-		Assert.assertEquals(6, stepCounter);
+		Assert.assertEquals(3, stepCounter);
 	}
 
 	@Override
 	protected void doTestScenarioFiveNodes() {
-		Assert.fail();
+		Node node1 = GridFactory.getNode(this.grid, "1");
+		Node node2 = GridFactory.getNode(this.grid, "2");
+		Node node3 = GridFactory.getNode(this.grid, "3");
+		Node node4 = GridFactory.getNode(this.grid, "4");
+		Node node5 = GridFactory.getNode(this.grid, "5");
+
+		Edge edge12 = GridFactory.getEdge(node1, node2);
+		Edge edge13 = GridFactory.getEdge(node1, node3);
+		Edge edge14 = GridFactory.getEdge(node1, node4);
+		Edge edge15 = GridFactory.getEdge(node1, node5);
+		Edge edge23 = GridFactory.getEdge(node2, node3);
+		Edge edge24 = GridFactory.getEdge(node2, node4);
+		Edge edge25 = GridFactory.getEdge(node2, node5);
+		Edge edge34 = GridFactory.getEdge(node3, node4);
+		Edge edge35 = GridFactory.getEdge(node3, node5);
+		Edge edge45 = GridFactory.getEdge(node4, node5);
+
+		// Step through the algorithm
+		int stepCounter = 0;
+		do {
+			Assert.assertTrue(this.algorithm.step());
+			stepCounter++;
+		} while (!this.algorithm.hasFinishedSuccessfully());
+
+		// Check if we have five edges
+		Assert.assertEquals(5, this.path.getNumberOfEdges());
+
+		// Check if we went the right path
+		Assert.assertTrue(this.path.containsEdge(edge12));
+		Assert.assertTrue(this.path.containsEdge(edge15));
+		Assert.assertTrue(this.path.containsEdge(edge23));
+		Assert.assertTrue(this.path.containsEdge(edge34));
+		Assert.assertTrue(this.path.containsEdge(edge45));
+
+		// Check if these edges are not part of the path
+		Assert.assertFalse(this.path.containsEdge(edge13));
+		Assert.assertFalse(this.path.containsEdge(edge14));
+		Assert.assertFalse(this.path.containsEdge(edge24));
+		Assert.assertFalse(this.path.containsEdge(edge25));
+		Assert.assertFalse(this.path.containsEdge(edge35));
+
+		// Check if we tested all possibilities
+		Assert.assertEquals(12, stepCounter);
 	}
 
 	@Override
 	protected void doTestScenarioFiveNodesOneNonAccessibleEdge() {
-		Assert.fail();
+		Node node1 = GridFactory.getNode(this.grid, "1");
+		Node node2 = GridFactory.getNode(this.grid, "2");
+		Node node3 = GridFactory.getNode(this.grid, "3");
+		Node node4 = GridFactory.getNode(this.grid, "4");
+		Node node5 = GridFactory.getNode(this.grid, "5");
+
+		Edge edge12 = GridFactory.getEdge(node1, node2);
+		Edge edge13 = GridFactory.getEdge(node1, node3);
+		Edge edge14 = GridFactory.getEdge(node1, node4);
+		Edge edge15 = GridFactory.getEdge(node1, node5);
+		Edge edge23 = GridFactory.getEdge(node2, node3);
+		Edge edge24 = GridFactory.getEdge(node2, node4);
+		Edge edge25 = GridFactory.getEdge(node2, node5);
+		Edge edge34 = GridFactory.getEdge(node3, node4);
+		Edge edge35 = GridFactory.getEdge(node3, node5);
+		Edge edge45 = GridFactory.getEdge(node4, node5);
+
+		// Check that one node is non-accessible
+		Assert.assertFalse(GridFactory.hasEdge(node1, node2));
+		Assert.assertNull(edge12);
+
+		// Step through the algorithm
+		int stepCounter = 0;
+		do {
+			Assert.assertTrue(this.algorithm.step());
+			stepCounter++;
+		} while (!this.algorithm.hasFinishedSuccessfully());
+
+		// Check if we have five edges
+		Assert.assertEquals(5, this.path.getNumberOfEdges());
+
+		// Check if we went the right path
+		Assert.assertTrue(this.path.containsEdge(edge13));
+		Assert.assertTrue(this.path.containsEdge(edge23));
+		Assert.assertTrue(this.path.containsEdge(edge24));
+		Assert.assertTrue(this.path.containsEdge(edge45));
+		Assert.assertTrue(this.path.containsEdge(edge15));
+
+		// Check if these edges are not part of the path
+		Assert.assertFalse(this.path.containsEdge(edge14));
+		Assert.assertFalse(this.path.containsEdge(edge25));
+		Assert.assertFalse(this.path.containsEdge(edge34));
+		Assert.assertFalse(this.path.containsEdge(edge35));
+
+		// Check if we tested all possibilities
+		Assert.assertEquals(12, stepCounter);
 	}
 
 	@Override
 	protected void doTestScenarioUnsolvable() {
-		Assert.fail();
+		// Step through the algorithm (59 steps)
+		for (int i = 0; i < 59; i++) {
+			Assert.assertTrue(this.algorithm.step());
+		}
+
+		// Check if the 60. step fails
+		Assert.assertFalse(this.algorithm.step());
+
+		// Check if we are still not finished
+		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
+
+		// But make sure that we can not take an other step
+		Assert.assertFalse(this.algorithm.step());
+
+		// Check if the path is empty
+		Assert.assertTrue(this.path.isEmpty());
 	}
 
 	@Override
