@@ -189,11 +189,15 @@ public class Scenario extends Observable implements Serializable, Observer {
 	}
 
 	public boolean isGridValid() {
-		return this.validator.validateGrid(this);
+		return this.validator.validateGrid(this, this.grid);
 	}
 
 	public boolean isPathValid() {
-		return this.validator.validatePath(this);
+		return this.validator.validatePath(this, this.grid, this.path);
+	}
+
+	public Validator getValidator() {
+		return this.validator;
 	}
 
 	public Grid getGrid() {

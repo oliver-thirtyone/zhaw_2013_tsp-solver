@@ -1,16 +1,16 @@
 package tspsolver.model.algorithm.optimizer;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Vector;
 
 import tspsolver.model.algorithm.OptimizerAlgorithm;
+import tspsolver.model.scenario.Scenario;
 import tspsolver.model.scenario.grid.Edge;
+import tspsolver.model.scenario.grid.Grid;
 import tspsolver.model.scenario.grid.Node;
 import tspsolver.model.scenario.path.Path;
 import tspsolver.model.scenario.path.PathUpdater;
-import tspsolver.model.validator.TSPValidator;
+import tspsolver.model.validator.Validator;
 
 public class LinKernighanHeuristik extends OptimizerAlgorithm {
 
@@ -57,7 +57,8 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 
 					this.nodesInOrder.add(currentNode);
 					break;
-				} else if (edge.getSecondNode() == currentNode) {
+				}
+				else if (edge.getSecondNode() == currentNode) {
 
 					edges.remove(edge);
 
@@ -77,9 +78,9 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 
 		// 1. Generate a random initial tour T.
 
-		initNodesInOrder();
+		this.initNodesInOrder();
 
-		while (j < this.nodesInOrder.size()) {
+		while (this.j < this.nodesInOrder.size()) {
 
 			Vector<Node> t = new Vector<Node>();
 
@@ -87,13 +88,14 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 			int i = 1;
 
 			// Choose t1.
-			Node t1 = this.nodesInOrder.get(j);
+			Node t1 = this.nodesInOrder.get(this.j);
 			t.add(t1);
 
 			Node t2;
-			if (j < this.nodesInOrder.size() - 1) {
-				t2 = this.nodesInOrder.get(j + 1);
-			} else {
+			if (this.j < this.nodesInOrder.size() - 1) {
+				t2 = this.nodesInOrder.get(this.j + 1);
+			}
+			else {
 				t2 = this.nodesInOrder.get(0);
 			}
 			t.add(t2);
@@ -116,8 +118,7 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 				// If this is not possible, go to Step 12.
 				boolean foundNoneNewY1 = true;
 				for (Edge y1 : t2.getEdges()) {
-					if (x1.getWeight() - y1.getWeight() > 0
-							&& this.getPath().containsEdge(y1) == false) {
+					if (x1.getWeight() - y1.getWeight() > 0 && this.getPath().containsEdge(y1) == false) {
 
 						foundNoneNewY1 = false;
 
@@ -125,8 +126,7 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 
 						y.add(y1);
 
-						Node t3 = y1.getFirstNode() == t2 ? y1.getSecondNode()
-								: y1.getFirstNode();
+						Node t3 = y1.getFirstNode() == t2 ? y1.getSecondNode() : y1.getFirstNode();
 
 						t.add(t3);
 
@@ -137,12 +137,10 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 						// that
 						for (Edge x2 : t3.getEdges()) {
 
-							Node t4 = x2.getFirstNode() == t3 ? x2
-									.getSecondNode() : x2.getFirstNode();
+							Node t4 = x2.getFirstNode() == t3 ? x2.getSecondNode() : x2.getFirstNode();
 
 							// (b) xi != ys for all s < i.
-							if (y.contains(x2) == false
-									&& t.contains(t4) == false) {
+							if (y.contains(x2) == false && t.contains(t4) == false) {
 								x.add(x2);
 								t.add(t4);
 								// (a) if t2i is joined to t1, the
@@ -161,16 +159,12 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 									// and go to Step 2.
 									Path newPath = this.generateNewPath(x, y);
 
-									if (newPath.getNumberOfEdges() == this
-											.getPath().getNumberOfEdges()
-											&& newPath.getWeight() < this
-													.getPath().getWeight()
-											&& isTour(newPath)) {
+									if (newPath.getNumberOfEdges() == this.getPath().getNumberOfEdges() && newPath.getWeight() < this.getPath().getWeight() && this.isTour(newPath)) {
 										this.getPathUpdater().clearPath();
 										this.getPathUpdater().addPath(newPath);
 										this.getPathUpdater().updatePath();
 
-										j++;
+										this.j++;
 										return true;
 									}
 
@@ -185,13 +179,9 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 								for (Edge y2 : t4.getEdges()) {
 									y.add(y2);
 
-									if (this.getPath().containsEdge(y2) == false
-											&& calcGain(x, y) > 0
-											&& x.contains(y2) == false) {
+									if (this.getPath().containsEdge(y2) == false && this.calcGain(x, y) > 0 && x.contains(y2) == false) {
 
-										Node t5 = y2.getFirstNode() == t2 ? y2
-												.getSecondNode() : y2
-												.getFirstNode();
+										Node t5 = y2.getFirstNode() == t2 ? y2.getSecondNode() : y2.getFirstNode();
 
 										t.add(t5);
 
@@ -202,24 +192,19 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 											// 5. Let i = i + 1.
 											i++;
 
-											Node t2iMinus1 = t
-													.get((2 * i - 1) - 1);
+											Node t2iMinus1 = t.get((2 * i - 1) - 1);
 
 											// 6. Choose xi = (t2i-1, t2i)
 											// element from T such
 											// that
 											Edge xi = null;
 											Node t2i = null;
-											for (Edge edge : t2iMinus1
-													.getEdges()) {
+											for (Edge edge : t2iMinus1.getEdges()) {
 
-												t2i = edge.getFirstNode() == t2iMinus1 ? edge
-														.getSecondNode() : edge
-														.getFirstNode();
+												t2i = edge.getFirstNode() == t2iMinus1 ? edge.getSecondNode() : edge.getFirstNode();
 
 												// (b) xi != ys for all s < i.
-												if (y.contains(edge) == false
-														&& t.contains(t2i) == false) {
+												if (y.contains(edge) == false && t.contains(t2i) == false) {
 
 													xi = edge;
 													break;
@@ -237,8 +222,7 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 											// resulting configuration is a tour
 											// T', and
 											{
-												Edge yi = t2iMinus1
-														.getEdgeToNode(t2i);
+												Edge yi = t2iMinus1.getEdgeToNode(t2i);
 												if (yi == null) {
 													// FIXME: this path does not
 													// work, what
@@ -251,24 +235,14 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 												// If T' is a better tour than
 												// T, let T = T' and go to Step
 												// 2.
-												Path newPath = this
-														.generateNewPath(x, y);
+												Path newPath = this.generateNewPath(x, y);
 
-												if (newPath.getNumberOfEdges() == this
-														.getPath()
-														.getNumberOfEdges()
-														&& newPath.getWeight() < this
-																.getPath()
-																.getWeight()
-														&& isTour(newPath)) {
-													this.getPathUpdater()
-															.clearPath();
-													this.getPathUpdater()
-															.addPath(newPath);
-													this.getPathUpdater()
-															.updatePath();
+												if (newPath.getNumberOfEdges() == this.getPath().getNumberOfEdges() && newPath.getWeight() < this.getPath().getWeight() && this.isTour(newPath)) {
+													this.getPathUpdater().clearPath();
+													this.getPathUpdater().addPath(newPath);
+													this.getPathUpdater().updatePath();
 
-													j++;
+													this.j++;
 													return true;
 												}
 
@@ -285,15 +259,9 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 											for (Edge edge : t2i.getEdges()) {
 
 												y.add(edge);
-												if (this.getPath()
-														.containsEdge(edge) == false
-														&& calcGain(x, y) > 0
-														&& x.contains(edge) == false) {
+												if (this.getPath().containsEdge(edge) == false && this.calcGain(x, y) > 0 && x.contains(edge) == false) {
 
-													Node t2iPlus1 = edge
-															.getFirstNode() == t2i ? edge
-															.getSecondNode()
-															: edge.getFirstNode();
+													Node t2iPlus1 = edge.getFirstNode() == t2i ? edge.getSecondNode() : edge.getFirstNode();
 
 													t.add(t2iPlus1);
 
@@ -362,26 +330,27 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 					t.add(t1);
 
 					// Take the Node in the other way.
-					if (j > 0) {
-						t2 = this.nodesInOrder.get(j - 1);
-					} else {
-						t2 = this.nodesInOrder
-								.get(this.nodesInOrder.size() - 1);
+					if (this.j > 0) {
+						t2 = this.nodesInOrder.get(this.j - 1);
+					}
+					else {
+						t2 = this.nodesInOrder.get(this.nodesInOrder.size() - 1);
 					}
 					t.add(t2);
 
 					i = 1;
 
 					hasTriedBackward = true;
-				} else {
+				}
+				else {
 					break;
 				}
 			}
 
-			j++;
+			this.j++;
 		}// 12. If there is an untried alternative for t1, then go to Step 2.
 
-		if (j >= this.nodesInOrder.size()) {
+		if (this.j >= this.nodesInOrder.size()) {
 			this.finishedSuccessfully();
 		}
 
@@ -423,73 +392,11 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 
 	// Check if the configuration builts a tour.
 	private boolean isTour(Path newPath) {
+		Scenario scenario = this.getScenario();
+		Grid grid = this.getGrid();
 
-		boolean validPath = true;
-
-		Node startingNode = newPath.getEdges()[0].getFirstNode();
-		Path path = newPath;
-
-		List<Node> nodes2Visit = new ArrayList<Node>();
-		for (final Node node : this.getGrid().getNodes()) {
-			nodes2Visit.add(node);
-		}
-
-		Node currentNode = null;
-		Node nextNode = startingNode;
-
-		// Check if we visit each node
-		while (validPath && nextNode != null) {
-			currentNode = nextNode;
-			nextNode = null;
-
-			// Remove the current node from the nodes to visit
-			nodes2Visit.remove(currentNode);
-
-			// Check if there are still nodes to visit
-			if (nodes2Visit.size() < 1) {
-				break;
-			}
-
-			int pathOccurencesCount = 0;
-			for (Edge edge : currentNode.getEdges()) {
-
-				// Check if an edge of this node belongs to the path
-				if (path.containsEdge(edge)) {
-					pathOccurencesCount++;
-
-					if (nextNode == null) {
-						Node fistNode = edge.getFirstNode();
-						Node secondNode = edge.getSecondNode();
-
-						// Set the next node
-						if (nodes2Visit.contains(fistNode)
-								&& !nodes2Visit.contains(secondNode)) {
-							nextNode = fistNode;
-						} else if (nodes2Visit.contains(secondNode)
-								&& !nodes2Visit.contains(fistNode)) {
-							nextNode = secondNode;
-						}
-					}
-				}
-			}
-
-			// Check if each node has two edges
-			if (pathOccurencesCount != TSPValidator.REQUIRED_PATH_OCCURENCES) {
-				validPath = false;
-			}
-		}
-
-		// Check if we have visited all nodes
-		if (nodes2Visit.size() != 0 || currentNode == null) {
-			validPath = false;
-		}
-		// Check if we can connect the last node to the starting node
-		else if (!currentNode.hasEdgeToNode(startingNode)
-				|| !path.containsEdge(currentNode.getEdgeToNode(startingNode))) {
-			validPath = false;
-		}
-
-		return validPath;
+		Validator validator = this.getScenario().getValidator();
+		return validator.validatePath(scenario, grid, newPath);
 	}
 
 }

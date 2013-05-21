@@ -37,10 +37,8 @@ public class TSPValidator implements Validator {
 	}
 
 	@Override
-	public boolean validateGrid(Scenario scenario) {
+	public boolean validateGrid(Scenario scenario, Grid grid) {
 		boolean validGrid = true;
-
-		Grid grid = scenario.getGrid();
 
 		if (grid.getNumberOfNodes() < TSPValidator.MINIMUM_NODE_COUNT) {
 			System.err.println("We need at least " + TSPValidator.MINIMUM_NODE_COUNT + " nodes in the node set");
@@ -59,12 +57,10 @@ public class TSPValidator implements Validator {
 	}
 
 	@Override
-	public boolean validatePath(Scenario scenario) {
+	public boolean validatePath(Scenario scenario, Grid grid, Path path) {
 		boolean validPath = true;
 
 		Node startingNode = scenario.getStartingNode();
-		Grid grid = scenario.getGrid();
-		Path path = scenario.getPath();
 
 		List<Node> nodes2Visit = new ArrayList<Node>();
 		for (final Node node : grid.getNodes()) {
