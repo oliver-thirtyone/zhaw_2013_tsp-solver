@@ -30,7 +30,7 @@ public class Node extends Observable implements Serializable, Observer {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		int prime = 31;
 		int result = 1;
 
 		result = prime * result + this.x;
@@ -53,7 +53,7 @@ public class Node extends Observable implements Serializable, Observer {
 			return false;
 		}
 
-		final Node other = (Node) obj;
+		Node other = (Node) obj;
 
 		if (this.x != other.x) {
 			return false;
@@ -68,7 +68,7 @@ public class Node extends Observable implements Serializable, Observer {
 
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
+		StringBuilder builder = new StringBuilder();
 
 		builder.append(this.getName());
 		builder.append(": ");
@@ -100,7 +100,7 @@ public class Node extends Observable implements Serializable, Observer {
 	}
 
 	public Edge[] getEdges() {
-		final Collection<Edge> edges = this.edges.values();
+		Collection<Edge> edges = this.edges.values();
 		return edges.toArray(new Edge[edges.size()]);
 	}
 
@@ -117,12 +117,12 @@ public class Node extends Observable implements Serializable, Observer {
 	}
 
 	protected Edge addEdgeToNode(Node node) {
-		final double weight = Edge.calcLinearDistance(this, node);
+		double weight = Edge.calcLinearDistance(this, node);
 		return this.addEdgeToNode(node, weight);
 	}
 
 	protected synchronized Edge addEdgeToNode(Node node, double weight) {
-		final Edge edge = new Edge(this, node, weight);
+		Edge edge = new Edge(this, node, weight);
 
 		// Add the edge to this node
 		if (!this.hasEdgeToNode(node)) {
@@ -150,7 +150,7 @@ public class Node extends Observable implements Serializable, Observer {
 	}
 
 	protected synchronized void clearEdges() {
-		for (final Node node : this.edges.keySet()) {
+		for (Node node : this.edges.keySet()) {
 			this.removeEdgeToNode(node);
 		}
 	}
@@ -163,7 +163,7 @@ public class Node extends Observable implements Serializable, Observer {
 	}
 
 	private void removeEdge(Node toNode) {
-		final Edge edge = this.edges.get(toNode);
+		Edge edge = this.edges.get(toNode);
 		edge.deleteObserver(this);
 
 		this.edges.remove(toNode);
@@ -171,7 +171,7 @@ public class Node extends Observable implements Serializable, Observer {
 	}
 
 	private void fireEdgeUpdate(Edge edge, EdgeUpdateAction action) {
-		final EdgeUpdate update = new EdgeUpdate(edge, action);
+		EdgeUpdate update = new EdgeUpdate(edge, action);
 
 		this.setChanged();
 		this.notifyObservers(update);

@@ -10,7 +10,7 @@ public abstract class MainRunner extends Observable implements Observer {
 	public MainRunner(Runner[] runners) {
 		this.runners = runners;
 
-		for (final Runner runner : runners) {
+		for (Runner runner : runners) {
 			runner.addObserver(this);
 		}
 	}
@@ -23,7 +23,7 @@ public abstract class MainRunner extends Observable implements Observer {
 
 	public boolean canInitialize() {
 		boolean canInitialize = true;
-		for (final Runner runner : this.runners) {
+		for (Runner runner : this.runners) {
 			if (!runner.canInitialize()) {
 				canInitialize = false;
 				break;
@@ -34,7 +34,7 @@ public abstract class MainRunner extends Observable implements Observer {
 
 	public boolean initialize() {
 		boolean successful = true;
-		for (final Runner runner : this.runners) {
+		for (Runner runner : this.runners) {
 			if (!runner.initialize()) {
 				successful = false;
 			}
@@ -44,7 +44,7 @@ public abstract class MainRunner extends Observable implements Observer {
 
 	public boolean initialize(int stepDelay) {
 		boolean successful = true;
-		for (final Runner runner : this.runners) {
+		for (Runner runner : this.runners) {
 			if (!runner.initialize(stepDelay)) {
 				successful = false;
 			}
@@ -54,7 +54,7 @@ public abstract class MainRunner extends Observable implements Observer {
 
 	public synchronized boolean canStart() {
 		boolean canStart = false;
-		for (final Runner runner : this.runners) {
+		for (Runner runner : this.runners) {
 			if (runner.canStart()) {
 				canStart = true;
 				break;
@@ -65,7 +65,7 @@ public abstract class MainRunner extends Observable implements Observer {
 
 	public synchronized boolean start() {
 		boolean successful = false;
-		for (final Runner runner : this.runners) {
+		for (Runner runner : this.runners) {
 			if (runner.start()) {
 				successful = true;
 			}
@@ -75,7 +75,7 @@ public abstract class MainRunner extends Observable implements Observer {
 
 	public synchronized boolean canStep() {
 		boolean canStep = false;
-		for (final Runner runner : this.runners) {
+		for (Runner runner : this.runners) {
 			if (runner.canStep()) {
 				canStep = true;
 				break;
@@ -86,7 +86,7 @@ public abstract class MainRunner extends Observable implements Observer {
 
 	public synchronized boolean step() {
 		boolean successful = false;
-		for (final Runner runner : this.runners) {
+		for (Runner runner : this.runners) {
 			if (runner.step()) {
 				successful = true;
 			}
@@ -96,7 +96,7 @@ public abstract class MainRunner extends Observable implements Observer {
 
 	public synchronized boolean canPause() {
 		boolean canPause = false;
-		for (final Runner runner : this.runners) {
+		for (Runner runner : this.runners) {
 			if (runner.canPause()) {
 				canPause = true;
 				break;
@@ -107,7 +107,7 @@ public abstract class MainRunner extends Observable implements Observer {
 
 	public synchronized boolean pause() {
 		boolean successful = false;
-		for (final Runner runner : this.runners) {
+		for (Runner runner : this.runners) {
 			if (runner.pause()) {
 				successful = true;
 			}
@@ -117,7 +117,7 @@ public abstract class MainRunner extends Observable implements Observer {
 
 	public synchronized boolean canStop() {
 		boolean canStop = false;
-		for (final Runner runner : this.runners) {
+		for (Runner runner : this.runners) {
 			if (runner.canStop()) {
 				canStop = true;
 				break;
@@ -128,7 +128,7 @@ public abstract class MainRunner extends Observable implements Observer {
 
 	public synchronized boolean stop() {
 		boolean successful = false;
-		for (final Runner runner : this.runners) {
+		for (Runner runner : this.runners) {
 			if (runner.stop()) {
 				successful = true;
 			}
@@ -138,7 +138,7 @@ public abstract class MainRunner extends Observable implements Observer {
 
 	public synchronized boolean canReset() {
 		boolean canReset = true;
-		for (final Runner runner : this.runners) {
+		for (Runner runner : this.runners) {
 			if (!runner.canReset()) {
 				canReset = false;
 				break;
@@ -149,7 +149,7 @@ public abstract class MainRunner extends Observable implements Observer {
 
 	public synchronized boolean reset() {
 		boolean successful = true;
-		for (final Runner runner : this.runners) {
+		for (Runner runner : this.runners) {
 			if (!runner.reset()) {
 				successful = false;
 			}

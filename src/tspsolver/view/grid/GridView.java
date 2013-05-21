@@ -46,7 +46,7 @@ public class GridView extends JPanel implements Observer {
 	public static final String SVG_GROUP_NODES = "tspsolver.nodes";
 	public static final String SVG_GROUP_EDGES = "tspsolver.edges";
 
-	private static final long serialVersionUID = -5210001067574218993L;
+	private final static long serialVersionUID = -5210001067574218993L;
 
 	private final SVGDiagram svgDiagram;
 	private final SVGIcon svgIcon;
@@ -86,7 +86,7 @@ public class GridView extends JPanel implements Observer {
 		this.edgeViews = new HashMap<Edge, EdgeView>();
 
 		// Create the titled border
-		final TitledBorder titledBorder = BorderFactory.createTitledBorder("");
+		TitledBorder titledBorder = BorderFactory.createTitledBorder("");
 		titledBorder.setTitlePosition(TitledBorder.ABOVE_TOP);
 		this.setBorder(titledBorder);
 	}
@@ -102,7 +102,7 @@ public class GridView extends JPanel implements Observer {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				final ElementUpdate<?, ?> elementUpdate = (ElementUpdate<?, ?>) argument;
+				ElementUpdate<?, ?> elementUpdate = (ElementUpdate<?, ?>) argument;
 				GridView.this.doUpdate(elementUpdate);
 			}
 		});
@@ -120,11 +120,11 @@ public class GridView extends JPanel implements Observer {
 	private synchronized void doUpdate(ElementUpdate<?, ?> elementUpdate) {
 		// Starting node updates
 		if (elementUpdate instanceof StartingNodeUpdate) {
-			final StartingNodeUpdate update = (StartingNodeUpdate) elementUpdate;
-			final StartingNodeUpdateAction action = update.getAction();
+			StartingNodeUpdate update = (StartingNodeUpdate) elementUpdate;
+			StartingNodeUpdateAction action = update.getAction();
 
-			final Node node = update.getElement();
-			final NodeView nodeView = this.nodeViews.get(node);
+			Node node = update.getElement();
+			NodeView nodeView = this.nodeViews.get(node);
 
 			if (nodeView != null) {
 				switch (action) {
@@ -142,10 +142,10 @@ public class GridView extends JPanel implements Observer {
 
 		// Node updates
 		else if (elementUpdate instanceof NodeUpdate) {
-			final NodeUpdate update = (NodeUpdate) elementUpdate;
-			final NodeUpdateAction action = update.getAction();
+			NodeUpdate update = (NodeUpdate) elementUpdate;
+			NodeUpdateAction action = update.getAction();
 
-			final Node node = update.getElement();
+			Node node = update.getElement();
 			NodeView nodeView = null;
 
 			switch (action) {
@@ -170,11 +170,11 @@ public class GridView extends JPanel implements Observer {
 
 		// Path updates
 		else if (elementUpdate instanceof PathUpdate) {
-			final PathUpdate update = (PathUpdate) elementUpdate;
-			final PathUpdateAction action = update.getAction();
+			PathUpdate update = (PathUpdate) elementUpdate;
+			PathUpdateAction action = update.getAction();
 
-			final Edge edge = update.getElement();
-			final EdgeView edgeView = this.edgeViews.get(edge);
+			Edge edge = update.getElement();
+			EdgeView edgeView = this.edgeViews.get(edge);
 
 			if (edgeView != null) {
 				switch (action) {
@@ -198,10 +198,10 @@ public class GridView extends JPanel implements Observer {
 
 		// Edge updates
 		else if (elementUpdate instanceof EdgeUpdate) {
-			final EdgeUpdate update = (EdgeUpdate) elementUpdate;
-			final EdgeUpdateAction action = update.getAction();
+			EdgeUpdate update = (EdgeUpdate) elementUpdate;
+			EdgeUpdateAction action = update.getAction();
 
-			final Edge edge = update.getElement();
+			Edge edge = update.getElement();
 			EdgeView edgeView = null;
 
 			switch (action) {
@@ -229,7 +229,7 @@ public class GridView extends JPanel implements Observer {
 			this.svgDiagram.updateTime(0.0);
 			this.repaint();
 		}
-		catch (final SVGException exception) {
+		catch (SVGException exception) {
 			exception.printStackTrace();
 		}
 	}
@@ -255,44 +255,44 @@ public class GridView extends JPanel implements Observer {
 			this.svgDiagram.updateTime(0.0);
 			this.repaint();
 		}
-		catch (final SVGException exception) {
+		catch (SVGException exception) {
 			exception.printStackTrace();
 		}
 	}
 
 	private void paintGrid() {
-		for (final Node node : this.scenario.getGrid().getNodes()) {
-			for (final Edge edge : node.getEdges()) {
+		for (Node node : this.scenario.getGrid().getNodes()) {
+			for (Edge edge : node.getEdges()) {
 				this.scenario.update(this.scenario, new EdgeUpdate(edge, EdgeUpdateAction.ADD_EDGE));
 			}
 
 			this.scenario.update(this.scenario, new NodeUpdate(node, NodeUpdateAction.ADD_NODE));
 		}
 
-		final Node startingNode = this.scenario.getStartingNode();
+		Node startingNode = this.scenario.getStartingNode();
 		if (startingNode != null) {
 			this.scenario.update(this.scenario, new StartingNodeUpdate(startingNode, StartingNodeUpdateAction.ADD_STARTING_NODE));
 		}
 
-		for (final Edge edge : this.scenario.getPath().getEdges()) {
+		for (Edge edge : this.scenario.getPath().getEdges()) {
 			this.scenario.update(this.scenario, new PathUpdate(edge, PathUpdateAction.PATH_ELEMENT));
 		}
 	}
 
 	private void clearGrid() {
-		for (final Edge edge : this.scenario.getPath().getEdges()) {
+		for (Edge edge : this.scenario.getPath().getEdges()) {
 			this.scenario.update(this.scenario, new PathUpdate(edge, PathUpdateAction.NON_PATH_ELEMENT));
 		}
 
-		final Node startingNode = this.scenario.getStartingNode();
+		Node startingNode = this.scenario.getStartingNode();
 		if (startingNode != null) {
 			this.scenario.update(this.scenario, new StartingNodeUpdate(startingNode, StartingNodeUpdateAction.REMOVE_STARTING_NODE));
 		}
 
-		for (final Node node : this.scenario.getGrid().getNodes()) {
+		for (Node node : this.scenario.getGrid().getNodes()) {
 			this.scenario.update(this.scenario, new NodeUpdate(node, NodeUpdateAction.REMOVE_NODE));
 
-			for (final Edge edge : node.getEdges()) {
+			for (Edge edge : node.getEdges()) {
 				this.scenario.update(this.scenario, new EdgeUpdate(edge, EdgeUpdateAction.REMOVE_EDGE));
 			}
 		}

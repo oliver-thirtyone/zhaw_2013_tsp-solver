@@ -29,7 +29,7 @@ public class PathUpdater {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		int prime = 31;
 		int result = 1;
 
 		result = prime * result + ((this.addedEdges == null) ? 0 : this.addedEdges.hashCode());
@@ -106,19 +106,19 @@ public class PathUpdater {
 
 	public synchronized void updatePath() {
 		// Mark the added edges as a path element
-		for (final Edge edge : this.addedEdges) {
+		for (Edge edge : this.addedEdges) {
 			this.path.firePathUpdate(edge, PathUpdateAction.PATH_ELEMENT);
 		}
 		this.addedEdges.clear();
 
 		// Mark the removed edges as a normal edge
-		for (final Edge edge : this.removedEdges) {
+		for (Edge edge : this.removedEdges) {
 			this.path.firePathUpdate(edge, PathUpdateAction.NON_PATH_ELEMENT);
 		}
 		this.removedEdges.clear();
 
 		// Add the new edges and mark them as a new path element
-		for (final Edge edge : this.edgesToAdd) {
+		for (Edge edge : this.edgesToAdd) {
 			this.path.addEdge(edge);
 			this.path.firePathUpdate(edge, PathUpdateAction.NEW_PATH_ELEMENT);
 		}
@@ -126,7 +126,7 @@ public class PathUpdater {
 		this.edgesToAdd.clear();
 
 		// Remove the old edges and mark them as a old path element
-		for (final Edge edge : this.edgesToRemove) {
+		for (Edge edge : this.edgesToRemove) {
 			this.path.removeEdge(edge);
 			this.path.firePathUpdate(edge, PathUpdateAction.OLD_PATH_ELEMENT);
 		}
@@ -153,25 +153,25 @@ public class PathUpdater {
 	}
 
 	public synchronized void addEdges(Edge[] edges) {
-		for (final Edge edge : edges) {
+		for (Edge edge : edges) {
 			this.addEdge(edge);
 		}
 	}
 
 	public synchronized void removeEdges(Edge[] edges) {
-		for (final Edge edge : edges) {
+		for (Edge edge : edges) {
 			this.removeEdge(edge);
 		}
 	}
 
 	public synchronized void addEdges(Collection<Edge> edges) {
-		for (final Edge edge : edges) {
+		for (Edge edge : edges) {
 			this.addEdge(edge);
 		}
 	}
 
 	public synchronized void removeEdges(Collection<Edge> edges) {
-		for (final Edge edge : edges) {
+		for (Edge edge : edges) {
 			this.removeEdge(edge);
 		}
 	}
@@ -188,7 +188,7 @@ public class PathUpdater {
 		this.removePath(this.path);
 	}
 
-	public final Path getPath() {
+	public Path getPath() {
 		return this.path;
 	}
 }

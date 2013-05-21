@@ -17,7 +17,7 @@ public class PipedDeepCopy {
 	/**
 	 * Flag object used internally to indicate that deserialization failed.
 	 */
-	private static final Object ERROR = new Object();
+	private static Object ERROR = new Object();
 
 	/**
 	 * Returns a copy of the object, or null if the object cannot be serialized.
@@ -26,14 +26,14 @@ public class PipedDeepCopy {
 		Object obj = null;
 		try {
 			// Make a connected pair of piped streams
-			final PipedInputStream in = new PipedInputStream();
-			final PipedOutputStream pos = new PipedOutputStream(in);
+			PipedInputStream in = new PipedInputStream();
+			PipedOutputStream pos = new PipedOutputStream(in);
 
 			// Make a deserializer thread (see inner class below)
-			final Deserializer des = new Deserializer(in);
+			Deserializer des = new Deserializer(in);
 
 			// Write the object to the pipe
-			final ObjectOutputStream out = new ObjectOutputStream(pos);
+			ObjectOutputStream out = new ObjectOutputStream(pos);
 			out.writeObject(orig);
 			out.close();
 
@@ -45,7 +45,7 @@ public class PipedDeepCopy {
 				obj = null;
 			}
 		}
-		catch (final IOException ioe) {
+		catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
 
@@ -81,16 +81,16 @@ public class PipedDeepCopy {
 		public void run() {
 			Object o = null;
 			try {
-				final ObjectInputStream oin = new ObjectInputStream(this.in);
+				ObjectInputStream oin = new ObjectInputStream(this.in);
 				o = oin.readObject();
 			}
-			catch (final IOException e) {
+			catch (IOException e) {
 				// This should never happen. If it does we make sure
 				// that a the object is set to a flag that indicates
 				// deserialization was not possible.
 				e.printStackTrace();
 			}
-			catch (final ClassNotFoundException cnfe) {
+			catch (ClassNotFoundException cnfe) {
 				// Same here...
 				cnfe.printStackTrace();
 			}
@@ -118,7 +118,7 @@ public class PipedDeepCopy {
 					}
 				}
 			}
-			catch (final InterruptedException ie) {
+			catch (InterruptedException ie) {
 				// If we are interrupted we just return null
 			}
 			return this.obj;

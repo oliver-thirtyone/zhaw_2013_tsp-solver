@@ -23,13 +23,13 @@ public class Edge extends Observable implements Serializable {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		int prime = 31;
 		int result = 1;
 
 		result = prime * result + ((this.firstNode == null) ? 0 : this.firstNode.hashCode());
 		result = prime * result + ((this.secondNode == null) ? 0 : this.secondNode.hashCode());
 
-		final long temp = Double.doubleToLongBits(this.weight);
+		long temp = Double.doubleToLongBits(this.weight);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 
 		return result;
@@ -47,7 +47,7 @@ public class Edge extends Observable implements Serializable {
 			return false;
 		}
 
-		final Edge other = (Edge) obj;
+		Edge other = (Edge) obj;
 
 		if (this.firstNode == null) {
 			if (other.firstNode != null) {
@@ -76,7 +76,7 @@ public class Edge extends Observable implements Serializable {
 
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
+		StringBuilder builder = new StringBuilder();
 
 		builder.append(this.getFirstNode());
 		builder.append(" -> ");

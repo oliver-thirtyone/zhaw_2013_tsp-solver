@@ -41,7 +41,7 @@ public class LayoutManager {
 	 * @return {@code true} if the component count got increased
 	 */
 	public boolean addComponent(Component component) {
-		final int componentCount = this.container.getComponentCount();
+		int componentCount = this.container.getComponentCount();
 
 		this.layout.setConstraints(component, this.constraints);
 		this.container.add(component);

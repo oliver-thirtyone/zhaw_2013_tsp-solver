@@ -5,7 +5,7 @@ import tspsolver.model.scenario.Scenario;
 public abstract class StartAlgorithm extends Algorithm {
 
 	@Override
-	public final synchronized void validateArguments() {
+	public synchronized final void validateArguments() {
 		boolean validArguments = true;
 
 		Scenario scenario = this.getScenario();

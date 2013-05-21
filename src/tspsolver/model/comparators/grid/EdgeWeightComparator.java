@@ -8,8 +8,8 @@ public class EdgeWeightComparator implements Comparator<Edge> {
 
 	@Override
 	public int compare(Edge edge1, Edge edge2) {
-		final Double edge1Weight = Double.valueOf(edge1.getWeight());
-		final Double edge2Weight = Double.valueOf(edge2.getWeight());
+		Double edge1Weight = Double.valueOf(edge1.getWeight());
+		Double edge2Weight = Double.valueOf(edge2.getWeight());
 
 		return edge1Weight.compareTo(edge2Weight);
 	}

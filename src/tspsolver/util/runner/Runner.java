@@ -4,8 +4,8 @@ import java.util.Observable;
 
 public abstract class Runner extends Observable implements Runnable {
 
-	public final static int DEFAULT_STEP_DELAY = 0;
-	public final static int PAUSE_SLEEP_MILLISECONDS = 300;
+	public static final int DEFAULT_STEP_DELAY = 0;
+	public static final int PAUSE_SLEEP_MILLISECONDS = 300;
 
 	private Thread thread;
 	private RunnerState state;
@@ -34,7 +34,7 @@ public abstract class Runner extends Observable implements Runnable {
 	protected abstract boolean doStep();
 
 	@Override
-	public final void run() {
+	public void run() {
 		this.timeStarted = System.currentTimeMillis();
 
 		while (this.isRunning()) {
@@ -44,7 +44,7 @@ public abstract class Runner extends Observable implements Runnable {
 				try {
 					Thread.sleep(Runner.PAUSE_SLEEP_MILLISECONDS);
 				}
-				catch (final InterruptedException exception) {
+				catch (InterruptedException exception) {
 					exception.printStackTrace();
 				}
 				continue;
@@ -55,7 +55,7 @@ public abstract class Runner extends Observable implements Runnable {
 				try {
 					Thread.sleep(this.getStepDelay());
 				}
-				catch (final InterruptedException exception) {
+				catch (InterruptedException exception) {
 					exception.printStackTrace();
 				}
 			}
@@ -109,7 +109,7 @@ public abstract class Runner extends Observable implements Runnable {
 		return successful;
 	}
 
-	public final synchronized boolean canReset() {
+	public synchronized boolean canReset() {
 		switch (this.getState()) {
 			case READY:
 			case STOPPED:
@@ -121,7 +121,7 @@ public abstract class Runner extends Observable implements Runnable {
 		return false;
 	}
 
-	public final synchronized boolean reset() {
+	public synchronized boolean reset() {
 		boolean successful = false;
 
 		if (this.canReset()) {
@@ -142,7 +142,7 @@ public abstract class Runner extends Observable implements Runnable {
 		return successful;
 	}
 
-	public final synchronized boolean canStart() {
+	public synchronized boolean canStart() {
 		switch (this.getState()) {
 			case READY:
 			case PAUSED:
@@ -154,7 +154,7 @@ public abstract class Runner extends Observable implements Runnable {
 		return false;
 	}
 
-	public final synchronized boolean start() {
+	public synchronized boolean start() {
 		boolean successful = false;
 
 		if (this.canStart()) {
@@ -168,7 +168,7 @@ public abstract class Runner extends Observable implements Runnable {
 		return successful;
 	}
 
-	public final synchronized boolean canStep() {
+	public synchronized boolean canStep() {
 		switch (this.getState()) {
 			case READY:
 			case PAUSED:
@@ -180,7 +180,7 @@ public abstract class Runner extends Observable implements Runnable {
 		return false;
 	}
 
-	public final synchronized boolean step() {
+	public synchronized boolean step() {
 		boolean successful = false;
 
 		if (this.canStep()) {
@@ -194,7 +194,7 @@ public abstract class Runner extends Observable implements Runnable {
 		return successful;
 	}
 
-	public final synchronized boolean canPause() {
+	public synchronized boolean canPause() {
 		switch (this.getState()) {
 			case RUNNING:
 			case STEPPING:
@@ -206,7 +206,7 @@ public abstract class Runner extends Observable implements Runnable {
 		return false;
 	}
 
-	public final synchronized boolean pause() {
+	public synchronized boolean pause() {
 		boolean successful = false;
 
 		if (this.canPause()) {
@@ -217,7 +217,7 @@ public abstract class Runner extends Observable implements Runnable {
 		return successful;
 	}
 
-	public final synchronized boolean canStop() {
+	public synchronized boolean canStop() {
 		switch (this.getState()) {
 			case RUNNING:
 			case STEPPING:
@@ -230,7 +230,7 @@ public abstract class Runner extends Observable implements Runnable {
 		return false;
 	}
 
-	public final synchronized boolean stop() {
+	public synchronized boolean stop() {
 		boolean successful = false;
 
 		if (this.canStop()) {
@@ -241,11 +241,11 @@ public abstract class Runner extends Observable implements Runnable {
 		return successful;
 	}
 
-	public final synchronized RunnerState getState() {
+	public synchronized RunnerState getState() {
 		return this.state;
 	}
 
-	protected final synchronized void setState(RunnerState state) {
+	protected synchronized void setState(RunnerState state) {
 		if (this.state == state) {
 			return;
 		}
@@ -255,25 +255,25 @@ public abstract class Runner extends Observable implements Runnable {
 		this.notifyObservers(this.state);
 	}
 
-	public final synchronized long getTimeElapsed() {
-		final long timeCurrent = System.currentTimeMillis();
+	public synchronized long getTimeElapsed() {
+		long timeCurrent = System.currentTimeMillis();
 
-		final long timeStarted = this.timeStarted != 0 ? this.timeStarted : timeCurrent;
-		final long timeStopped = this.timeStopped != 0 ? this.timeStopped : timeCurrent;
+		long timeStarted = this.timeStarted != 0 ? this.timeStarted : timeCurrent;
+		long timeStopped = this.timeStopped != 0 ? this.timeStopped : timeCurrent;
 
 		return timeStopped - timeStarted;
 	}
 
-	public final synchronized int getStepDelay() {
+	public synchronized int getStepDelay() {
 		return this.stepDelay;
 	}
 
-	public final synchronized long getStepCounter() {
+	public synchronized long getStepCounter() {
 		return this.stepCounter;
 	}
 
-	public final synchronized boolean isRunning() {
-		final RunnerState state = this.getState();
+	public synchronized boolean isRunning() {
+		RunnerState state = this.getState();
 		return state == RunnerState.RUNNING || state == RunnerState.STEPPING || state == RunnerState.PAUSED;
 	}
 }

@@ -24,14 +24,14 @@ public class ScenarioTest {
 		this.scenario = new Scenario(new TSPValidator());
 		this.scenario.setName("ScenarioTest");
 
-		final Grid grid = this.scenario.getGrid();
-		final Path path = this.scenario.getPath();
-		final PathUpdater pathUpdater = new PathUpdater(path);
+		Grid grid = this.scenario.getGrid();
+		Path path = this.scenario.getPath();
+		PathUpdater pathUpdater = new PathUpdater(path);
 
-		final Node nodeNorth = GridFactory.createNode("north", 0, 5);
-		final Node nodeEast = GridFactory.createNode("east", 4, 0);
-		final Node nodeSouth = GridFactory.createNode("south", 0, -5);
-		final Node nodeWest = GridFactory.createNode("west", -5, 0);
+		Node nodeNorth = GridFactory.createNode("north", 0, 5);
+		Node nodeEast = GridFactory.createNode("east", 4, 0);
+		Node nodeSouth = GridFactory.createNode("south", 0, -5);
+		Node nodeWest = GridFactory.createNode("west", -5, 0);
 
 		GridFactory.addNode(grid, nodeNorth);
 		GridFactory.addNode(grid, nodeEast);
@@ -54,7 +54,7 @@ public class ScenarioTest {
 
 	@Test
 	public void testCopy() throws FileNotFoundException {
-		final Scenario copyOfScenario = this.scenario.copy();
+		Scenario copyOfScenario = this.scenario.copy();
 		Assert.assertEquals(this.scenario, copyOfScenario);
 	}
 

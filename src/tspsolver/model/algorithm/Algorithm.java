@@ -19,7 +19,7 @@ public abstract class Algorithm {
 		return this.getClass().getSimpleName();
 	}
 
-	public final synchronized void initialize(Scenario scenario) {
+	public synchronized void initialize(Scenario scenario) {
 		// Reset everything before we initialize
 		this.reset();
 
@@ -30,7 +30,7 @@ public abstract class Algorithm {
 		this.validateArguments();
 	}
 
-	public final synchronized void reset() {
+	public synchronized void reset() {
 		if (this.getPathUpdater() != null) {
 			this.getPathUpdater().clearPath();
 			this.getPathUpdater().updatePath();
@@ -45,7 +45,7 @@ public abstract class Algorithm {
 		this.doReset();
 	}
 
-	public final synchronized boolean step() {
+	public synchronized boolean step() {
 		if (!this.hasValidArguments() || this.hasFinishedSuccessfully()) {
 			return false;
 		}

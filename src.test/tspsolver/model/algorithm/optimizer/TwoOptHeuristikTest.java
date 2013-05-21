@@ -66,7 +66,7 @@ public class TwoOptHeuristikTest {
 	@Test
 	public void test() {
 		// Create a valid path that is too heavy
-		final PathUpdater pathUpdater = new PathUpdater(this.path);
+		PathUpdater pathUpdater = new PathUpdater(this.path);
 		pathUpdater.addEdge(this.edgeNorthSouth);
 		pathUpdater.addEdge(this.edgeNorthWest);
 		pathUpdater.addEdge(this.edgeEastWest);

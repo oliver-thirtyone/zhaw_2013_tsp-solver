@@ -63,7 +63,7 @@ public class TSPValidator implements Validator {
 		Node startingNode = scenario.getStartingNode();
 
 		List<Node> nodes2Visit = new ArrayList<Node>();
-		for (final Node node : grid.getNodes()) {
+		for (Node node : grid.getNodes()) {
 			nodes2Visit.add(node);
 		}
 

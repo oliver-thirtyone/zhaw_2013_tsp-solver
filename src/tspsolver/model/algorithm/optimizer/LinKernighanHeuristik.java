@@ -40,15 +40,15 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 
 		this.nodesInOrder.add(currentNode);
 
-		final int numberOfEdges = this.getPath().getNumberOfEdges();
+		int numberOfEdges = this.getPath().getNumberOfEdges();
 
-		final HashSet<Edge> edges = new HashSet<Edge>();
-		for (final Edge edge : this.getPath().getEdges()) {
+		HashSet<Edge> edges = new HashSet<Edge>();
+		for (Edge edge : this.getPath().getEdges()) {
 			edges.add(edge);
 		}
 
 		while (this.nodesInOrder.size() < numberOfEdges) {
-			for (final Edge edge : edges) {
+			for (Edge edge : edges) {
 				if (edge.getFirstNode() == currentNode) {
 
 					edges.remove(edge);

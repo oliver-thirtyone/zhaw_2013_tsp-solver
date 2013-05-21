@@ -65,10 +65,10 @@ public class Controller extends MainRunner {
 		}
 
 		// Set the scenario for all algorithm runners
-		for (final AlgorithmRunner runner : this.getAlgorithmRunners()) {
-			final Scenario copyOfScenario = scenario.copy();
+		for (AlgorithmRunner runner : this.getAlgorithmRunners()) {
+			Scenario copyOfScenario = scenario.copy();
 
-			final boolean setSelectedScenario = runner.setSelectedScenario(copyOfScenario);
+			boolean setSelectedScenario = runner.setSelectedScenario(copyOfScenario);
 			success = success ? setSelectedScenario : false;
 		}
 

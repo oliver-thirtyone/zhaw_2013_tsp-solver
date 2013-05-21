@@ -12,7 +12,7 @@ import tspsolver.util.view.layout.LayoutManager;
 
 public class MainFrame extends JFrame {
 
-	private static final long serialVersionUID = -5157138756987495470L;
+	private final static long serialVersionUID = -5157138756987495470L;
 
 	private final LayoutManager layoutManager;
 
@@ -26,8 +26,8 @@ public class MainFrame extends JFrame {
 		this.mainRunnerView = new ControllerView(controller);
 		this.algorithmRunnerViews = new ArrayList<AlgorithmRunnerView>();
 
-		for (final AlgorithmRunner algorithmRunner : controller.getAlgorithmRunners()) {
-			final AlgorithmRunnerView algorithmRunnerView = new AlgorithmRunnerView(algorithmRunner);
+		for (AlgorithmRunner algorithmRunner : controller.getAlgorithmRunners()) {
+			AlgorithmRunnerView algorithmRunnerView = new AlgorithmRunnerView(algorithmRunner);
 			this.algorithmRunnerViews.add(algorithmRunnerView);
 		}
 

@@ -38,13 +38,14 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 		this.currentPath.addAll(this.startPath);
 
 		this.steps = 0;
-		this.maxSteps = factorial(this.startPath.size()).intValue() / 2;
+		this.maxSteps = this.factorial(this.startPath.size()).intValue() / 2;
 	}
 
 	public BigInteger factorial(int n) {
 		BigInteger ret = BigInteger.ONE;
-		for (int i = 1; i <= n; ++i)
+		for (int i = 1; i <= n; ++i) {
 			ret = ret.multiply(BigInteger.valueOf(i));
+		}
 		return ret;
 	}
 
@@ -61,7 +62,7 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 	protected boolean doStep() {
 		boolean successfulStep = true;
 
-		steps++;
+		this.steps++;
 
 		this.next_permutation();
 
@@ -69,18 +70,17 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 		Path newPath = this.convertToPath(this.currentPath);
 
 		// Check if the new path is lighter
-		if (this.getPath().isEmpty()
-				|| (!newPath.isEmpty() && newPath.getWeight() < this.getPath()
-						.getWeight())) {
+		if (this.getPath().isEmpty() || (!newPath.isEmpty() && newPath.getWeight() < this.getPath().getWeight())) {
 			this.getPathUpdater().clearPath();
 			this.getPathUpdater().addPath(newPath);
 		}
 
 		// Check if we are finished
-		if (steps >= maxSteps) {
+		if (this.steps >= this.maxSteps) {
 			if (!this.getPath().isEmpty()) {
 				this.finishedSuccessfully();
-			} else {
+			}
+			else {
 				successfulStep = false;
 			}
 		}
@@ -106,16 +106,14 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 			// spezfische reihenfolge, ändlich dem eines alphabet, die grösse
 			// funktioniert nicht weil nicht eindeutig
 			// lexikogr. Nachfolger hat größeres a[i]
-			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath
-					.indexOf(this.currentPath.get(i + 1))) {
+			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath.indexOf(this.currentPath.get(i + 1))) {
 				break;
 			}
 		}
 		int j = this.currentPath.size();
 		while (true) {
 			j -= 1;
-			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath
-					.indexOf(this.currentPath.get(j))) {
+			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath.indexOf(this.currentPath.get(j))) {
 				break;
 			}
 		}
@@ -159,7 +157,8 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 			if (edge != null) {
 				newPathUpdater.addEdge(edge);
 				currentNode = node;
-			} else {
+			}
+			else {
 				isNewPathValid = false;
 			}
 		}
@@ -168,7 +167,8 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 		Edge edge = currentNode.getEdgeToNode(this.getStartingNode());
 		if (edge != null) {
 			newPathUpdater.addEdge(edge);
-		} else {
+		}
+		else {
 			isNewPathValid = false;
 		}
 

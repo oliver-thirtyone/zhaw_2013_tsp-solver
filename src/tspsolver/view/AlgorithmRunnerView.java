@@ -33,7 +33,7 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 
 	private static final long serialVersionUID = 6150985298461587724L;
 
-	private static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss:SSS");
+	private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss:SSS");
 	{
 		AlgorithmRunnerView.TIME_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
@@ -82,7 +82,7 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 		this.startAlgorithms = new JComboBox<StartAlgorithm>();
 		this.startAlgorithms.setEditable(false);
 
-		for (final StartAlgorithm startAlgorithm : this.algorithmRunner.getStartAlgorithms()) {
+		for (StartAlgorithm startAlgorithm : this.algorithmRunner.getStartAlgorithms()) {
 			this.startAlgorithms.addItem(startAlgorithm);
 		}
 		this.startAlgorithms.setActionCommand("select_startAlgorithm");
@@ -94,7 +94,7 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 		this.optimizerAlgorithms.setEditable(false);
 
 		this.optimizerAlgorithms.addItem(null);
-		for (final OptimizerAlgorithm optimizerAlgorithm : this.algorithmRunner.getOptimizerAlgorithms()) {
+		for (OptimizerAlgorithm optimizerAlgorithm : this.algorithmRunner.getOptimizerAlgorithms()) {
 			this.optimizerAlgorithms.addItem(optimizerAlgorithm);
 		}
 		this.optimizerAlgorithms.setActionCommand("select_optimizerAlgorithm");
@@ -146,7 +146,7 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 		this.components();
 
 		// Create the titled border
-		final TitledBorder titledBorder = BorderFactory.createTitledBorder("");
+		TitledBorder titledBorder = BorderFactory.createTitledBorder("");
 		titledBorder.setTitlePosition(TitledBorder.ABOVE_TOP);
 		this.setBorder(titledBorder);
 
@@ -198,14 +198,14 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
-		final String actionCommand = actionEvent.getActionCommand();
+		String actionCommand = actionEvent.getActionCommand();
 
 		if (actionCommand.equals("select_startAlgorithm")) {
-			final StartAlgorithm startAlgorithm = (StartAlgorithm) this.startAlgorithms.getSelectedItem();
+			StartAlgorithm startAlgorithm = (StartAlgorithm) this.startAlgorithms.getSelectedItem();
 			this.algorithmRunner.setSelectedStartAlgorithm(startAlgorithm);
 		}
 		else if (actionCommand.equals("select_optimizerAlgorithm")) {
-			final Object selectedItem = this.optimizerAlgorithms.getSelectedItem();
+			Object selectedItem = this.optimizerAlgorithms.getSelectedItem();
 			OptimizerAlgorithm optimizerAlgorithm = null;
 
 			if (selectedItem instanceof OptimizerAlgorithm) {
@@ -223,7 +223,7 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 			this.stepCounter.setText(String.valueOf(this.algorithmRunner.getStepCounter()));
 
 			// Update the algorithm statistics
-			final Algorithm runningAlgorithm = this.algorithmRunner.getRunningAlgorithm();
+			Algorithm runningAlgorithm = this.algorithmRunner.getRunningAlgorithm();
 			if (runningAlgorithm != null) {
 				this.finishedSuccessfully.setText(String.valueOf(runningAlgorithm.hasFinishedSuccessfully()));
 			}
@@ -232,9 +232,9 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 			}
 
 			// Update the scenario statistics
-			final Scenario scenario = this.algorithmRunner.getSelectedScenario();
+			Scenario scenario = this.algorithmRunner.getSelectedScenario();
 			if (scenario != null) {
-				final Path path = scenario.getPath();
+				Path path = scenario.getPath();
 				this.pathWeight.setText(String.valueOf(path.getWeight()));
 				this.numberOfEdges.setText(String.valueOf(path.getNumberOfEdges()));
 
@@ -257,7 +257,7 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 
 		// The running algorithm changed
 		if (argument == null || argument instanceof Algorithm) {
-			final Algorithm runningAlgorithm = this.algorithmRunner.getRunningAlgorithm();
+			Algorithm runningAlgorithm = this.algorithmRunner.getRunningAlgorithm();
 			if (runningAlgorithm != null) {
 				this.runningAlgorithm.setText(runningAlgorithm.toString());
 			}
@@ -268,11 +268,11 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 
 		// The scenario changed
 		if (argument == null || argument instanceof Scenario) {
-			final Scenario scenario = this.algorithmRunner.getSelectedScenario();
+			Scenario scenario = this.algorithmRunner.getSelectedScenario();
 			this.gridView.updateScenario(scenario);
 
 			if (scenario != null) {
-				final Grid grid = scenario.getGrid();
+				Grid grid = scenario.getGrid();
 				this.numberOfNodes.setText(String.valueOf(grid.getNumberOfNodes()));
 			}
 			else {
