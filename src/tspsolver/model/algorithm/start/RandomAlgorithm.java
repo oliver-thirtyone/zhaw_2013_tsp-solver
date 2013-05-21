@@ -95,8 +95,7 @@ public class RandomAlgorithm extends StartAlgorithm {
 				this.finishedSuccessfully();
 			}
 			else {
-				// FIXME: If the last node has no accessible edge to the starting node we fail here
-				System.err.println("Jetzt hämmer es Problem...");
+				// If the last node has no accessible edge to the starting node we fail here
 				successfulStep = false;
 			}
 		}

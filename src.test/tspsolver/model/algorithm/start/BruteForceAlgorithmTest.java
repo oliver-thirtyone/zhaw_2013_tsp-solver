@@ -188,11 +188,19 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 
 	@Override
 	protected void doTestScenarioFortyoneNode() {
-		// not testable
-		Assert.assertTrue(true);
+		// Step through the algorithm (10000 steps)
+		for (int i = 0; i < 10000; i++) {
+			Assert.assertTrue(this.algorithm.step());
+		}
 
-		// Check if the path is invalid
-		Assert.assertFalse(this.scenarioFortyoneNodes.isPathValid());
+		// Check if we are still not finished
+		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
+
+		// But make sure that we can take an other step
+		Assert.assertTrue(this.algorithm.step());
+
+		// Check if the path is valid. It is not the best path but it should be valid
+		Assert.assertTrue(this.scenarioFortyoneNodes.isPathValid());
 	}
 
 }

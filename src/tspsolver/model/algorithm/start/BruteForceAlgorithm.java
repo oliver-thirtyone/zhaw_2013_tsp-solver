@@ -38,6 +38,8 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 		this.currentPath.addAll(this.startPath);
 
 		this.steps = 0;
+
+		// FIXME: this causes problems! Possible solution Interger.MAX_VALUE ????
 		this.maxSteps = this.factorial(this.startPath.size()).intValue() / 2;
 	}
 
@@ -64,6 +66,7 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 
 		this.steps++;
 
+		// FIXME: The return value gets ignored ???
 		this.next_permutation();
 
 		// Create the new path
