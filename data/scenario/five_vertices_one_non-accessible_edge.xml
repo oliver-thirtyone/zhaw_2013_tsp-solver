@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<scenario name="Five Vertices, Edge '1 -> 2' is not accessible">
+	<vertex name="1" x="350" y="25" />
+	<vertex name="2" x="550" y="250" />
+	<vertex name="3" x="350" y="500" />
+	<vertex name="4" x="125" y="250" />
+	<vertex name="5" x="240" y="240" />
+
+	<remove-edge first-vertex="1" second-vertex="2" />
+
+	<starting-vertex name="1" />
+</scenario>

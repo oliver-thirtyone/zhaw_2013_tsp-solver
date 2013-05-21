@@ -70,7 +70,7 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 	private final JLabel numberOfEdgesLabel;
 	private final JTextField numberOfEdges;
 	private final JLabel slashLabel;
-	private final JTextField numberOfNodes;
+	private final JTextField numberOfVertices;
 
 	public AlgorithmRunnerView(AlgorithmRunner algorithmRunner) {
 		this.algorithmRunner = algorithmRunner;
@@ -139,8 +139,8 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 		this.numberOfEdges = new JTextField();
 		this.numberOfEdges.setEditable(false);
 		this.slashLabel = new JLabel("/");
-		this.numberOfNodes = new JTextField();
-		this.numberOfNodes.setEditable(false);
+		this.numberOfVertices = new JTextField();
+		this.numberOfVertices.setEditable(false);
 
 		// Create the components
 		this.components();
@@ -177,7 +177,7 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 		this.layoutManager.setWeightX(1.0);
 
 		this.layoutManager.setX(1).setY(9).addComponent(this.numberOfEdges);
-		this.layoutManager.setX(3).setY(9).addComponent(this.numberOfNodes);
+		this.layoutManager.setX(3).setY(9).addComponent(this.numberOfVertices);
 
 		this.layoutManager.setWidth(3);
 
@@ -273,10 +273,10 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 
 			if (scenario != null) {
 				Grid grid = scenario.getGrid();
-				this.numberOfNodes.setText(String.valueOf(grid.getNumberOfNodes()));
+				this.numberOfVertices.setText(String.valueOf(grid.getNumberOfVertices()));
 			}
 			else {
-				this.numberOfNodes.setText(String.valueOf(0));
+				this.numberOfVertices.setText(String.valueOf(0));
 			}
 		}
 

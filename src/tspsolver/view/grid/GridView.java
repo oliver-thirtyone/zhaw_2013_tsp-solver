@@ -20,16 +20,16 @@ import javax.swing.border.TitledBorder;
 
 import tspsolver.model.scenario.Scenario;
 import tspsolver.model.scenario.grid.Edge;
-import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.grid.Vertex;
 import tspsolver.model.updates.ElementUpdate;
 import tspsolver.model.updates.grid.EdgeUpdate;
 import tspsolver.model.updates.grid.EdgeUpdateAction;
-import tspsolver.model.updates.grid.NodeUpdate;
-import tspsolver.model.updates.grid.NodeUpdateAction;
+import tspsolver.model.updates.grid.VertexUpdate;
+import tspsolver.model.updates.grid.VertexUpdateAction;
 import tspsolver.model.updates.path.PathUpdate;
 import tspsolver.model.updates.path.PathUpdateAction;
-import tspsolver.model.updates.scenario.StartingNodeUpdate;
-import tspsolver.model.updates.scenario.StartingNodeUpdateAction;
+import tspsolver.model.updates.scenario.StartingVertexUpdate;
+import tspsolver.model.updates.scenario.StartingVertexUpdateAction;
 import tspsolver.util.copy.FileCopy;
 
 import com.kitfox.svg.SVGCache;
@@ -43,7 +43,7 @@ public class GridView extends JPanel implements Observer {
 	public static final int MAP_SWITZERLAND_HEIGHT = 320;
 
 	public static final String DATA_MAP_SWITZERLAND = "data/map/switzerland_simple.svg";
-	public static final String SVG_GROUP_NODES = "tspsolver.nodes";
+	public static final String SVG_GROUP_NODES = "tspsolver.vertices";
 	public static final String SVG_GROUP_EDGES = "tspsolver.edges";
 
 	private final static long serialVersionUID = -5210001067574218993L;
@@ -51,7 +51,7 @@ public class GridView extends JPanel implements Observer {
 	private final SVGDiagram svgDiagram;
 	private final SVGIcon svgIcon;
 
-	private final Map<Node, NodeView> nodeViews;
+	private final Map<Vertex, VertexView> vertexViews;
 	private final Map<Edge, EdgeView> edgeViews;
 
 	private Scenario scenario;
@@ -82,7 +82,7 @@ public class GridView extends JPanel implements Observer {
 		this.svgIcon.setScaleToFit(true);
 
 		// Create the views
-		this.nodeViews = new HashMap<Node, NodeView>();
+		this.vertexViews = new HashMap<Vertex, VertexView>();
 		this.edgeViews = new HashMap<Edge, EdgeView>();
 
 		// Create the titled border
@@ -118,21 +118,21 @@ public class GridView extends JPanel implements Observer {
 	}
 
 	private synchronized void doUpdate(ElementUpdate<?, ?> elementUpdate) {
-		// Starting node updates
-		if (elementUpdate instanceof StartingNodeUpdate) {
-			StartingNodeUpdate update = (StartingNodeUpdate) elementUpdate;
-			StartingNodeUpdateAction action = update.getAction();
+		// Starting vertex updates
+		if (elementUpdate instanceof StartingVertexUpdate) {
+			StartingVertexUpdate update = (StartingVertexUpdate) elementUpdate;
+			StartingVertexUpdateAction action = update.getAction();
 
-			Node node = update.getElement();
-			NodeView nodeView = this.nodeViews.get(node);
+			Vertex vertex = update.getElement();
+			VertexView vertexView = this.vertexViews.get(vertex);
 
-			if (nodeView != null) {
+			if (vertexView != null) {
 				switch (action) {
 					case ADD_STARTING_NODE:
-						nodeView.updateCircle(NodeView.CIRCLE_FILL_STARTINGNODE);
+						vertexView.updateCircle(VertexView.CIRCLE_FILL_STARTINGNODE);
 						break;
 					case REMOVE_STARTING_NODE:
-						nodeView.updateCircle(NodeView.CIRCLE_FILL_NODE);
+						vertexView.updateCircle(VertexView.CIRCLE_FILL_NODE);
 						break;
 					default:
 						break;
@@ -140,27 +140,27 @@ public class GridView extends JPanel implements Observer {
 			}
 		}
 
-		// Node updates
-		else if (elementUpdate instanceof NodeUpdate) {
-			NodeUpdate update = (NodeUpdate) elementUpdate;
-			NodeUpdateAction action = update.getAction();
+		// Vertex updates
+		else if (elementUpdate instanceof VertexUpdate) {
+			VertexUpdate update = (VertexUpdate) elementUpdate;
+			VertexUpdateAction action = update.getAction();
 
-			Node node = update.getElement();
-			NodeView nodeView = null;
+			Vertex vertex = update.getElement();
+			VertexView vertexView = null;
 
 			switch (action) {
 				case ADD_NODE:
-					if (!this.nodeViews.containsKey(node)) {
-						nodeView = new NodeView(node, this.svgDiagram);
-						nodeView.createCircle();
-						this.nodeViews.put(node, nodeView);
+					if (!this.vertexViews.containsKey(vertex)) {
+						vertexView = new VertexView(vertex, this.svgDiagram);
+						vertexView.createCircle();
+						this.vertexViews.put(vertex, vertexView);
 					}
 					break;
 				case REMOVE_NODE:
-					if (this.nodeViews.containsKey(node)) {
-						nodeView = this.nodeViews.get(node);
-						nodeView.deleteCircle();
-						this.nodeViews.remove(node);
+					if (this.vertexViews.containsKey(vertex)) {
+						vertexView = this.vertexViews.get(vertex);
+						vertexView.deleteCircle();
+						this.vertexViews.remove(vertex);
 					}
 					break;
 				default:
@@ -261,17 +261,17 @@ public class GridView extends JPanel implements Observer {
 	}
 
 	private void paintGrid() {
-		for (Node node : this.scenario.getGrid().getNodes()) {
-			for (Edge edge : node.getEdges()) {
+		for (Vertex vertex : this.scenario.getGrid().getVertices()) {
+			for (Edge edge : vertex.getEdges()) {
 				this.scenario.update(this.scenario, new EdgeUpdate(edge, EdgeUpdateAction.ADD_EDGE));
 			}
 
-			this.scenario.update(this.scenario, new NodeUpdate(node, NodeUpdateAction.ADD_NODE));
+			this.scenario.update(this.scenario, new VertexUpdate(vertex, VertexUpdateAction.ADD_NODE));
 		}
 
-		Node startingNode = this.scenario.getStartingNode();
-		if (startingNode != null) {
-			this.scenario.update(this.scenario, new StartingNodeUpdate(startingNode, StartingNodeUpdateAction.ADD_STARTING_NODE));
+		Vertex startingVertex = this.scenario.getStartingVertex();
+		if (startingVertex != null) {
+			this.scenario.update(this.scenario, new StartingVertexUpdate(startingVertex, StartingVertexUpdateAction.ADD_STARTING_NODE));
 		}
 
 		for (Edge edge : this.scenario.getPath().getEdges()) {
@@ -284,15 +284,15 @@ public class GridView extends JPanel implements Observer {
 			this.scenario.update(this.scenario, new PathUpdate(edge, PathUpdateAction.NON_PATH_ELEMENT));
 		}
 
-		Node startingNode = this.scenario.getStartingNode();
-		if (startingNode != null) {
-			this.scenario.update(this.scenario, new StartingNodeUpdate(startingNode, StartingNodeUpdateAction.REMOVE_STARTING_NODE));
+		Vertex startingVertex = this.scenario.getStartingVertex();
+		if (startingVertex != null) {
+			this.scenario.update(this.scenario, new StartingVertexUpdate(startingVertex, StartingVertexUpdateAction.REMOVE_STARTING_NODE));
 		}
 
-		for (Node node : this.scenario.getGrid().getNodes()) {
-			this.scenario.update(this.scenario, new NodeUpdate(node, NodeUpdateAction.REMOVE_NODE));
+		for (Vertex vertex : this.scenario.getGrid().getVertices()) {
+			this.scenario.update(this.scenario, new VertexUpdate(vertex, VertexUpdateAction.REMOVE_NODE));
 
-			for (Edge edge : node.getEdges()) {
+			for (Edge edge : vertex.getEdges()) {
 				this.scenario.update(this.scenario, new EdgeUpdate(edge, EdgeUpdateAction.REMOVE_EDGE));
 			}
 		}

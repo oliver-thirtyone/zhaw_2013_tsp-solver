@@ -7,19 +7,19 @@ import tspsolver.model.algorithm.OptimizerAlgorithm;
 import tspsolver.model.scenario.Scenario;
 import tspsolver.model.scenario.grid.Edge;
 import tspsolver.model.scenario.grid.Grid;
-import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.grid.Vertex;
 import tspsolver.model.scenario.path.Path;
 import tspsolver.model.scenario.path.PathUpdater;
 import tspsolver.model.validator.Validator;
 
 public class LinKernighanHeuristik extends OptimizerAlgorithm {
 
-	private final Vector<Node> nodesInOrder;
+	private final Vector<Vertex> verticesInOrder;
 
 	private int j;
 
 	public LinKernighanHeuristik() {
-		this.nodesInOrder = new Vector<Node>();
+		this.verticesInOrder = new Vector<Vertex>();
 	}
 
 	@Override
@@ -31,14 +31,14 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 		this.j = 0;
 	}
 
-	private void initNodesInOrder() {
+	private void initVerticesInOrder() {
 
-		this.nodesInOrder.clear();
+		this.verticesInOrder.clear();
 
-		// Get the node in line
-		Node currentNode = this.getStartingNode();
+		// Get the vertex in line
+		Vertex currentVertex = this.getStartingVertex();
 
-		this.nodesInOrder.add(currentNode);
+		this.verticesInOrder.add(currentVertex);
 
 		int numberOfEdges = this.getPath().getNumberOfEdges();
 
@@ -47,24 +47,24 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 			edges.add(edge);
 		}
 
-		while (this.nodesInOrder.size() < numberOfEdges) {
+		while (this.verticesInOrder.size() < numberOfEdges) {
 			for (Edge edge : edges) {
-				if (edge.getFirstNode() == currentNode) {
+				if (edge.getFirstVertex() == currentVertex) {
 
 					edges.remove(edge);
 
-					currentNode = edge.getSecondNode();
+					currentVertex = edge.getSecondVertex();
 
-					this.nodesInOrder.add(currentNode);
+					this.verticesInOrder.add(currentVertex);
 					break;
 				}
-				else if (edge.getSecondNode() == currentNode) {
+				else if (edge.getSecondVertex() == currentVertex) {
 
 					edges.remove(edge);
 
-					currentNode = edge.getFirstNode();
+					currentVertex = edge.getFirstVertex();
 
-					this.nodesInOrder.add(currentNode);
+					this.verticesInOrder.add(currentVertex);
 					break;
 				}
 			}
@@ -78,25 +78,25 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 
 		// 1. Generate a random initial tour T.
 
-		this.initNodesInOrder();
+		this.initVerticesInOrder();
 
-		while (this.j < this.nodesInOrder.size()) {
+		while (this.j < this.verticesInOrder.size()) {
 
-			Vector<Node> t = new Vector<Node>();
+			Vector<Vertex> t = new Vector<Vertex>();
 
 			// 2. Let i = 1.
 			int i = 1;
 
 			// Choose t1.
-			Node t1 = this.nodesInOrder.get(this.j);
+			Vertex t1 = this.verticesInOrder.get(this.j);
 			t.add(t1);
 
-			Node t2;
-			if (this.j < this.nodesInOrder.size() - 1) {
-				t2 = this.nodesInOrder.get(this.j + 1);
+			Vertex t2;
+			if (this.j < this.verticesInOrder.size() - 1) {
+				t2 = this.verticesInOrder.get(this.j + 1);
 			}
 			else {
-				t2 = this.nodesInOrder.get(0);
+				t2 = this.verticesInOrder.get(0);
 			}
 			t.add(t2);
 
@@ -106,7 +106,7 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 				Vector<Edge> x = new Vector<Edge>();
 
 				// 3. Choose x1 = (t1, t2) element from T.
-				Edge x1 = t1.getEdgeToNode(t2);
+				Edge x1 = t1.getEdgeToVertex(t2);
 				if (x1 == null) {
 					// FIXME: this path does not work, what do we do now?
 					throw new IllegalStateException();
@@ -126,7 +126,7 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 
 						y.add(y1);
 
-						Node t3 = y1.getFirstNode() == t2 ? y1.getSecondNode() : y1.getFirstNode();
+						Vertex t3 = y1.getFirstVertex() == t2 ? y1.getSecondVertex() : y1.getFirstVertex();
 
 						t.add(t3);
 
@@ -137,7 +137,7 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 						// that
 						for (Edge x2 : t3.getEdges()) {
 
-							Node t4 = x2.getFirstNode() == t3 ? x2.getSecondNode() : x2.getFirstNode();
+							Vertex t4 = x2.getFirstVertex() == t3 ? x2.getSecondVertex() : x2.getFirstVertex();
 
 							// (b) xi != ys for all s < i.
 							if (y.contains(x2) == false && t.contains(t4) == false) {
@@ -146,7 +146,7 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 								// (a) if t2i is joined to t1, the
 								// resulting configuration is a tour T', and
 								{
-									Edge yi = t4.getEdgeToNode(t1);
+									Edge yi = t4.getEdgeToVertex(t1);
 									if (yi == null) {
 										// FIXME: this path does not work, what
 										// do
@@ -181,7 +181,7 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 
 									if (this.getPath().containsEdge(y2) == false && this.calcGain(x, y) > 0 && x.contains(y2) == false) {
 
-										Node t5 = y2.getFirstNode() == t2 ? y2.getSecondNode() : y2.getFirstNode();
+										Vertex t5 = y2.getFirstVertex() == t2 ? y2.getSecondVertex() : y2.getFirstVertex();
 
 										t.add(t5);
 
@@ -192,16 +192,16 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 											// 5. Let i = i + 1.
 											i++;
 
-											Node t2iMinus1 = t.get((2 * i - 1) - 1);
+											Vertex t2iMinus1 = t.get((2 * i - 1) - 1);
 
 											// 6. Choose xi = (t2i-1, t2i)
 											// element from T such
 											// that
 											Edge xi = null;
-											Node t2i = null;
+											Vertex t2i = null;
 											for (Edge edge : t2iMinus1.getEdges()) {
 
-												t2i = edge.getFirstNode() == t2iMinus1 ? edge.getSecondNode() : edge.getFirstNode();
+												t2i = edge.getFirstVertex() == t2iMinus1 ? edge.getSecondVertex() : edge.getFirstVertex();
 
 												// (b) xi != ys for all s < i.
 												if (y.contains(edge) == false && t.contains(t2i) == false) {
@@ -222,7 +222,7 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 											// resulting configuration is a tour
 											// T', and
 											{
-												Edge yi = t2iMinus1.getEdgeToNode(t2i);
+												Edge yi = t2iMinus1.getEdgeToVertex(t2i);
 												if (yi == null) {
 													// FIXME: this path does not
 													// work, what
@@ -261,7 +261,7 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 												y.add(edge);
 												if (this.getPath().containsEdge(edge) == false && this.calcGain(x, y) > 0 && x.contains(edge) == false) {
 
-													Node t2iPlus1 = edge.getFirstNode() == t2i ? edge.getSecondNode() : edge.getFirstNode();
+													Vertex t2iPlus1 = edge.getFirstVertex() == t2i ? edge.getSecondVertex() : edge.getFirstVertex();
 
 													t.add(t2iPlus1);
 
@@ -329,12 +329,12 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 					t.clear();
 					t.add(t1);
 
-					// Take the Node in the other way.
+					// Take the Vertex in the other way.
 					if (this.j > 0) {
-						t2 = this.nodesInOrder.get(this.j - 1);
+						t2 = this.verticesInOrder.get(this.j - 1);
 					}
 					else {
-						t2 = this.nodesInOrder.get(this.nodesInOrder.size() - 1);
+						t2 = this.verticesInOrder.get(this.verticesInOrder.size() - 1);
 					}
 					t.add(t2);
 
@@ -350,7 +350,7 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 			this.j++;
 		}// 12. If there is an untried alternative for t1, then go to Step 2.
 
-		if (this.j >= this.nodesInOrder.size()) {
+		if (this.j >= this.verticesInOrder.size()) {
 			this.finishedSuccessfully();
 		}
 

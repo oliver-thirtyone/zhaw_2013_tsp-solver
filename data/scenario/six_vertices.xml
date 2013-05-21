@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<scenario name="Six Vertices">
+	<vertex name="1" x="420" y="250" />
+	<vertex name="2" x="650" y="150" />
+	<vertex name="3" x="460" y="300" />
+	<vertex name="4" x="165" y="250" />
+	<vertex name="5" x="240" y="340" />
+	<vertex name="6" x="155" y="360" />
+
+	<starting-vertex name="1" />
+</scenario>

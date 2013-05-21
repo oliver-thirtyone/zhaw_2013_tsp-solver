@@ -9,11 +9,11 @@ import java.util.Observer;
 import tspsolver.model.scenario.grid.Edge;
 import tspsolver.model.scenario.grid.Grid;
 import tspsolver.model.scenario.grid.GridFactory;
-import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.grid.Vertex;
 import tspsolver.model.scenario.path.Path;
 import tspsolver.model.scenario.path.PathUpdater;
-import tspsolver.model.updates.scenario.StartingNodeUpdate;
-import tspsolver.model.updates.scenario.StartingNodeUpdateAction;
+import tspsolver.model.updates.scenario.StartingVertexUpdate;
+import tspsolver.model.updates.scenario.StartingVertexUpdateAction;
 import tspsolver.model.validator.Validator;
 
 public class Scenario extends Observable implements Serializable, Observer {
@@ -26,7 +26,7 @@ public class Scenario extends Observable implements Serializable, Observer {
 	private final Path path;
 
 	private String name;
-	private Node startingNode;
+	private Vertex startingVertex;
 
 	public Scenario(Validator validator) {
 		this.validator = validator;
@@ -35,7 +35,7 @@ public class Scenario extends Observable implements Serializable, Observer {
 		this.path = new Path();
 
 		this.name = "";
-		this.startingNode = null;
+		this.startingVertex = null;
 
 		this.grid.addObserver(this);
 		this.path.addObserver(this);
@@ -50,7 +50,7 @@ public class Scenario extends Observable implements Serializable, Observer {
 		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
 		result = prime * result + ((this.grid == null) ? 0 : this.grid.hashCode());
 		result = prime * result + ((this.path == null) ? 0 : this.path.hashCode());
-		result = prime * result + ((this.startingNode == null) ? 0 : this.startingNode.hashCode());
+		result = prime * result + ((this.startingVertex == null) ? 0 : this.startingVertex.hashCode());
 
 		return result;
 	}
@@ -106,12 +106,12 @@ public class Scenario extends Observable implements Serializable, Observer {
 			return false;
 		}
 
-		if (this.startingNode == null) {
-			if (other.startingNode != null) {
+		if (this.startingVertex == null) {
+			if (other.startingVertex != null) {
 				return false;
 			}
 		}
-		else if (!this.startingNode.equals(other.startingNode)) {
+		else if (!this.startingVertex.equals(other.startingVertex)) {
 			return false;
 		}
 
@@ -136,32 +136,32 @@ public class Scenario extends Observable implements Serializable, Observer {
 		// Copy the gird
 		Grid gridCopy = scenarioCopy.getGrid();
 
-		// Copy the nodes
-		Map<Node, Node> nodeCopies = new HashMap<Node, Node>();
-		for (Node node : this.grid.getNodes()) {
-			// Create a copy of each node
-			Node nodeCopy = GridFactory.createNode(node.getName(), node.getX(), node.getY());
+		// Copy the vertices
+		Map<Vertex, Vertex> vertexCopies = new HashMap<Vertex, Vertex>();
+		for (Vertex vertex : this.grid.getVertices()) {
+			// Create a copy of each vertex
+			Vertex vertexCopy = GridFactory.createVertex(vertex.getName(), vertex.getX(), vertex.getY());
 
-			// Add the copied node to the copied grid
-			GridFactory.addNode(gridCopy, nodeCopy, false);
+			// Add the copied vertex to the copied grid
+			GridFactory.addVertex(gridCopy, vertexCopy, false);
 
-			// Add the copied node to the reference map
-			nodeCopies.put(node, nodeCopy);
+			// Add the copied vertex to the reference map
+			vertexCopies.put(vertex, vertexCopy);
 		}
 
 		// Copy the edges
 		Map<Edge, Edge> edgeCopies = new HashMap<Edge, Edge>();
-		for (Node node : this.grid.getNodes()) {
-			for (Edge edge : node.getEdges()) {
-				// Get the copied nodes
-				Node firstNodeCopy = nodeCopies.get(edge.getFirstNode());
-				Node secondNodeCopy = nodeCopies.get(edge.getSecondNode());
+		for (Vertex vertex : this.grid.getVertices()) {
+			for (Edge edge : vertex.getEdges()) {
+				// Get the copied vertices
+				Vertex firstVertexCopy = vertexCopies.get(edge.getFirstVertex());
+				Vertex secondVertexCopy = vertexCopies.get(edge.getSecondVertex());
 
-				if (!GridFactory.hasEdge(firstNodeCopy, secondNodeCopy)) {
-					// Add the copied edge to the nodes
-					Edge edgeCopy = GridFactory.addEdge(firstNodeCopy, secondNodeCopy, edge.getWeight());
+				if (!GridFactory.hasEdge(firstVertexCopy, secondVertexCopy)) {
+					// Add the copied edge to the vertices
+					Edge edgeCopy = GridFactory.addEdge(firstVertexCopy, secondVertexCopy, edge.getWeight());
 
-					// Add the copied node to the reference map
+					// Add the copied vertex to the reference map
 					edgeCopies.put(edge, edgeCopy);
 				}
 			}
@@ -178,8 +178,8 @@ public class Scenario extends Observable implements Serializable, Observer {
 		// Copy the name
 		scenarioCopy.setName(this.getName());
 
-		// Copy the starting node
-		scenarioCopy.setStartingNode(nodeCopies.get(this.getStartingNode()));
+		// Copy the starting vertex
+		scenarioCopy.setStartingVertex(vertexCopies.get(this.getStartingVertex()));
 
 		return scenarioCopy;
 	}
@@ -216,24 +216,24 @@ public class Scenario extends Observable implements Serializable, Observer {
 		this.name = name;
 	}
 
-	public Node getStartingNode() {
-		return this.startingNode;
+	public Vertex getStartingVertex() {
+		return this.startingVertex;
 	}
 
-	public void setStartingNode(Node startingNode) {
-		if (this.startingNode != null) {
-			this.fireStartingNodeUpdate(this.startingNode, StartingNodeUpdateAction.REMOVE_STARTING_NODE);
+	public void setStartingVertex(Vertex startingVertex) {
+		if (this.startingVertex != null) {
+			this.fireStartingVertexUpdate(this.startingVertex, StartingVertexUpdateAction.REMOVE_STARTING_NODE);
 		}
 
-		this.startingNode = startingNode;
+		this.startingVertex = startingVertex;
 
-		if (this.startingNode != null) {
-			this.fireStartingNodeUpdate(this.startingNode, StartingNodeUpdateAction.ADD_STARTING_NODE);
+		if (this.startingVertex != null) {
+			this.fireStartingVertexUpdate(this.startingVertex, StartingVertexUpdateAction.ADD_STARTING_NODE);
 		}
 	}
 
-	private void fireStartingNodeUpdate(Node node, StartingNodeUpdateAction action) {
-		StartingNodeUpdate update = new StartingNodeUpdate(node, action);
+	private void fireStartingVertexUpdate(Vertex vertex, StartingVertexUpdateAction action) {
+		StartingVertexUpdate update = new StartingVertexUpdate(vertex, action);
 
 		this.setChanged();
 		this.notifyObservers(update);

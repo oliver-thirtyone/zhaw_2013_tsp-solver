@@ -25,6 +25,7 @@ import tspsolver.controller.scenario.ScenarioLoader;
 import tspsolver.model.scenario.Scenario;
 import tspsolver.model.scenario.grid.Grid;
 import tspsolver.model.scenario.grid.GridFactory;
+import tspsolver.model.scenario.grid.Vertex;
 
 public class XMLScenarioLoader implements ScenarioLoader {
 
@@ -59,29 +60,29 @@ public class XMLScenarioLoader implements ScenarioLoader {
 			Document document = this.documentBuilder.parse(inputStream);
 			document.getDocumentElement().normalize();
 
-			Map<String, tspsolver.model.scenario.grid.Node> nodes = new HashMap<String, tspsolver.model.scenario.grid.Node>();
+			Map<String, Vertex> vertices = new HashMap<String, Vertex>();
 
 			if (this.isXMLValid(document)) {
 				NodeList rootXMLNodes = document.getChildNodes();
 				for (int x = 0; x < rootXMLNodes.getLength(); x++) {
-					Node rootXMLNode = rootXMLNodes.item(x);
-					if (rootXMLNode.getNodeName().equals(XMLScenario.ELEMENT_SCENARIO.toString())) {
-						this.parseScenario(scenario, rootXMLNode);
+					Node rootXMLVertex = rootXMLNodes.item(x);
+					if (rootXMLVertex.getNodeName().equals(XMLScenario.ELEMENT_SCENARIO.toString())) {
+						this.parseScenario(scenario, rootXMLVertex);
 
-						NodeList xmlNodes = rootXMLNode.getChildNodes();
+						NodeList xmlNodes = rootXMLVertex.getChildNodes();
 						for (int y = 0; y < xmlNodes.getLength(); y++) {
 							Node xmlNode = xmlNodes.item(y);
 							if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_NODE.toString())) {
-								this.parseNode(scenario.getGrid(), nodes, xmlNode);
+								this.parseVertex(scenario.getGrid(), vertices, xmlNode);
 							}
 							else if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_ADD_EDGE.toString())) {
-								this.parseAddEdge(scenario.getGrid(), nodes, xmlNode);
+								this.parseAddEdge(scenario.getGrid(), vertices, xmlNode);
 							}
 							else if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_REMOVE_EDGE.toString())) {
-								this.parseRemoveEdge(scenario.getGrid(), nodes, xmlNode);
+								this.parseRemoveEdge(scenario.getGrid(), vertices, xmlNode);
 							}
 							else if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_STARTINGNODE.toString())) {
-								this.parseStartingNode(scenario, nodes, xmlNode);
+								this.parseStartingVertex(scenario, vertices, xmlNode);
 							}
 						}
 					}
@@ -103,7 +104,7 @@ public class XMLScenarioLoader implements ScenarioLoader {
 		scenario.setName(name);
 	}
 
-	private void parseNode(Grid grid, Map<String, tspsolver.model.scenario.grid.Node> nodes, Node xmlNode) {
+	private void parseVertex(Grid grid, Map<String, Vertex> vertices, Node xmlNode) {
 		Element nodeElement = (Element) xmlNode;
 
 		String name = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_NAME.toString());
@@ -111,101 +112,101 @@ public class XMLScenarioLoader implements ScenarioLoader {
 		String y = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_Y.toString());
 		String link = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_LINK.toString());
 
-		// Check if this node already exists
-		if (nodes.containsKey(name)) {
-			throw new IllegalArgumentException("Node already exists: " + name);
+		// Check if this vertex already exists
+		if (vertices.containsKey(name)) {
+			throw new IllegalArgumentException("Vertex already exists: " + name);
 		}
 
-		// Create the node
-		tspsolver.model.scenario.grid.Node node = GridFactory.createNode(name, Integer.parseInt(x), Integer.parseInt(y));
+		// Create the vertex
+		tspsolver.model.scenario.grid.Vertex vertex = GridFactory.createVertex(name, Integer.parseInt(x), Integer.parseInt(y));
 
-		// Add the node to the grid
+		// Add the vertex to the grid
 		if (!link.isEmpty()) {
-			GridFactory.addNode(grid, node, Boolean.parseBoolean(link));
+			GridFactory.addVertex(grid, vertex, Boolean.parseBoolean(link));
 		}
 		else {
-			GridFactory.addNode(grid, node);
+			GridFactory.addVertex(grid, vertex);
 		}
 
-		// Add the node to a temporary map for future references
-		nodes.put(name, node);
+		// Add the vertex to a temporary map for future references
+		vertices.put(name, vertex);
 	}
 
-	private void parseAddEdge(Grid grid, Map<String, tspsolver.model.scenario.grid.Node> nodes, Node xmlNode) {
+	private void parseAddEdge(Grid grid, Map<String, Vertex> vertices, Node xmlNode) {
 		Element addEdgeElement = (Element) xmlNode;
 
-		String firstNodeName = addEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_FIRSTNODE.toString());
-		String secondNodeName = addEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_SECONDNODE.toString());
+		String firstVertexName = addEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_FIRSTNODE.toString());
+		String secondVertexName = addEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_SECONDNODE.toString());
 		String weight = addEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_WEIGHT.toString());
 
-		// Check if the referred nodes do exist
-		if (!nodes.containsKey(firstNodeName)) {
-			throw new IllegalArgumentException("Referred node does not exist: " + firstNodeName);
+		// Check if the referred vertices do exist
+		if (!vertices.containsKey(firstVertexName)) {
+			throw new IllegalArgumentException("Referred vertex does not exist: " + firstVertexName);
 		}
-		if (!nodes.containsKey(secondNodeName)) {
-			throw new IllegalArgumentException("Referred node does not exist: " + secondNodeName);
+		if (!vertices.containsKey(secondVertexName)) {
+			throw new IllegalArgumentException("Referred vertex does not exist: " + secondVertexName);
 		}
 
-		// Get the nodes
-		tspsolver.model.scenario.grid.Node firstNode = nodes.get(firstNodeName);
-		tspsolver.model.scenario.grid.Node secondNode = nodes.get(secondNodeName);
+		// Get the vertices
+		tspsolver.model.scenario.grid.Vertex firstVertex = vertices.get(firstVertexName);
+		tspsolver.model.scenario.grid.Vertex secondVertex = vertices.get(secondVertexName);
 
 		// Check if this edge already exists
-		if (firstNode.hasEdgeToNode(secondNode)) {
-			throw new IllegalArgumentException("Edge already exists: " + firstNodeName + " -> " + secondNodeName);
+		if (firstVertex.hasEdgeToVertex(secondVertex)) {
+			throw new IllegalArgumentException("Edge already exists: " + firstVertexName + " -> " + secondVertexName);
 		}
 
-		// Add the node to the grid
+		// Add the vertex to the grid
 		if (!weight.isEmpty()) {
-			GridFactory.addEdge(firstNode, secondNode, Double.parseDouble(weight));
+			GridFactory.addEdge(firstVertex, secondVertex, Double.parseDouble(weight));
 		}
 		else {
-			GridFactory.addEdge(firstNode, secondNode);
+			GridFactory.addEdge(firstVertex, secondVertex);
 		}
 	}
 
-	private void parseRemoveEdge(Grid grid, Map<String, tspsolver.model.scenario.grid.Node> nodes, Node xmlNode) {
+	private void parseRemoveEdge(Grid grid, Map<String, Vertex> vertices, Node xmlNode) {
 		Element removeEdgeElement = (Element) xmlNode;
 
-		String firstNodeName = removeEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_FIRSTNODE.toString());
-		String secondNodeName = removeEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_SECONDNODE.toString());
+		String firstVertexName = removeEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_FIRSTNODE.toString());
+		String secondVertexName = removeEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_SECONDNODE.toString());
 
-		// Check if the referred nodes do exist
-		if (!nodes.containsKey(firstNodeName)) {
-			throw new IllegalArgumentException("Referred node does not exist: " + firstNodeName);
+		// Check if the referred vertices do exist
+		if (!vertices.containsKey(firstVertexName)) {
+			throw new IllegalArgumentException("Referred vertex does not exist: " + firstVertexName);
 		}
-		if (!nodes.containsKey(secondNodeName)) {
-			throw new IllegalArgumentException("Referred node does not exist: " + secondNodeName);
+		if (!vertices.containsKey(secondVertexName)) {
+			throw new IllegalArgumentException("Referred vertex does not exist: " + secondVertexName);
 		}
 
-		// Get the nodes
-		tspsolver.model.scenario.grid.Node firstNode = nodes.get(firstNodeName);
-		tspsolver.model.scenario.grid.Node secondNode = nodes.get(secondNodeName);
+		// Get the vertices
+		tspsolver.model.scenario.grid.Vertex firstVertex = vertices.get(firstVertexName);
+		tspsolver.model.scenario.grid.Vertex secondVertex = vertices.get(secondVertexName);
 
 		// Check if this edge exists
-		if (!firstNode.hasEdgeToNode(secondNode)) {
-			throw new IllegalArgumentException("Edge does not exist: " + firstNodeName + " -> " + secondNodeName);
+		if (!firstVertex.hasEdgeToVertex(secondVertex)) {
+			throw new IllegalArgumentException("Edge does not exist: " + firstVertexName + " -> " + secondVertexName);
 		}
 
 		// Remove the edge from the grid
-		GridFactory.removeEdge(firstNode, secondNode);
+		GridFactory.removeEdge(firstVertex, secondVertex);
 	}
 
-	private void parseStartingNode(Scenario scenario, Map<String, tspsolver.model.scenario.grid.Node> nodes, Node xmlNode) {
+	private void parseStartingVertex(Scenario scenario, Map<String, Vertex> vertices, Node xmlNode) {
 		Element nodeElement = (Element) xmlNode;
 
 		String name = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_NAME.toString());
 
-		// Check if this node exists
-		if (!nodes.containsKey(name)) {
-			throw new IllegalArgumentException("Referred starting node does not exist: " + name);
+		// Check if this vertex exists
+		if (!vertices.containsKey(name)) {
+			throw new IllegalArgumentException("Referred starting vertex does not exist: " + name);
 		}
 
-		// Get the node
-		tspsolver.model.scenario.grid.Node node = nodes.get(name);
+		// Get the vertex
+		tspsolver.model.scenario.grid.Vertex vertex = vertices.get(name);
 
-		// Set the starting node for this scenario
-		scenario.setStartingNode(node);
+		// Set the starting vertex for this scenario
+		scenario.setStartingVertex(vertex);
 	}
 
 }

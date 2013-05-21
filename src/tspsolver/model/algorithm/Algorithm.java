@@ -2,7 +2,7 @@ package tspsolver.model.algorithm;
 
 import tspsolver.model.scenario.Scenario;
 import tspsolver.model.scenario.grid.Grid;
-import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.grid.Vertex;
 import tspsolver.model.scenario.path.Path;
 import tspsolver.model.scenario.path.PathUpdater;
 
@@ -86,8 +86,8 @@ public abstract class Algorithm {
 		return this.scenario.getGrid();
 	}
 
-	public Node getStartingNode() {
-		return this.scenario.getStartingNode();
+	public Vertex getStartingVertex() {
+		return this.scenario.getStartingVertex();
 	}
 
 	public Path getPath() {

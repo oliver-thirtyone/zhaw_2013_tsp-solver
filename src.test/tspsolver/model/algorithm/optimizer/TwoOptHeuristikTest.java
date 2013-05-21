@@ -10,7 +10,7 @@ import tspsolver.model.scenario.Scenario;
 import tspsolver.model.scenario.grid.Edge;
 import tspsolver.model.scenario.grid.Grid;
 import tspsolver.model.scenario.grid.GridFactory;
-import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.grid.Vertex;
 import tspsolver.model.scenario.path.Path;
 import tspsolver.model.scenario.path.PathUpdater;
 import tspsolver.model.validator.TSPValidator;
@@ -21,10 +21,10 @@ public class TwoOptHeuristikTest {
 	private Grid grid;
 	private Path path;
 
-	private Node nodeNorth;
-	private Node nodeEast;
-	private Node nodeSouth;
-	private Node nodeWest;
+	private Vertex vertexNorth;
+	private Vertex vertexEast;
+	private Vertex vertexSouth;
+	private Vertex vertexWest;
 
 	private Edge edgeNorthEast;
 	private Edge edgeNorthSouth;
@@ -41,24 +41,24 @@ public class TwoOptHeuristikTest {
 		this.grid = this.scenario.getGrid();
 		this.path = this.scenario.getPath();
 
-		this.nodeNorth = GridFactory.createNode("north", 4, 2);
-		this.nodeEast = GridFactory.createNode("east", 6, 4);
-		this.nodeSouth = GridFactory.createNode("south", 4, 6);
-		this.nodeWest = GridFactory.createNode("west", 2, 4);
+		this.vertexNorth = GridFactory.createVertex("north", 4, 2);
+		this.vertexEast = GridFactory.createVertex("east", 6, 4);
+		this.vertexSouth = GridFactory.createVertex("south", 4, 6);
+		this.vertexWest = GridFactory.createVertex("west", 2, 4);
 
-		GridFactory.addNode(this.grid, this.nodeNorth);
-		GridFactory.addNode(this.grid, this.nodeEast);
-		GridFactory.addNode(this.grid, this.nodeSouth);
-		GridFactory.addNode(this.grid, this.nodeWest);
+		GridFactory.addVertex(this.grid, this.vertexNorth);
+		GridFactory.addVertex(this.grid, this.vertexEast);
+		GridFactory.addVertex(this.grid, this.vertexSouth);
+		GridFactory.addVertex(this.grid, this.vertexWest);
 
-		this.scenario.setStartingNode(this.nodeNorth);
+		this.scenario.setStartingVertex(this.vertexNorth);
 
-		this.edgeNorthEast = GridFactory.getEdge(this.nodeNorth, this.nodeEast);
-		this.edgeNorthSouth = GridFactory.getEdge(this.nodeNorth, this.nodeSouth);
-		this.edgeNorthWest = GridFactory.getEdge(this.nodeNorth, this.nodeWest);
-		this.edgeEastSouth = GridFactory.getEdge(this.nodeEast, this.nodeSouth);
-		this.edgeEastWest = GridFactory.getEdge(this.nodeEast, this.nodeWest);
-		this.edgeSouthWest = GridFactory.getEdge(this.nodeSouth, this.nodeWest);
+		this.edgeNorthEast = GridFactory.getEdge(this.vertexNorth, this.vertexEast);
+		this.edgeNorthSouth = GridFactory.getEdge(this.vertexNorth, this.vertexSouth);
+		this.edgeNorthWest = GridFactory.getEdge(this.vertexNorth, this.vertexWest);
+		this.edgeEastSouth = GridFactory.getEdge(this.vertexEast, this.vertexSouth);
+		this.edgeEastWest = GridFactory.getEdge(this.vertexEast, this.vertexWest);
+		this.edgeSouthWest = GridFactory.getEdge(this.vertexSouth, this.vertexWest);
 
 		this.algorithm = new TwoOptHeuristik();
 	}

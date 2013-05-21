@@ -10,7 +10,7 @@ import java.util.Observer;
 import tspsolver.model.updates.grid.EdgeUpdate;
 import tspsolver.model.updates.grid.EdgeUpdateAction;
 
-public class Node extends Observable implements Serializable, Observer {
+public class Vertex extends Observable implements Serializable, Observer {
 
 	private static final long serialVersionUID = -5593471052000934706L;
 
@@ -18,14 +18,14 @@ public class Node extends Observable implements Serializable, Observer {
 	private final int x;
 	private final int y;
 
-	private final Map<Node, Edge> edges;
+	private final Map<Vertex, Edge> edges;
 
-	protected Node(String name, int x, int y) {
+	protected Vertex(String name, int x, int y) {
 		this.name = name;
 		this.x = x;
 		this.y = y;
 
-		this.edges = new HashMap<Node, Edge>();
+		this.edges = new HashMap<Vertex, Edge>();
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class Node extends Observable implements Serializable, Observer {
 			return false;
 		}
 
-		Node other = (Node) obj;
+		Vertex other = (Vertex) obj;
 
 		if (this.x != other.x) {
 			return false;
@@ -108,65 +108,65 @@ public class Node extends Observable implements Serializable, Observer {
 		return this.edges.size();
 	}
 
-	public boolean hasEdgeToNode(Node node) {
-		return this.edges.containsKey(node);
+	public boolean hasEdgeToVertex(Vertex vertex) {
+		return this.edges.containsKey(vertex);
 	}
 
-	public Edge getEdgeToNode(Node node) {
-		return this.edges.get(node);
+	public Edge getEdgeToVertex(Vertex vertex) {
+		return this.edges.get(vertex);
 	}
 
-	protected Edge addEdgeToNode(Node node) {
-		double weight = Edge.calcLinearDistance(this, node);
-		return this.addEdgeToNode(node, weight);
+	protected Edge addEdgeToVertex(Vertex vertex) {
+		double weight = Edge.calcLinearDistance(this, vertex);
+		return this.addEdgeToVertex(vertex, weight);
 	}
 
-	protected synchronized Edge addEdgeToNode(Node node, double weight) {
-		Edge edge = new Edge(this, node, weight);
+	protected synchronized Edge addEdgeToVertex(Vertex vertex, double weight) {
+		Edge edge = new Edge(this, vertex, weight);
 
-		// Add the edge to this node
-		if (!this.hasEdgeToNode(node)) {
-			this.addEdge(node, edge);
+		// Add the edge to this vertex
+		if (!this.hasEdgeToVertex(vertex)) {
+			this.addEdge(vertex, edge);
 		}
 
-		// Add the edge to the oder node
-		if (!node.hasEdgeToNode(this)) {
-			node.addEdge(this, edge);
+		// Add the edge to the oder vertex
+		if (!vertex.hasEdgeToVertex(this)) {
+			vertex.addEdge(this, edge);
 		}
 
 		return edge;
 	}
 
-	protected synchronized void removeEdgeToNode(Node node) {
-		// Remove the edge from this node
-		if (this.hasEdgeToNode(node)) {
-			this.removeEdge(node);
+	protected synchronized void removeEdgeToVertex(Vertex vertex) {
+		// Remove the edge from this vertex
+		if (this.hasEdgeToVertex(vertex)) {
+			this.removeEdge(vertex);
 		}
 
-		// Remove the edge from the other node
-		if (node.hasEdgeToNode(this)) {
-			node.removeEdge(this);
+		// Remove the edge from the other vertex
+		if (vertex.hasEdgeToVertex(this)) {
+			vertex.removeEdge(this);
 		}
 	}
 
 	protected synchronized void clearEdges() {
-		for (Node node : this.edges.keySet()) {
-			this.removeEdgeToNode(node);
+		for (Vertex vertex : this.edges.keySet()) {
+			this.removeEdgeToVertex(vertex);
 		}
 	}
 
-	private void addEdge(Node toNode, Edge edge) {
+	private void addEdge(Vertex toVertex, Edge edge) {
 		edge.addObserver(this);
 
-		this.edges.put(toNode, edge);
+		this.edges.put(toVertex, edge);
 		this.fireEdgeUpdate(edge, EdgeUpdateAction.ADD_EDGE);
 	}
 
-	private void removeEdge(Node toNode) {
-		Edge edge = this.edges.get(toNode);
+	private void removeEdge(Vertex toVertex) {
+		Edge edge = this.edges.get(toVertex);
 		edge.deleteObserver(this);
 
-		this.edges.remove(toNode);
+		this.edges.remove(toVertex);
 		this.fireEdgeUpdate(edge, EdgeUpdateAction.REMOVE_EDGE);
 	}
 

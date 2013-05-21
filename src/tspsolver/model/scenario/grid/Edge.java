@@ -7,17 +7,17 @@ public class Edge extends Observable implements Serializable {
 
 	private static final long serialVersionUID = -1032951953663147952L;
 
-	private final Node firstNode;
-	private final Node secondNode;
+	private final Vertex firstVertex;
+	private final Vertex secondVertex;
 	private final double weight;
 
-	protected Edge(Node firstNode, Node secondNode, double weight) throws IllegalArgumentException {
-		if (firstNode.equals(secondNode)) {
-			throw new IllegalArgumentException("The nodes must not be equal");
+	protected Edge(Vertex firstVertex, Vertex secondVertex, double weight) throws IllegalArgumentException {
+		if (firstVertex.equals(secondVertex)) {
+			throw new IllegalArgumentException("The vertices must not be equal");
 		}
 
-		this.firstNode = firstNode;
-		this.secondNode = secondNode;
+		this.firstVertex = firstVertex;
+		this.secondVertex = secondVertex;
 		this.weight = weight;
 	}
 
@@ -26,8 +26,8 @@ public class Edge extends Observable implements Serializable {
 		int prime = 31;
 		int result = 1;
 
-		result = prime * result + ((this.firstNode == null) ? 0 : this.firstNode.hashCode());
-		result = prime * result + ((this.secondNode == null) ? 0 : this.secondNode.hashCode());
+		result = prime * result + ((this.firstVertex == null) ? 0 : this.firstVertex.hashCode());
+		result = prime * result + ((this.secondVertex == null) ? 0 : this.secondVertex.hashCode());
 
 		long temp = Double.doubleToLongBits(this.weight);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -49,21 +49,21 @@ public class Edge extends Observable implements Serializable {
 
 		Edge other = (Edge) obj;
 
-		if (this.firstNode == null) {
-			if (other.firstNode != null) {
+		if (this.firstVertex == null) {
+			if (other.firstVertex != null) {
 				return false;
 			}
 		}
-		else if (!this.firstNode.equals(other.firstNode) && !this.firstNode.equals(other.secondNode)) {
+		else if (!this.firstVertex.equals(other.firstVertex) && !this.firstVertex.equals(other.secondVertex)) {
 			return false;
 		}
 
-		if (this.secondNode == null) {
-			if (other.secondNode != null) {
+		if (this.secondVertex == null) {
+			if (other.secondVertex != null) {
 				return false;
 			}
 		}
-		else if (!this.secondNode.equals(other.secondNode) && !this.secondNode.equals(other.firstNode)) {
+		else if (!this.secondVertex.equals(other.secondVertex) && !this.secondVertex.equals(other.firstVertex)) {
 			return false;
 		}
 
@@ -78,28 +78,28 @@ public class Edge extends Observable implements Serializable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 
-		builder.append(this.getFirstNode());
+		builder.append(this.getFirstVertex());
 		builder.append(" -> ");
-		builder.append(this.getSecondNode());
+		builder.append(this.getSecondVertex());
 
 		return builder.toString();
 	}
 
-	public Node getFirstNode() {
-		return this.firstNode;
+	public Vertex getFirstVertex() {
+		return this.firstVertex;
 	}
 
-	public Node getSecondNode() {
-		return this.secondNode;
+	public Vertex getSecondVertex() {
+		return this.secondVertex;
 	}
 
 	public double getWeight() {
 		return this.weight;
 	}
 
-	protected static double calcLinearDistance(Node firstNode, Node secondNode) {
-		int deltaX = secondNode.getX() - firstNode.getX();
-		int deltaY = secondNode.getY() - firstNode.getY();
+	protected static double calcLinearDistance(Vertex firstVertex, Vertex secondVertex) {
+		int deltaX = secondVertex.getX() - firstVertex.getX();
+		int deltaY = secondVertex.getY() - firstVertex.getY();
 
 		// Make deltaX positive
 		if (deltaX < 0) {

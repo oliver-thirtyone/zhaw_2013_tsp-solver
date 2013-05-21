@@ -5,60 +5,60 @@ import java.util.Set;
 
 import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.scenario.grid.Edge;
-import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.grid.Vertex;
 
 public class NearestNeighborHeuristik extends StartAlgorithm {
 
-	private final Set<Node> nodesToVisit;
+	private final Set<Vertex> verticesToVisit;
 
-	private Node currentNode;
+	private Vertex currentVertex;
 
 	public NearestNeighborHeuristik() {
-		this.nodesToVisit = new HashSet<Node>();
+		this.verticesToVisit = new HashSet<Vertex>();
 
 		this.reset();
 	}
 
 	@Override
 	protected void doInitialize() {
-		for (Node node : this.getGrid().getNodes()) {
-			this.nodesToVisit.add(node);
+		for (Vertex vertex : this.getGrid().getVertices()) {
+			this.verticesToVisit.add(vertex);
 		}
-		this.setCurrentNode(this.getStartingNode());
+		this.setCurrentVertex(this.getStartingVertex());
 	}
 
 	@Override
 	protected void doReset() {
-		this.nodesToVisit.clear();
-		this.setCurrentNode(null);
+		this.verticesToVisit.clear();
+		this.setCurrentVertex(null);
 	}
 
 	@Override
 	protected boolean doStep() {
 		boolean successfulStep = true;
 
-		// Remove the current node from the set of nodes to visit
-		this.nodesToVisit.remove(this.getCurrentNode());
+		// Remove the current vertex from the set of vertices to visit
+		this.verticesToVisit.remove(this.getCurrentVertex());
 
-		if (this.nodesToVisit.size() > 0) {
+		if (this.verticesToVisit.size() > 0) {
 			Edge shortestEdge = null;
 
-			// Get all available edges from the current node
-			Edge[] edges = this.getCurrentNode().getEdges();
+			// Get all available edges from the current vertex
+			Edge[] edges = this.getCurrentVertex().getEdges();
 
-			// Get the shortest edge to a node that we still have to visit
+			// Get the shortest edge to a vertex that we still have to visit
 			for (Edge edge : edges) {
 
-				// Does this edge lead to a node that we still have to visit?
+				// Does this edge lead to a vertex that we still have to visit?
 				boolean validEdge = false;
-				for (Node nodeToVisit : this.nodesToVisit) {
-					if (edge.getFirstNode() == nodeToVisit || edge.getSecondNode() == nodeToVisit) {
+				for (Vertex vertexToVisit : this.verticesToVisit) {
+					if (edge.getFirstVertex() == vertexToVisit || edge.getSecondVertex() == vertexToVisit) {
 						validEdge = true;
 						break;
 					}
 				}
 
-				// If this edge does not lead to a node we want to visit we will continue with the next one
+				// If this edge does not lead to a vertex we want to visit we will continue with the next one
 				if (!validEdge) {
 					continue;
 				}
@@ -74,12 +74,12 @@ public class NearestNeighborHeuristik extends StartAlgorithm {
 				// Add the new edge to the path
 				this.getPathUpdater().addEdge(shortestEdge);
 
-				// Set the new current node
-				if (shortestEdge.getFirstNode() == this.getCurrentNode()) {
-					this.setCurrentNode(shortestEdge.getSecondNode());
+				// Set the new current vertex
+				if (shortestEdge.getFirstVertex() == this.getCurrentVertex()) {
+					this.setCurrentVertex(shortestEdge.getSecondVertex());
 				}
 				else {
-					this.setCurrentNode(shortestEdge.getFirstNode());
+					this.setCurrentVertex(shortestEdge.getFirstVertex());
 				}
 			}
 			else {
@@ -88,17 +88,17 @@ public class NearestNeighborHeuristik extends StartAlgorithm {
 			}
 		}
 		else {
-			Edge lastEdge = this.getCurrentNode().getEdgeToNode(this.getStartingNode());
+			Edge lastEdge = this.getCurrentVertex().getEdgeToVertex(this.getStartingVertex());
 
-			// Link the last node with the starting node
+			// Link the last vertex with the starting vertex
 			if (lastEdge != null) {
 				this.getPathUpdater().addEdge(lastEdge);
-				this.setCurrentNode(this.getStartingNode());
+				this.setCurrentVertex(this.getStartingVertex());
 
 				this.finishedSuccessfully();
 			}
 			else {
-				// There is no edge to the starting node
+				// There is no edge to the starting vertex
 				// The algorithm fails
 				successfulStep = false;
 			}
@@ -108,11 +108,11 @@ public class NearestNeighborHeuristik extends StartAlgorithm {
 		return successfulStep;
 	}
 
-	public Node getCurrentNode() {
-		return this.currentNode;
+	public Vertex getCurrentVertex() {
+		return this.currentVertex;
 	}
 
-	protected void setCurrentNode(Node currentNode) {
-		this.currentNode = currentNode;
+	protected void setCurrentVertex(Vertex currentVertex) {
+		this.currentVertex = currentVertex;
 	}
 }

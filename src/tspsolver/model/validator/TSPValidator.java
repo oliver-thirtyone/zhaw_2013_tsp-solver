@@ -7,7 +7,7 @@ import tspsolver.model.scenario.Scenario;
 import tspsolver.model.scenario.grid.Edge;
 import tspsolver.model.scenario.grid.Grid;
 import tspsolver.model.scenario.grid.GridFactory;
-import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.grid.Vertex;
 import tspsolver.model.scenario.path.Path;
 
 public class TSPValidator implements Validator {
@@ -20,16 +20,16 @@ public class TSPValidator implements Validator {
 	public boolean validateScenario(Scenario scenario) {
 		boolean validScenario = true;
 
-		Node startingNode = scenario.getStartingNode();
+		Vertex startingVertex = scenario.getStartingVertex();
 		Grid grid = scenario.getGrid();
 
-		if (startingNode == null) {
-			System.err.println("The starting node cannot be null");
+		if (startingVertex == null) {
+			System.err.println("The starting vertex cannot be null");
 			validScenario = false;
 		}
 
-		if (!GridFactory.containsNode(grid, startingNode)) {
-			System.err.println("The starting node must be in the node set");
+		if (!GridFactory.containsVertex(grid, startingVertex)) {
+			System.err.println("The starting vertex must be in the vertex set");
 			validScenario = false;
 		}
 
@@ -40,14 +40,14 @@ public class TSPValidator implements Validator {
 	public boolean validateGrid(Scenario scenario, Grid grid) {
 		boolean validGrid = true;
 
-		if (grid.getNumberOfNodes() < TSPValidator.MINIMUM_NODE_COUNT) {
-			System.err.println("We need at least " + TSPValidator.MINIMUM_NODE_COUNT + " nodes in the node set");
+		if (grid.getNumberOfVertices() < TSPValidator.MINIMUM_NODE_COUNT) {
+			System.err.println("We need at least " + TSPValidator.MINIMUM_NODE_COUNT + " vertices in the vertex set");
 			validGrid = false;
 		}
 
-		for (Node node : scenario.getGrid().getNodes()) {
-			if (node.getNumberOfEdges() < TSPValidator.MINIMUM_EDGE_COUNT) {
-				System.err.println("Each node needs at least " + TSPValidator.MINIMUM_EDGE_COUNT + " edges");
+		for (Vertex vertex : scenario.getGrid().getVertices()) {
+			if (vertex.getNumberOfEdges() < TSPValidator.MINIMUM_EDGE_COUNT) {
+				System.err.println("Each vertex needs at least " + TSPValidator.MINIMUM_EDGE_COUNT + " edges");
 				validGrid = false;
 				break;
 			}
@@ -60,63 +60,63 @@ public class TSPValidator implements Validator {
 	public boolean validatePath(Scenario scenario, Grid grid, Path path) {
 		boolean validPath = true;
 
-		Node startingNode = scenario.getStartingNode();
+		Vertex startingVertex = scenario.getStartingVertex();
 
-		List<Node> nodes2Visit = new ArrayList<Node>();
-		for (Node node : grid.getNodes()) {
-			nodes2Visit.add(node);
+		List<Vertex> vertices2Visit = new ArrayList<Vertex>();
+		for (Vertex vertex : grid.getVertices()) {
+			vertices2Visit.add(vertex);
 		}
 
-		Node currentNode = null;
-		Node nextNode = startingNode;
+		Vertex currentVertex = null;
+		Vertex nextVertex = startingVertex;
 
-		// Check if we visit each node
-		while (validPath && nextNode != null) {
-			currentNode = nextNode;
-			nextNode = null;
+		// Check if we visit each vertex
+		while (validPath && nextVertex != null) {
+			currentVertex = nextVertex;
+			nextVertex = null;
 
-			// Remove the current node from the nodes to visit
-			nodes2Visit.remove(currentNode);
+			// Remove the current vertex from the vertices to visit
+			vertices2Visit.remove(currentVertex);
 
-			// Check if there are still nodes to visit
-			if (nodes2Visit.size() < 1) {
+			// Check if there are still vertices to visit
+			if (vertices2Visit.size() < 1) {
 				break;
 			}
 
 			int pathOccurencesCount = 0;
-			for (Edge edge : currentNode.getEdges()) {
+			for (Edge edge : currentVertex.getEdges()) {
 
-				// Check if an edge of this node belongs to the path
+				// Check if an edge of this vertex belongs to the path
 				if (path.containsEdge(edge)) {
 					pathOccurencesCount++;
 
-					if (nextNode == null) {
-						Node fistNode = edge.getFirstNode();
-						Node secondNode = edge.getSecondNode();
+					if (nextVertex == null) {
+						Vertex fistVertex = edge.getFirstVertex();
+						Vertex secondVertex = edge.getSecondVertex();
 
-						// Set the next node
-						if (nodes2Visit.contains(fistNode) && !nodes2Visit.contains(secondNode)) {
-							nextNode = fistNode;
+						// Set the next vertex
+						if (vertices2Visit.contains(fistVertex) && !vertices2Visit.contains(secondVertex)) {
+							nextVertex = fistVertex;
 						}
-						else if (nodes2Visit.contains(secondNode) && !nodes2Visit.contains(fistNode)) {
-							nextNode = secondNode;
+						else if (vertices2Visit.contains(secondVertex) && !vertices2Visit.contains(fistVertex)) {
+							nextVertex = secondVertex;
 						}
 					}
 				}
 			}
 
-			// Check if each node has two edges
+			// Check if each vertex has two edges
 			if (pathOccurencesCount != TSPValidator.REQUIRED_PATH_OCCURENCES) {
 				validPath = false;
 			}
 		}
 
-		// Check if we have visited all nodes
-		if (nodes2Visit.size() != 0 || currentNode == null) {
+		// Check if we have visited all vertices
+		if (vertices2Visit.size() != 0 || currentVertex == null) {
 			validPath = false;
 		}
-		// Check if we can connect the last node to the starting node
-		else if (!currentNode.hasEdgeToNode(startingNode) || !path.containsEdge(currentNode.getEdgeToNode(startingNode))) {
+		// Check if we can connect the last vertex to the starting vertex
+		else if (!currentVertex.hasEdgeToVertex(startingVertex) || !path.containsEdge(currentVertex.getEdgeToVertex(startingVertex))) {
 			validPath = false;
 		}
 

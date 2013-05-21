@@ -7,7 +7,7 @@ import org.junit.Before;
 import tspsolver.model.algorithm.StartAlgorithmTest;
 import tspsolver.model.scenario.grid.Edge;
 import tspsolver.model.scenario.grid.GridFactory;
-import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.grid.Vertex;
 
 public class RandomAlgorithmTest extends StartAlgorithmTest {
 
@@ -40,7 +40,7 @@ public class RandomAlgorithmTest extends StartAlgorithmTest {
 	}
 
 	@Override
-	protected void doTestScenarioFiveNodes() {
+	protected void doTestScenarioFiveVertices() {
 		// Step through the algorithm
 		do {
 			Assert.assertTrue(this.algorithm.step());
@@ -57,23 +57,23 @@ public class RandomAlgorithmTest extends StartAlgorithmTest {
 		Assert.assertEquals(5, this.path.getNumberOfEdges());
 
 		// Check if the path is valid
-		Assert.assertTrue(this.scenarioFiveNodes.isPathValid());
+		Assert.assertTrue(this.scenarioFiveVertices.isPathValid());
 	}
 
 	@Override
-	protected void doTestScenarioFiveNodesOneNonAccessibleEdge() {
+	protected void doTestScenarioFiveVerticesOneNonAccessibleEdge() {
 		// not testable
-		Assert.assertFalse(this.scenarioFiveNodesOneNonAccessibleEdge.isPathValid());
+		Assert.assertFalse(this.scenarioFiveVerticesOneNonAccessibleEdge.isPathValid());
 	}
 
 	@Override
 	protected void doTestScenarioUnsolvable() {
-		Node north = GridFactory.getNode(this.grid, "north");
-		Node east1 = GridFactory.getNode(this.grid, "east1");
-		Node east2 = GridFactory.getNode(this.grid, "east2");
-		Node south = GridFactory.getNode(this.grid, "south");
-		Node west1 = GridFactory.getNode(this.grid, "west1");
-		Node west2 = GridFactory.getNode(this.grid, "west2");
+		Vertex north = GridFactory.getVertex(this.grid, "north");
+		Vertex east1 = GridFactory.getVertex(this.grid, "east1");
+		Vertex east2 = GridFactory.getVertex(this.grid, "east2");
+		Vertex south = GridFactory.getVertex(this.grid, "south");
+		Vertex west1 = GridFactory.getVertex(this.grid, "west1");
+		Vertex west2 = GridFactory.getVertex(this.grid, "west2");
 
 		Edge edgeNorthEast1 = GridFactory.getEdge(north, east1);
 		Edge edgeNorthWest1 = GridFactory.getEdge(north, west1);
@@ -110,7 +110,7 @@ public class RandomAlgorithmTest extends StartAlgorithmTest {
 	}
 
 	@Override
-	protected void doTestScenarioFortyoneNode() {
+	protected void doTestScenarioFortyoneVertex() {
 		// Take 39 steps
 		for (int i = 0; i < 40; i++) {
 			Assert.assertTrue(this.algorithm.step());
@@ -125,6 +125,6 @@ public class RandomAlgorithmTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.algorithm.step());
 
 		// Check if the path is valid
-		Assert.assertTrue(this.scenarioFortyoneNodes.isPathValid());
+		Assert.assertTrue(this.scenarioFortyoneVertices.isPathValid());
 	}
 }

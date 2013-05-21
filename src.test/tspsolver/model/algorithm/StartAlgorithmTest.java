@@ -18,18 +18,18 @@ import tspsolver.model.validator.Validator;
 public abstract class StartAlgorithmTest {
 
 	public static final String SCENARIO_NORTH_EAST_SOUTH_WEST = "data.test/scenario/test_north_south_east_west.xml";
-	public static final String SCENARIO_FIVE_NODES = "data.test/scenario/test_five_nodes.xml";
-	public static final String SCENARIO_FIVE_NODES_ONE_NON_ACCESSIBLE_EDGE = "data.test/scenario/test_five_nodes_one_non-accessible_edge.xml";
+	public static final String SCENARIO_FIVE_NODES = "data.test/scenario/test_five_vertices.xml";
+	public static final String SCENARIO_FIVE_NODES_ONE_NON_ACCESSIBLE_EDGE = "data.test/scenario/test_five_vertices_one_non-accessible_edge.xml";
 	public static final String SCENARIO_UNSOLVABLE = "data.test/scenario/test_unsolvable_scenario.xml";
-	public static final String SCENARIO_FORTYONE_NODES = "data.test/scenario/test_fortyone_nodes.xml";
+	public static final String SCENARIO_FORTYONE_NODES = "data.test/scenario/test_fortyone_vertices.xml";
 
 	private static final Validator VALIDATOR = new TSPValidator();
 
 	protected Scenario scenarioNorthEastSouthWest;
-	protected Scenario scenarioFiveNodes;
-	protected Scenario scenarioFiveNodesOneNonAccessibleEdge;
+	protected Scenario scenarioFiveVertices;
+	protected Scenario scenarioFiveVerticesOneNonAccessibleEdge;
 	protected Scenario scenarioUnsolvable;
-	protected Scenario scenarioFortyoneNodes;
+	protected Scenario scenarioFortyoneVertices;
 
 	protected Grid grid;
 	protected Path path;
@@ -41,18 +41,18 @@ public abstract class StartAlgorithmTest {
 		XMLScenarioLoader scenarioLoader = new XMLScenarioLoader();
 
 		this.scenarioNorthEastSouthWest = new Scenario(StartAlgorithmTest.VALIDATOR);
-		this.scenarioFiveNodes = new Scenario(StartAlgorithmTest.VALIDATOR);
-		this.scenarioFiveNodesOneNonAccessibleEdge = new Scenario(StartAlgorithmTest.VALIDATOR);
+		this.scenarioFiveVertices = new Scenario(StartAlgorithmTest.VALIDATOR);
+		this.scenarioFiveVerticesOneNonAccessibleEdge = new Scenario(StartAlgorithmTest.VALIDATOR);
 		this.scenarioUnsolvable = new Scenario(StartAlgorithmTest.VALIDATOR);
-		this.scenarioFortyoneNodes = new Scenario(StartAlgorithmTest.VALIDATOR);
+		this.scenarioFortyoneVertices = new Scenario(StartAlgorithmTest.VALIDATOR);
 
 		// Load all scenarios
 		try {
 			scenarioLoader.loadScenario(this.scenarioNorthEastSouthWest, new FileInputStream(StartAlgorithmTest.SCENARIO_NORTH_EAST_SOUTH_WEST));
-			scenarioLoader.loadScenario(this.scenarioFiveNodes, new FileInputStream(StartAlgorithmTest.SCENARIO_FIVE_NODES));
-			scenarioLoader.loadScenario(this.scenarioFiveNodesOneNonAccessibleEdge, new FileInputStream(StartAlgorithmTest.SCENARIO_FIVE_NODES_ONE_NON_ACCESSIBLE_EDGE));
+			scenarioLoader.loadScenario(this.scenarioFiveVertices, new FileInputStream(StartAlgorithmTest.SCENARIO_FIVE_NODES));
+			scenarioLoader.loadScenario(this.scenarioFiveVerticesOneNonAccessibleEdge, new FileInputStream(StartAlgorithmTest.SCENARIO_FIVE_NODES_ONE_NON_ACCESSIBLE_EDGE));
 			scenarioLoader.loadScenario(this.scenarioUnsolvable, new FileInputStream(StartAlgorithmTest.SCENARIO_UNSOLVABLE));
-			scenarioLoader.loadScenario(this.scenarioFortyoneNodes, new FileInputStream(StartAlgorithmTest.SCENARIO_FORTYONE_NODES));
+			scenarioLoader.loadScenario(this.scenarioFortyoneVertices, new FileInputStream(StartAlgorithmTest.SCENARIO_FORTYONE_NODES));
 		}
 		catch (IllegalArgumentException exception) {
 			exception.printStackTrace();
@@ -84,31 +84,31 @@ public abstract class StartAlgorithmTest {
 	}
 
 	@Test
-	public void testScenarioFiveNodes() {
+	public void testScenarioFiveVertices() {
 		// Get the grid and the path
-		this.grid = this.scenarioFiveNodes.getGrid();
-		this.path = this.scenarioFiveNodes.getPath();
+		this.grid = this.scenarioFiveVertices.getGrid();
+		this.path = this.scenarioFiveVertices.getPath();
 
 		// Initialize the algorithm
-		this.algorithm.initialize(this.scenarioFiveNodes);
+		this.algorithm.initialize(this.scenarioFiveVertices);
 		Assert.assertTrue(this.algorithm.hasValidArguments());
 
 		// Run the test
-		this.doTestScenarioFiveNodes();
+		this.doTestScenarioFiveVertices();
 	}
 
 	@Test
-	public void testScenarioFiveNodesOneNonAccessibleEdge() {
+	public void testScenarioFiveVerticesOneNonAccessibleEdge() {
 		// Get the grid and the path
-		this.grid = this.scenarioFiveNodesOneNonAccessibleEdge.getGrid();
-		this.path = this.scenarioFiveNodesOneNonAccessibleEdge.getPath();
+		this.grid = this.scenarioFiveVerticesOneNonAccessibleEdge.getGrid();
+		this.path = this.scenarioFiveVerticesOneNonAccessibleEdge.getPath();
 
 		// Initialize the algorithm
-		this.algorithm.initialize(this.scenarioFiveNodesOneNonAccessibleEdge);
+		this.algorithm.initialize(this.scenarioFiveVerticesOneNonAccessibleEdge);
 		Assert.assertTrue(this.algorithm.hasValidArguments());
 
 		// Run the test
-		this.doTestScenarioFiveNodesOneNonAccessibleEdge();
+		this.doTestScenarioFiveVerticesOneNonAccessibleEdge();
 	}
 
 	@Test
@@ -126,27 +126,27 @@ public abstract class StartAlgorithmTest {
 	}
 
 	@Test
-	public void testScenarioFortyoneNode() {
+	public void testScenarioFortyoneVertex() {
 		// Get the grid and the path
-		this.grid = this.scenarioFortyoneNodes.getGrid();
-		this.path = this.scenarioFortyoneNodes.getPath();
+		this.grid = this.scenarioFortyoneVertices.getGrid();
+		this.path = this.scenarioFortyoneVertices.getPath();
 
 		// Initialize the algorithm
-		this.algorithm.initialize(this.scenarioFortyoneNodes);
+		this.algorithm.initialize(this.scenarioFortyoneVertices);
 		Assert.assertTrue(this.algorithm.hasValidArguments());
 
 		// Run the test
-		this.doTestScenarioFortyoneNode();
+		this.doTestScenarioFortyoneVertex();
 	}
 
 	protected abstract void doTestScenarioNorthEastSouthWest();
 
-	protected abstract void doTestScenarioFiveNodes();
+	protected abstract void doTestScenarioFiveVertices();
 
-	protected abstract void doTestScenarioFiveNodesOneNonAccessibleEdge();
+	protected abstract void doTestScenarioFiveVerticesOneNonAccessibleEdge();
 
 	protected abstract void doTestScenarioUnsolvable();
 
-	protected abstract void doTestScenarioFortyoneNode();
+	protected abstract void doTestScenarioFortyoneVertex();
 
 }

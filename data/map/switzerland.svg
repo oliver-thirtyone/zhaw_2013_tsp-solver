@@ -173,6 +173,6 @@
   </g>
 
 	<!-- TSP-Solver additional information -->
-	<g id="tspsolver.nodes" style="fill: #000000;" />
+	<g id="tspsolver.vertices" style="fill: #000000;" />
 	<g id="tspsolver.edges" style="stroke: #000000; stroke-width:1;" />
 </svg>

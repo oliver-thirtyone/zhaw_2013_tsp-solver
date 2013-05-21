@@ -1,6 +1,6 @@
 package tspsolver.model.updates.scenario;
 
-public enum StartingNodeUpdateAction {
+public enum StartingVertexUpdateAction {
 
 	ADD_STARTING_NODE, REMOVE_STARTING_NODE;
 

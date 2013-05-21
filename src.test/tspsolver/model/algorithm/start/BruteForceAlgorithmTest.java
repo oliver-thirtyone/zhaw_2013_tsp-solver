@@ -7,7 +7,7 @@ import org.junit.Before;
 import tspsolver.model.algorithm.StartAlgorithmTest;
 import tspsolver.model.scenario.grid.Edge;
 import tspsolver.model.scenario.grid.GridFactory;
-import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.grid.Vertex;
 
 public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 
@@ -20,17 +20,17 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 
 	@Override
 	protected void doTestScenarioNorthEastSouthWest() {
-		Node nodeNorth = GridFactory.getNode(this.grid, "north");
-		Node nodeEast = GridFactory.getNode(this.grid, "east");
-		Node nodeSouth = GridFactory.getNode(this.grid, "south");
-		Node nodeWest = GridFactory.getNode(this.grid, "west");
+		Vertex vertexNorth = GridFactory.getVertex(this.grid, "north");
+		Vertex vertexEast = GridFactory.getVertex(this.grid, "east");
+		Vertex vertexSouth = GridFactory.getVertex(this.grid, "south");
+		Vertex vertexWest = GridFactory.getVertex(this.grid, "west");
 
-		Edge edgeNorthEast = GridFactory.getEdge(nodeNorth, nodeEast);
-		Edge edgeNorthSouth = GridFactory.getEdge(nodeNorth, nodeSouth);
-		Edge edgeNorthWest = GridFactory.getEdge(nodeNorth, nodeWest);
-		Edge edgeEastSouth = GridFactory.getEdge(nodeEast, nodeSouth);
-		Edge edgeEastWest = GridFactory.getEdge(nodeEast, nodeWest);
-		Edge edgeSouthWest = GridFactory.getEdge(nodeSouth, nodeWest);
+		Edge edgeNorthEast = GridFactory.getEdge(vertexNorth, vertexEast);
+		Edge edgeNorthSouth = GridFactory.getEdge(vertexNorth, vertexSouth);
+		Edge edgeNorthWest = GridFactory.getEdge(vertexNorth, vertexWest);
+		Edge edgeEastSouth = GridFactory.getEdge(vertexEast, vertexSouth);
+		Edge edgeEastWest = GridFactory.getEdge(vertexEast, vertexWest);
+		Edge edgeSouthWest = GridFactory.getEdge(vertexSouth, vertexWest);
 
 		// Step through the algorithm
 		int stepCounter = 0;
@@ -60,23 +60,23 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 	}
 
 	@Override
-	protected void doTestScenarioFiveNodes() {
-		Node node1 = GridFactory.getNode(this.grid, "1");
-		Node node2 = GridFactory.getNode(this.grid, "2");
-		Node node3 = GridFactory.getNode(this.grid, "3");
-		Node node4 = GridFactory.getNode(this.grid, "4");
-		Node node5 = GridFactory.getNode(this.grid, "5");
+	protected void doTestScenarioFiveVertices() {
+		Vertex vertex1 = GridFactory.getVertex(this.grid, "1");
+		Vertex vertex2 = GridFactory.getVertex(this.grid, "2");
+		Vertex vertex3 = GridFactory.getVertex(this.grid, "3");
+		Vertex vertex4 = GridFactory.getVertex(this.grid, "4");
+		Vertex vertex5 = GridFactory.getVertex(this.grid, "5");
 
-		Edge edge12 = GridFactory.getEdge(node1, node2);
-		Edge edge13 = GridFactory.getEdge(node1, node3);
-		Edge edge14 = GridFactory.getEdge(node1, node4);
-		Edge edge15 = GridFactory.getEdge(node1, node5);
-		Edge edge23 = GridFactory.getEdge(node2, node3);
-		Edge edge24 = GridFactory.getEdge(node2, node4);
-		Edge edge25 = GridFactory.getEdge(node2, node5);
-		Edge edge34 = GridFactory.getEdge(node3, node4);
-		Edge edge35 = GridFactory.getEdge(node3, node5);
-		Edge edge45 = GridFactory.getEdge(node4, node5);
+		Edge edge12 = GridFactory.getEdge(vertex1, vertex2);
+		Edge edge13 = GridFactory.getEdge(vertex1, vertex3);
+		Edge edge14 = GridFactory.getEdge(vertex1, vertex4);
+		Edge edge15 = GridFactory.getEdge(vertex1, vertex5);
+		Edge edge23 = GridFactory.getEdge(vertex2, vertex3);
+		Edge edge24 = GridFactory.getEdge(vertex2, vertex4);
+		Edge edge25 = GridFactory.getEdge(vertex2, vertex5);
+		Edge edge34 = GridFactory.getEdge(vertex3, vertex4);
+		Edge edge35 = GridFactory.getEdge(vertex3, vertex5);
+		Edge edge45 = GridFactory.getEdge(vertex4, vertex5);
 
 		// Step through the algorithm
 		int stepCounter = 0;
@@ -106,30 +106,30 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 		Assert.assertEquals(12, stepCounter);
 
 		// Check if the path is valid
-		Assert.assertTrue(this.scenarioFiveNodes.isPathValid());
+		Assert.assertTrue(this.scenarioFiveVertices.isPathValid());
 	}
 
 	@Override
-	protected void doTestScenarioFiveNodesOneNonAccessibleEdge() {
-		Node node1 = GridFactory.getNode(this.grid, "1");
-		Node node2 = GridFactory.getNode(this.grid, "2");
-		Node node3 = GridFactory.getNode(this.grid, "3");
-		Node node4 = GridFactory.getNode(this.grid, "4");
-		Node node5 = GridFactory.getNode(this.grid, "5");
+	protected void doTestScenarioFiveVerticesOneNonAccessibleEdge() {
+		Vertex vertex1 = GridFactory.getVertex(this.grid, "1");
+		Vertex vertex2 = GridFactory.getVertex(this.grid, "2");
+		Vertex vertex3 = GridFactory.getVertex(this.grid, "3");
+		Vertex vertex4 = GridFactory.getVertex(this.grid, "4");
+		Vertex vertex5 = GridFactory.getVertex(this.grid, "5");
 
-		Edge edge12 = GridFactory.getEdge(node1, node2);
-		Edge edge13 = GridFactory.getEdge(node1, node3);
-		Edge edge14 = GridFactory.getEdge(node1, node4);
-		Edge edge15 = GridFactory.getEdge(node1, node5);
-		Edge edge23 = GridFactory.getEdge(node2, node3);
-		Edge edge24 = GridFactory.getEdge(node2, node4);
-		Edge edge25 = GridFactory.getEdge(node2, node5);
-		Edge edge34 = GridFactory.getEdge(node3, node4);
-		Edge edge35 = GridFactory.getEdge(node3, node5);
-		Edge edge45 = GridFactory.getEdge(node4, node5);
+		Edge edge12 = GridFactory.getEdge(vertex1, vertex2);
+		Edge edge13 = GridFactory.getEdge(vertex1, vertex3);
+		Edge edge14 = GridFactory.getEdge(vertex1, vertex4);
+		Edge edge15 = GridFactory.getEdge(vertex1, vertex5);
+		Edge edge23 = GridFactory.getEdge(vertex2, vertex3);
+		Edge edge24 = GridFactory.getEdge(vertex2, vertex4);
+		Edge edge25 = GridFactory.getEdge(vertex2, vertex5);
+		Edge edge34 = GridFactory.getEdge(vertex3, vertex4);
+		Edge edge35 = GridFactory.getEdge(vertex3, vertex5);
+		Edge edge45 = GridFactory.getEdge(vertex4, vertex5);
 
-		// Check that one node is non-accessible
-		Assert.assertFalse(GridFactory.hasEdge(node1, node2));
+		// Check that one vertex is non-accessible
+		Assert.assertFalse(GridFactory.hasEdge(vertex1, vertex2));
 		Assert.assertNull(edge12);
 
 		// Step through the algorithm
@@ -160,7 +160,7 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 		Assert.assertEquals(12, stepCounter);
 
 		// Check if the path is valid
-		Assert.assertTrue(this.scenarioFiveNodesOneNonAccessibleEdge.isPathValid());
+		Assert.assertTrue(this.scenarioFiveVerticesOneNonAccessibleEdge.isPathValid());
 	}
 
 	@Override
@@ -187,7 +187,7 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 	}
 
 	@Override
-	protected void doTestScenarioFortyoneNode() {
+	protected void doTestScenarioFortyoneVertex() {
 		// Step through the algorithm (10000 steps)
 		for (int i = 0; i < 10000; i++) {
 			Assert.assertTrue(this.algorithm.step());
@@ -200,7 +200,7 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 		Assert.assertTrue(this.algorithm.step());
 
 		// Check if the path is valid. It is not the best path but it should be valid
-		Assert.assertTrue(this.scenarioFortyoneNodes.isPathValid());
+		Assert.assertTrue(this.scenarioFortyoneVertices.isPathValid());
 	}
 
 }

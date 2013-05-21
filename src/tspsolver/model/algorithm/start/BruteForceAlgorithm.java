@@ -5,30 +5,30 @@ import java.util.Vector;
 
 import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.scenario.grid.Edge;
-import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.grid.Vertex;
 import tspsolver.model.scenario.path.Path;
 import tspsolver.model.scenario.path.PathUpdater;
 
 public class BruteForceAlgorithm extends StartAlgorithm {
 
-	private final Vector<Node> startPath;
-	private final Vector<Node> currentPath;
+	private final Vector<Vertex> startPath;
+	private final Vector<Vertex> currentPath;
 
 	public BruteForceAlgorithm() {
-		this.startPath = new Vector<Node>();
-		this.currentPath = new Vector<Node>();
+		this.startPath = new Vector<Vertex>();
+		this.currentPath = new Vector<Vertex>();
 	}
 
 	@Override
 	protected void doInitialize() {
 		this.getPathUpdater().addPath(new Path());
 
-		// convert to node path
-		Node startingNode = this.getStartingNode();
+		// convert to vertex path
+		Vertex startingVertex = this.getStartingVertex();
 
-		for (Node node : this.getGrid().getNodes()) {
-			if (startingNode != node) {
-				this.startPath.add(node);
+		for (Vertex vertex : this.getGrid().getVertices()) {
+			if (startingVertex != vertex) {
+				this.startPath.add(vertex);
 			}
 		}
 
@@ -84,7 +84,7 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 				return true;
 			}
 			i -= 1;
-			// FIXME: Dies könnte optimiert werden jedes Node müsste einen
+			// FIXME: Dies könnte optimiert werden jedes Vertex müsste einen
 			// spezfische reihenfolge, ändlich dem eines alphabet, die grösse
 			// funktioniert nicht weil nicht eindeutig
 			// lexikogr. Nachfolger hat größeres a[i]
@@ -120,34 +120,34 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 	}
 
 	private void swap(int first, int second) {
-		Node temp = this.currentPath.get(first);
+		Vertex temp = this.currentPath.get(first);
 
 		this.currentPath.set(first, this.currentPath.get(second));
 
 		this.currentPath.set(second, temp);
 	}
 
-	private Path convertToPath(Vector<Node> nodes) {
+	private Path convertToPath(Vector<Vertex> vertices) {
 		Path newPath = new Path();
 		PathUpdater newPathUpdater = new PathUpdater(newPath);
 
 		boolean isNewPathValid = true;
-		Node currentNode = this.getStartingNode();
+		Vertex currentVertex = this.getStartingVertex();
 
-		// Link all nodes
-		for (Node node : nodes) {
-			Edge edge = currentNode.getEdgeToNode(node);
+		// Link all vertices
+		for (Vertex vertex : vertices) {
+			Edge edge = currentVertex.getEdgeToVertex(vertex);
 
 			if (edge != null) {
 				newPathUpdater.addEdge(edge);
-				currentNode = node;
+				currentVertex = vertex;
 			} else {
 				isNewPathValid = false;
 			}
 		}
 
-		// Link the last node with the starting node
-		Edge edge = currentNode.getEdgeToNode(this.getStartingNode());
+		// Link the last vertex with the starting vertex
+		Edge edge = currentVertex.getEdgeToVertex(this.getStartingVertex());
 		if (edge != null) {
 			newPathUpdater.addEdge(edge);
 		} else {

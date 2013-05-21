@@ -1,7 +1,7 @@
 package tspsolver.view.grid;
 
 import tspsolver.model.scenario.grid.Edge;
-import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.grid.Vertex;
 
 import com.kitfox.svg.Group;
 import com.kitfox.svg.Line;
@@ -36,13 +36,13 @@ public class EdgeView {
 
 	protected void createLine() {
 		try {
-			Node firstNode = this.edge.getFirstNode();
-			Node secondNode = this.edge.getSecondNode();
+			Vertex firstVertex = this.edge.getFirstVertex();
+			Vertex secondVertex = this.edge.getSecondVertex();
 
-			this.svgLine.addAttribute("x1", AnimationElement.AT_XML, String.valueOf(firstNode.getX()));
-			this.svgLine.addAttribute("y1", AnimationElement.AT_XML, String.valueOf(firstNode.getY()));
-			this.svgLine.addAttribute("x2", AnimationElement.AT_XML, String.valueOf(secondNode.getX()));
-			this.svgLine.addAttribute("y2", AnimationElement.AT_XML, String.valueOf(secondNode.getY()));
+			this.svgLine.addAttribute("x1", AnimationElement.AT_XML, String.valueOf(firstVertex.getX()));
+			this.svgLine.addAttribute("y1", AnimationElement.AT_XML, String.valueOf(firstVertex.getY()));
+			this.svgLine.addAttribute("x2", AnimationElement.AT_XML, String.valueOf(secondVertex.getX()));
+			this.svgLine.addAttribute("y2", AnimationElement.AT_XML, String.valueOf(secondVertex.getY()));
 			this.svgLine.addAttribute("stroke-dasharray", AnimationElement.AT_CSS, "2, 8");
 
 			this.svgGroup.loaderAddChild(null, this.svgLine);

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <scenario name="Unsolvable scenario">
-	<node name="north" x="350" y="25" link="false" />
-	<node name="east1" x="550" y="240" link="false" />
-	<node name="east2" x="550" y="260" link="false" />
-	<node name="south" x="350" y="500" link="false" />
-	<node name="west1" x="125" y="240" link="false" />
-	<node name="west2" x="125" y="260" link="false" />
+	<vertex name="north" x="350" y="25" link="false" />
+	<vertex name="east1" x="550" y="240" link="false" />
+	<vertex name="east2" x="550" y="260" link="false" />
+	<vertex name="south" x="350" y="500" link="false" />
+	<vertex name="west1" x="125" y="240" link="false" />
+	<vertex name="west2" x="125" y="260" link="false" />
 
-	<add-edge first-node="north" second-node="east1" />
-	<add-edge first-node="north" second-node="west1" />
-	<add-edge first-node="east1" second-node="west1" />
-	<add-edge first-node="south" second-node="east2" />
-	<add-edge first-node="south" second-node="west2" />
-	<add-edge first-node="east2" second-node="west2" />
+	<add-edge first-vertex="north" second-vertex="east1" />
+	<add-edge first-vertex="north" second-vertex="west1" />
+	<add-edge first-vertex="east1" second-vertex="west1" />
+	<add-edge first-vertex="south" second-vertex="east2" />
+	<add-edge first-vertex="south" second-vertex="west2" />
+	<add-edge first-vertex="east2" second-vertex="west2" />
 
-	<starting-node name="north" />
+	<starting-vertex name="north" />
 </scenario>

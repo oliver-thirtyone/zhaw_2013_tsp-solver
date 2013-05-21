@@ -9,7 +9,7 @@ import java.util.Vector;
 import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.comparators.grid.EdgeWeightComparator;
 import tspsolver.model.scenario.grid.Edge;
-import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.grid.Vertex;
 
 public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
@@ -18,29 +18,29 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 	}
 
 	private final Vector<Edge> spanningTreeEdges;
-	private final Set<Node> spanningTreeNodes;
+	private final Set<Vertex> spanningTreeVertices;
 	private final TreeSet<Edge> spanningTreePossibleEdges;
-	private final Stack<Node> brancheNodes;
+	private final Stack<Vertex> brancheVertices;
 
 	private Phase phase;
-	private Node currentNode;
+	private Vertex currentVertex;
 
 	public MinimumSpanningTreeHeuristik() {
 		this.spanningTreeEdges = new Vector<Edge>();
-		this.spanningTreeNodes = new HashSet<Node>();
+		this.spanningTreeVertices = new HashSet<Vertex>();
 
 		this.spanningTreePossibleEdges = new TreeSet<Edge>(new EdgeWeightComparator());
-		this.brancheNodes = new Stack<Node>();
+		this.brancheVertices = new Stack<Vertex>();
 
 		this.reset();
 	}
 
 	@Override
 	protected void doInitialize() {
-		this.spanningTreeNodes.add(this.getStartingNode());
+		this.spanningTreeVertices.add(this.getStartingVertex());
 
 		// Sort all possible edges by weight
-		for (Edge edge : this.getStartingNode().getEdges()) {
+		for (Edge edge : this.getStartingVertex().getEdges()) {
 			this.spanningTreePossibleEdges.add(edge);
 		}
 
@@ -49,14 +49,14 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 	@Override
 	protected void doReset() {
-		this.spanningTreeNodes.clear();
+		this.spanningTreeVertices.clear();
 		this.spanningTreeEdges.clear();
 
 		this.spanningTreePossibleEdges.clear();
-		this.brancheNodes.clear();
+		this.brancheVertices.clear();
 
 		this.phase = null;
-		this.currentNode = null;
+		this.currentVertex = null;
 	}
 
 	@Override
@@ -80,22 +80,22 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 		// Take the lowest one, that not build a circle and add it to the tree.
 		for (Edge edge : this.spanningTreePossibleEdges) {
-			if (this.spanningTreeNodes.contains(edge.getFirstNode()) == false) {
+			if (this.spanningTreeVertices.contains(edge.getFirstVertex()) == false) {
 
 				// Add the edge to the spanning tree.
 				this.spanningTreeEdges.add(edge);
 				this.getPathUpdater().addEdge(edge);
 
-				if (this.spanningTreeEdges.size() < this.getGrid().getNumberOfNodes() - 1) {
+				if (this.spanningTreeEdges.size() < this.getGrid().getNumberOfVertices() - 1) {
 
 					// Prepare for next step.
-					this.spanningTreeNodes.add(edge.getFirstNode());
+					this.spanningTreeVertices.add(edge.getFirstVertex());
 
 					// Add all new possible edges
 					// FIXME: Bin nicht sicher ob dieser Schritt richtig
 					// funktioniert, ich gehe davon aus das in einem TreeSet
 					// jeweils nur eine Instanz des selben Edges drin sein kann.
-					for (Edge edgeToAdd : edge.getFirstNode().getEdges()) {
+					for (Edge edgeToAdd : edge.getFirstVertex().getEdges()) {
 						this.spanningTreePossibleEdges.add(edgeToAdd);
 					}
 
@@ -109,22 +109,22 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 				break;
 			}
-			else if (this.spanningTreeNodes.contains(edge.getSecondNode()) == false) {
+			else if (this.spanningTreeVertices.contains(edge.getSecondVertex()) == false) {
 
 				// Add the edge to the spanning tree.
 				this.spanningTreeEdges.add(edge);
 				this.getPathUpdater().addEdge(edge);
 
-				if (this.spanningTreeEdges.size() < this.getGrid().getNumberOfNodes() - 1) {
+				if (this.spanningTreeEdges.size() < this.getGrid().getNumberOfVertices() - 1) {
 
 					// Prepare for next step.
-					this.spanningTreeNodes.add(edge.getSecondNode());
+					this.spanningTreeVertices.add(edge.getSecondVertex());
 
 					// Add all new possible edges
 					// FIXME: Bin nicht sicher ob dieser Schritt richtig
 					// funktioniert, ich gehe davon aus das in einem TreeSet
 					// jeweils nur eine Instanz des selben Edges drin sein kann.
-					for (Edge edgeToAdd : edge.getSecondNode().getEdges()) {
+					for (Edge edgeToAdd : edge.getSecondVertex().getEdges()) {
 						this.spanningTreePossibleEdges.add(edgeToAdd);
 					}
 
@@ -146,7 +146,7 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 				// jeweiligen Kanten, welche einen Kreis bilden, nicht
 				// hinzufügt. Ich denke aber das diese Variante bei einer
 				// grossen Anzahl Knoten besser ist.
-				this.spanningTreeNodes.remove(edge);
+				this.spanningTreeVertices.remove(edge);
 			}
 		}
 
@@ -156,23 +156,23 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 	private void initEulerianTrail() {
 		this.phase = Phase.DO_EULERIAN_TRAIL;
-		this.currentNode = this.getStartingNode();
-		this.brancheNodes.push(this.currentNode);
+		this.currentVertex = this.getStartingVertex();
+		this.brancheVertices.push(this.currentVertex);
 	}
 
 	private boolean doStepEulerianTrail() {
 
-		Node brancheNode = this.brancheNodes.pop();
+		Vertex brancheVertex = this.brancheVertices.pop();
 
 		int i = 1;
 		while (this.spanningTreeEdges.isEmpty() == false) {
 			Edge edge = this.spanningTreeEdges.elementAt(this.spanningTreeEdges.size() - i);
 
 			// Find the next edge in the spanning tree that is connected to the
-			// current branch node.
-			if (edge.getFirstNode() == brancheNode) {
+			// current branch vertex.
+			if (edge.getFirstVertex() == brancheVertex) {
 
-				Edge newEdge = this.currentNode.getEdgeToNode(edge.getSecondNode());
+				Edge newEdge = this.currentVertex.getEdgeToVertex(edge.getSecondVertex());
 				if (newEdge == null) {
 					// FIXME: this path does not work, what do we do now?
 					return false;
@@ -187,19 +187,19 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 				// Add the new edge to the path.
 				this.getPathUpdater().addEdge(newEdge);
 
-				// Set the other node as new current node.
-				this.currentNode = edge.getSecondNode();
+				// Set the other vertex as new current vertex.
+				this.currentVertex = edge.getSecondVertex();
 
-				this.brancheNodes.add(brancheNode);
-				this.brancheNodes.add(this.currentNode);
+				this.brancheVertices.add(brancheVertex);
+				this.brancheVertices.add(this.currentVertex);
 
 				this.getPathUpdater().updatePath();
 				return true;
 
 			}
-			else if (edge.getSecondNode() == brancheNode) {
+			else if (edge.getSecondVertex() == brancheVertex) {
 
-				Edge newEdge = this.currentNode.getEdgeToNode(edge.getFirstNode());
+				Edge newEdge = this.currentVertex.getEdgeToVertex(edge.getFirstVertex());
 				if (newEdge == null) {
 					// FIXME: this path does not work, what do we do now?
 					return false;
@@ -214,11 +214,11 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 				// Add the new edge to the path.
 				this.getPathUpdater().addEdge(newEdge);
 
-				// Set the other node as new current node.
-				this.currentNode = edge.getFirstNode();
+				// Set the other vertex as new current vertex.
+				this.currentVertex = edge.getFirstVertex();
 
-				this.brancheNodes.add(brancheNode);
-				this.brancheNodes.add(this.currentNode);
+				this.brancheVertices.add(brancheVertex);
+				this.brancheVertices.add(this.currentVertex);
 
 				this.getPathUpdater().updatePath();
 				return true;
@@ -237,9 +237,9 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 		}
 
 		// Finishing the eulerian trail:
-		// Connect the last node from the eulerian path with the start node to
+		// Connect the last vertex from the eulerian path with the start vertex to
 		// close the circle
-		Edge newEdge = this.getStartingNode().getEdgeToNode(this.currentNode);
+		Edge newEdge = this.getStartingVertex().getEdgeToVertex(this.currentVertex);
 		if (newEdge == null) {
 			// FIXME: this path does not work, what do we do now?
 			return false;

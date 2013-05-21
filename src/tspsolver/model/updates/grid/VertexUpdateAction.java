@@ -1,6 +1,6 @@
 package tspsolver.model.updates.grid;
 
-public enum NodeUpdateAction {
+public enum VertexUpdateAction {
 
 	ADD_NODE, REMOVE_NODE;
 

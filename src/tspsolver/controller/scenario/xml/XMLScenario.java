@@ -6,8 +6,8 @@ public enum XMLScenario {
 	ELEMENT_SCENARIO("scenario"),
 	ELEMENT_SCENARIO_ATTRIBUTE_NAME("name"),
 
-	ELEMENT_NODE("node"),
-	ELEMENT_STARTINGNODE("starting-node"),
+	ELEMENT_NODE("vertex"),
+	ELEMENT_STARTINGNODE("starting-vertex"),
 	ELEMENT_NODE_ATTRIBUTE_NAME("name"),
 	ELEMENT_NODE_ATTRIBUTE_X("x"),
 	ELEMENT_NODE_ATTRIBUTE_Y("y"),
@@ -15,8 +15,8 @@ public enum XMLScenario {
 
 	ELEMENT_ADD_EDGE("add-edge"),
 	ELEMENT_REMOVE_EDGE("remove-edge"),
-	ELEMENT_EDGE_ATTRIBUTE_FIRSTNODE("first-node"),
-	ELEMENT_EDGE_ATTRIBUTE_SECONDNODE("second-node"),
+	ELEMENT_EDGE_ATTRIBUTE_FIRSTNODE("first-vertex"),
+	ELEMENT_EDGE_ATTRIBUTE_SECONDNODE("second-vertex"),
 	ELEMENT_EDGE_ATTRIBUTE_WEIGHT("weight");
 	// @formatter:on
 

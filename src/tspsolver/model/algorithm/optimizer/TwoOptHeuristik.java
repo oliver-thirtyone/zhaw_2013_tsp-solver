@@ -5,24 +5,24 @@ import java.util.Vector;
 
 import tspsolver.model.algorithm.OptimizerAlgorithm;
 import tspsolver.model.scenario.grid.Edge;
-import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.grid.Vertex;
 import tspsolver.model.scenario.path.Path;
 import tspsolver.model.scenario.path.PathUpdater;
 
 public class TwoOptHeuristik extends OptimizerAlgorithm {
 
-	private final Vector<Node> nodesInOrder;
+	private final Vector<Vertex> verticesInOrder;
 
 	public TwoOptHeuristik() {
-		this.nodesInOrder = new Vector<Node>();
+		this.verticesInOrder = new Vector<Vertex>();
 	}
 
 	@Override
 	protected void doInitialize() {
-		// Get the node in line
-		Node currentNode = this.getStartingNode();
+		// Get the vertex in line
+		Vertex currentVertex = this.getStartingVertex();
 
-		this.nodesInOrder.add(currentNode);
+		this.verticesInOrder.add(currentVertex);
 
 		int numberOfEdges = this.getPath().getNumberOfEdges();
 
@@ -31,24 +31,24 @@ public class TwoOptHeuristik extends OptimizerAlgorithm {
 			edges.add(edge);
 		}
 
-		while (this.nodesInOrder.size() < numberOfEdges) {
+		while (this.verticesInOrder.size() < numberOfEdges) {
 			for (Edge edge : edges) {
-				if (edge.getFirstNode() == currentNode) {
+				if (edge.getFirstVertex() == currentVertex) {
 
 					edges.remove(edge);
 
-					currentNode = edge.getSecondNode();
+					currentVertex = edge.getSecondVertex();
 
-					this.nodesInOrder.add(currentNode);
+					this.verticesInOrder.add(currentVertex);
 					break;
 				}
-				else if (edge.getSecondNode() == currentNode) {
+				else if (edge.getSecondVertex() == currentVertex) {
 
 					edges.remove(edge);
 
-					currentNode = edge.getFirstNode();
+					currentVertex = edge.getFirstVertex();
 
-					this.nodesInOrder.add(currentNode);
+					this.verticesInOrder.add(currentVertex);
 					break;
 				}
 			}
@@ -59,19 +59,19 @@ public class TwoOptHeuristik extends OptimizerAlgorithm {
 
 	@Override
 	protected void doReset() {
-		this.nodesInOrder.clear();
+		this.verticesInOrder.clear();
 	}
 
 	@Override
 	protected boolean doStep() {
 		try {
 
-			int numberOfNodes = this.getPath().getNumberOfEdges();
+			int numberOfVertices = this.getPath().getNumberOfEdges();
 
 			double lightestWeight = this.getPath().getWeight();
 
-			for (int i = 0; i < numberOfNodes; i++) {
-				for (int k = i + 1; k < numberOfNodes - 1; k++) {
+			for (int i = 0; i < numberOfVertices; i++) {
+				for (int k = i + 1; k < numberOfVertices - 1; k++) {
 
 					Path newPath = this.generateNewPath(i, k);
 
@@ -98,33 +98,33 @@ public class TwoOptHeuristik extends OptimizerAlgorithm {
 
 	private Path generateNewPath(int i, int k) {
 
-		Vector<Node> newNodePath = new Vector<Node>();
+		Vector<Vertex> newVertexPath = new Vector<Vertex>();
 
 		for (int j = 0; j < i; j++) {
-			newNodePath.add(this.nodesInOrder.get(j));
+			newVertexPath.add(this.verticesInOrder.get(j));
 		}
 
 		for (int j = k; j >= i; j--) {
-			newNodePath.add(this.nodesInOrder.get(j));
+			newVertexPath.add(this.verticesInOrder.get(j));
 		}
 
-		for (int j = k + 1; j < this.nodesInOrder.size(); j++) {
-			newNodePath.add(this.nodesInOrder.get(j));
+		for (int j = k + 1; j < this.verticesInOrder.size(); j++) {
+			newVertexPath.add(this.verticesInOrder.get(j));
 		}
 
-		return this.convertNodesToPath(newNodePath);
+		return this.convertVerticesToPath(newVertexPath);
 	}
 
-	private Path convertNodesToPath(Vector<Node> nodePath) {
+	private Path convertVerticesToPath(Vector<Vertex> vertexPath) {
 
 		Path path = new Path();
 		PathUpdater pathUpdater = new PathUpdater(path);
 
-		for (int j = 1; j <= this.nodesInOrder.size(); j++) {
-			Node firstNode = nodePath.get(j - 1);
-			Node secondNode = (j == this.nodesInOrder.size()) ? nodePath.get(0) : nodePath.get(j);
+		for (int j = 1; j <= this.verticesInOrder.size(); j++) {
+			Vertex firstVertex = vertexPath.get(j - 1);
+			Vertex secondVertex = (j == this.verticesInOrder.size()) ? vertexPath.get(0) : vertexPath.get(j);
 
-			Edge edge = firstNode.getEdgeToNode(secondNode);
+			Edge edge = firstVertex.getEdgeToVertex(secondVertex);
 			if (edge == null) {
 				// FIXME: this path does not work, what do we do now?
 				throw new IllegalStateException();

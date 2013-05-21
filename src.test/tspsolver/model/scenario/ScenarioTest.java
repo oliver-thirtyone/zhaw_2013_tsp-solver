@@ -10,7 +10,7 @@ import org.junit.Test;
 import tspsolver.model.scenario.grid.Edge;
 import tspsolver.model.scenario.grid.Grid;
 import tspsolver.model.scenario.grid.GridFactory;
-import tspsolver.model.scenario.grid.Node;
+import tspsolver.model.scenario.grid.Vertex;
 import tspsolver.model.scenario.path.Path;
 import tspsolver.model.scenario.path.PathUpdater;
 import tspsolver.model.validator.TSPValidator;
@@ -28,20 +28,20 @@ public class ScenarioTest {
 		Path path = this.scenario.getPath();
 		PathUpdater pathUpdater = new PathUpdater(path);
 
-		Node nodeNorth = GridFactory.createNode("north", 0, 5);
-		Node nodeEast = GridFactory.createNode("east", 4, 0);
-		Node nodeSouth = GridFactory.createNode("south", 0, -5);
-		Node nodeWest = GridFactory.createNode("west", -5, 0);
+		Vertex vertexNorth = GridFactory.createVertex("north", 0, 5);
+		Vertex vertexEast = GridFactory.createVertex("east", 4, 0);
+		Vertex vertexSouth = GridFactory.createVertex("south", 0, -5);
+		Vertex vertexWest = GridFactory.createVertex("west", -5, 0);
 
-		GridFactory.addNode(grid, nodeNorth);
-		GridFactory.addNode(grid, nodeEast);
-		GridFactory.addNode(grid, nodeSouth);
-		GridFactory.addNode(grid, nodeWest);
+		GridFactory.addVertex(grid, vertexNorth);
+		GridFactory.addVertex(grid, vertexEast);
+		GridFactory.addVertex(grid, vertexSouth);
+		GridFactory.addVertex(grid, vertexWest);
 
-		Edge edgeNorthEast = GridFactory.getEdge(nodeNorth, nodeEast);
-		Edge edgeNorthWest = GridFactory.getEdge(nodeNorth, nodeWest);
-		Edge edgeEastSouth = GridFactory.getEdge(nodeEast, nodeSouth);
-		Edge edgeSouthWest = GridFactory.getEdge(nodeSouth, nodeWest);
+		Edge edgeNorthEast = GridFactory.getEdge(vertexNorth, vertexEast);
+		Edge edgeNorthWest = GridFactory.getEdge(vertexNorth, vertexWest);
+		Edge edgeEastSouth = GridFactory.getEdge(vertexEast, vertexSouth);
+		Edge edgeSouthWest = GridFactory.getEdge(vertexSouth, vertexWest);
 
 		pathUpdater.addEdge(edgeNorthEast);
 		pathUpdater.addEdge(edgeEastSouth);
@@ -49,7 +49,7 @@ public class ScenarioTest {
 		pathUpdater.addEdge(edgeNorthWest);
 		pathUpdater.updatePath();
 
-		this.scenario.setStartingNode(nodeNorth);
+		this.scenario.setStartingVertex(vertexNorth);
 	}
 
 	@Test

@@ -9,21 +9,21 @@ public class EdgeTest {
 
 	private Grid grid;
 
-	private Node firstNode;
-	private Node secondNode;
+	private Vertex firstVertex;
+	private Vertex secondVertex;
 	private Edge edge;
 
 	@Before
 	public void setUp() {
 		this.grid = new Grid();
 
-		this.firstNode = GridFactory.createNode("firstNode", 2, 3);
-		this.secondNode = GridFactory.createNode("secondNode", -2, -3);
+		this.firstVertex = GridFactory.createVertex("firstVertex", 2, 3);
+		this.secondVertex = GridFactory.createVertex("secondVertex", -2, -3);
 
-		GridFactory.addNode(this.grid, this.firstNode);
-		GridFactory.addNode(this.grid, this.secondNode);
+		GridFactory.addVertex(this.grid, this.firstVertex);
+		GridFactory.addVertex(this.grid, this.secondVertex);
 
-		this.edge = GridFactory.getEdge(this.firstNode, this.secondNode);
+		this.edge = GridFactory.getEdge(this.firstVertex, this.secondVertex);
 	}
 
 	@Test
@@ -33,8 +33,8 @@ public class EdgeTest {
 
 	@Test
 	public void testNumberOfEdges() {
-		Assert.assertEquals(1, this.firstNode.getNumberOfEdges());
-		Assert.assertEquals(1, this.secondNode.getNumberOfEdges());
+		Assert.assertEquals(1, this.firstVertex.getNumberOfEdges());
+		Assert.assertEquals(1, this.secondVertex.getNumberOfEdges());
 	}
 
 }

@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
-import tspsolver.model.updates.grid.NodeUpdate;
-import tspsolver.model.updates.grid.NodeUpdateAction;
+import tspsolver.model.updates.grid.VertexUpdate;
+import tspsolver.model.updates.grid.VertexUpdateAction;
 
 public class Grid extends Observable implements Serializable, Observer {
 
@@ -15,10 +15,10 @@ public class Grid extends Observable implements Serializable, Observer {
 
 	public static final boolean LINK_ADDED_NODE = true;
 
-	private final Map<String, Node> nodes;
+	private final Map<String, Vertex> vertices;
 
 	public Grid() {
-		this.nodes = new HashMap<String, Node>();
+		this.vertices = new HashMap<String, Vertex>();
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class Grid extends Observable implements Serializable, Observer {
 		int prime = 31;
 		int result = 1;
 
-		result = prime * result + ((this.nodes == null) ? 0 : this.nodes.hashCode());
+		result = prime * result + ((this.vertices == null) ? 0 : this.vertices.hashCode());
 
 		return result;
 	}
@@ -46,12 +46,12 @@ public class Grid extends Observable implements Serializable, Observer {
 		}
 
 		Grid other = (Grid) obj;
-		if (this.nodes == null) {
-			if (other.nodes != null) {
+		if (this.vertices == null) {
+			if (other.vertices != null) {
 				return false;
 			}
 		}
-		else if (!this.nodes.equals(other.nodes)) {
+		else if (!this.vertices.equals(other.vertices)) {
 			return false;
 		}
 
@@ -64,60 +64,60 @@ public class Grid extends Observable implements Serializable, Observer {
 		this.notifyObservers(argument);
 	}
 
-	public Node[] getNodes() {
-		return this.nodes.values().toArray(new Node[this.nodes.size()]);
+	public Vertex[] getVertices() {
+		return this.vertices.values().toArray(new Vertex[this.vertices.size()]);
 	}
 
-	public int getNumberOfNodes() {
-		return this.nodes.size();
+	public int getNumberOfVertices() {
+		return this.vertices.size();
 	}
 
-	protected Node getNode(String name) {
-		return this.nodes.get(name);
+	protected Vertex getVertex(String name) {
+		return this.vertices.get(name);
 	}
 
-	protected boolean containsNode(Node node) {
-		return this.nodes.containsKey(node.getName());
+	protected boolean containsVertex(Vertex vertex) {
+		return this.vertices.containsKey(vertex.getName());
 	}
 
-	protected void addNode(Node node) {
-		this.addNode(node, Grid.LINK_ADDED_NODE);
+	protected void addVertex(Vertex vertex) {
+		this.addVertex(vertex, Grid.LINK_ADDED_NODE);
 	}
 
-	protected synchronized void addNode(Node node, boolean link) {
-		if (!this.containsNode(node)) {
+	protected synchronized void addVertex(Vertex vertex, boolean link) {
+		if (!this.containsVertex(vertex)) {
 			if (link) {
-				for (Node n : this.getNodes()) {
-					n.addEdgeToNode(node);
+				for (Vertex n : this.getVertices()) {
+					n.addEdgeToVertex(vertex);
 				}
 			}
-			node.addObserver(this);
+			vertex.addObserver(this);
 
-			this.nodes.put(node.getName(), node);
-			this.fireNodeUpdate(node, NodeUpdateAction.ADD_NODE);
+			this.vertices.put(vertex.getName(), vertex);
+			this.fireVertexUpdate(vertex, VertexUpdateAction.ADD_NODE);
 		}
 	}
 
-	protected synchronized void removeNode(Node node) {
-		if (this.containsNode(node)) {
-			for (Node n : this.getNodes()) {
-				n.removeEdgeToNode(node);
+	protected synchronized void removeVertex(Vertex vertex) {
+		if (this.containsVertex(vertex)) {
+			for (Vertex n : this.getVertices()) {
+				n.removeEdgeToVertex(vertex);
 			}
-			node.deleteObserver(this);
+			vertex.deleteObserver(this);
 
-			this.nodes.remove(node);
-			this.fireNodeUpdate(node, NodeUpdateAction.REMOVE_NODE);
+			this.vertices.remove(vertex);
+			this.fireVertexUpdate(vertex, VertexUpdateAction.REMOVE_NODE);
 		}
 	}
 
 	protected synchronized void clear() {
-		for (Node node : this.getNodes()) {
-			this.removeNode(node);
+		for (Vertex vertex : this.getVertices()) {
+			this.removeVertex(vertex);
 		}
 	}
 
-	private void fireNodeUpdate(Node node, NodeUpdateAction action) {
-		NodeUpdate update = new NodeUpdate(node, action);
+	private void fireVertexUpdate(Vertex vertex, VertexUpdateAction action) {
+		VertexUpdate update = new VertexUpdate(vertex, action);
 
 		this.setChanged();
 		this.notifyObservers(update);
