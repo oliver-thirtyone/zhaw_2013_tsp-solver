@@ -58,7 +58,7 @@ public abstract class MainRunner extends Observable implements Observer {
 		return successful;
 	}
 
-	public synchronized boolean canStart() {
+	public boolean canStart() {
 		boolean canStart = false;
 		for (Runner runner : this.runners) {
 			if (runner.canStart()) {
@@ -69,7 +69,7 @@ public abstract class MainRunner extends Observable implements Observer {
 		return canStart;
 	}
 
-	public synchronized boolean start() {
+	public boolean start() {
 		boolean successful = false;
 		for (Runner runner : this.runners) {
 			if (runner.start()) {
@@ -79,7 +79,7 @@ public abstract class MainRunner extends Observable implements Observer {
 		return successful;
 	}
 
-	public synchronized boolean canStep() {
+	public boolean canStep() {
 		boolean canStep = false;
 		for (Runner runner : this.runners) {
 			if (runner.canStep()) {
@@ -90,7 +90,7 @@ public abstract class MainRunner extends Observable implements Observer {
 		return canStep;
 	}
 
-	public synchronized boolean step() {
+	public boolean step() {
 		boolean successful = false;
 		for (Runner runner : this.runners) {
 			if (runner.step()) {
@@ -100,7 +100,7 @@ public abstract class MainRunner extends Observable implements Observer {
 		return successful;
 	}
 
-	public synchronized boolean canPause() {
+	public boolean canPause() {
 		boolean canPause = false;
 		for (Runner runner : this.runners) {
 			if (runner.canPause()) {
@@ -111,7 +111,7 @@ public abstract class MainRunner extends Observable implements Observer {
 		return canPause;
 	}
 
-	public synchronized boolean pause() {
+	public boolean pause() {
 		boolean successful = false;
 		for (Runner runner : this.runners) {
 			if (runner.pause()) {
@@ -121,7 +121,7 @@ public abstract class MainRunner extends Observable implements Observer {
 		return successful;
 	}
 
-	public synchronized boolean canStop() {
+	public boolean canStop() {
 		boolean canStop = false;
 		for (Runner runner : this.runners) {
 			if (runner.canStop()) {
@@ -132,7 +132,7 @@ public abstract class MainRunner extends Observable implements Observer {
 		return canStop;
 	}
 
-	public synchronized boolean stop() {
+	public boolean stop() {
 		boolean successful = false;
 		for (Runner runner : this.runners) {
 			if (runner.stop()) {
@@ -142,7 +142,7 @@ public abstract class MainRunner extends Observable implements Observer {
 		return successful;
 	}
 
-	public synchronized boolean canReset() {
+	public boolean canReset() {
 		boolean canReset = true;
 		for (Runner runner : this.runners) {
 			if (!runner.canReset()) {
@@ -153,7 +153,7 @@ public abstract class MainRunner extends Observable implements Observer {
 		return canReset;
 	}
 
-	public synchronized boolean reset() {
+	public boolean reset() {
 		boolean successful = true;
 		for (Runner runner : this.runners) {
 			if (!runner.reset()) {

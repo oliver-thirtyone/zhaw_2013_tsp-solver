@@ -140,7 +140,7 @@ public class ControllerView extends JPanel implements Observer, ActionListener {
 		});
 	}
 
-	private synchronized void actionPerformed(String actionCommand) {
+	private void actionPerformed(String actionCommand) {
 		// Turn the stepDelay into an integer
 		int stepDelay = Runner.DEFAULT_STEP_DELAY;
 		try {
@@ -176,7 +176,7 @@ public class ControllerView extends JPanel implements Observer, ActionListener {
 		}
 	}
 
-	private synchronized void doUpdate(Object argument) {
+	private void doUpdate(Object argument) {
 		String stepDelay = String.valueOf(this.controller.getStepDelay());
 		this.stepDelay.setText(stepDelay);
 
