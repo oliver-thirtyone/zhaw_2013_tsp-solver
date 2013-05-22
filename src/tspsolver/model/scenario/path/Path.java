@@ -14,7 +14,7 @@ public class Path extends Observable implements Serializable {
 	private static final long serialVersionUID = 8102936507138748772L;
 
 	private final Set<Edge> edges;
-	private int weight;
+	private long weight;
 
 	public Path() {
 		this.edges = new HashSet<Edge>();
@@ -27,7 +27,7 @@ public class Path extends Observable implements Serializable {
 		int result = 1;
 
 		result = prime * result + ((this.edges == null) ? 0 : this.edges.hashCode());
-		result = prime * result + this.weight;
+		result = prime * result + (int) (this.weight ^ (this.weight >>> 32));
 
 		return result;
 	}
@@ -64,7 +64,7 @@ public class Path extends Observable implements Serializable {
 		return true;
 	}
 
-	public int getWeight() {
+	public long getWeight() {
 		return this.weight;
 	}
 

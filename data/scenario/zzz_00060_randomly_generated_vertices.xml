@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<scenario name="Randomly generated scenario: 60 vertices">
+	<vertex name="0" x="395" y="281" />
+	<vertex name="1" x="733" y="103" />
+	<vertex name="2" x="868" y="269" />
+	<vertex name="3" x="220" y="431" />
+	<vertex name="4" x="546" y="418" />
+	<vertex name="5" x="566" y="114" />
+	<vertex name="6" x="47" y="380" />
+	<vertex name="7" x="453" y="266" />
+	<vertex name="8" x="421" y="70" />
+	<vertex name="9" x="565" y="204" />
+	<vertex name="10" x="34" y="313" />
+	<vertex name="11" x="667" y="166" />
+	<vertex name="12" x="105" y="43" />
+	<vertex name="13" x="484" y="140" />
+	<vertex name="14" x="470" y="439" />
+	<vertex name="15" x="206" y="42" />
+	<vertex name="16" x="241" y="225" />
+	<vertex name="17" x="683" y="511" />
+	<vertex name="18" x="47" y="21" />
+	<vertex name="19" x="248" y="348" />
+	<vertex name="20" x="170" y="360" />
+	<vertex name="21" x="524" y="355" />
+	<vertex name="22" x="444" y="493" />
+	<vertex name="23" x="182" y="209" />
+	<vertex name="24" x="422" y="138" />
+	<vertex name="25" x="770" y="533" />
+	<vertex name="26" x="502" y="546" />
+	<vertex name="27" x="786" y="40" />
+	<vertex name="28" x="282" y="126" />
+	<vertex name="29" x="342" y="516" />
+	<vertex name="30" x="357" y="195" />
+	<vertex name="31" x="746" y="341" />
+	<vertex name="32" x="266" y="36" />
+	<vertex name="33" x="426" y="207" />
+	<vertex name="34" x="409" y="430" />
+	<vertex name="35" x="327" y="351" />
+	<vertex name="36" x="119" y="192" />
+	<vertex name="37" x="610" y="362" />
+	<vertex name="38" x="172" y="145" />
+	<vertex name="39" x="864" y="133" />
+	<vertex name="40" x="692" y="388" />
+	<vertex name="41" x="427" y="544" />
+	<vertex name="42" x="95" y="546" />
+	<vertex name="43" x="641" y="48" />
+	<vertex name="44" x="327" y="269" />
+	<vertex name="45" x="340" y="43" />
+	<vertex name="46" x="144" y="295" />
+	<vertex name="47" x="876" y="393" />
+	<vertex name="48" x="144" y="414" />
+	<vertex name="49" x="793" y="96" />
+	<vertex name="50" x="426" y="379" />
+	<vertex name="51" x="701" y="453" />
+	<vertex name="52" x="641" y="444" />
+	<vertex name="53" x="546" y="284" />
+	<vertex name="54" x="672" y="281" />
+	<vertex name="55" x="297" y="425" />
+	<vertex name="56" x="845" y="519" />
+	<vertex name="57" x="76" y="110" />
+	<vertex name="58" x="818" y="408" />
+	<vertex name="59" x="548" y="479" />
+
+	<starting-vertex name="0" />
+</scenario>
