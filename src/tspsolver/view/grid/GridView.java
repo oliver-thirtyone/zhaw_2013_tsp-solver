@@ -32,8 +32,11 @@ import tspsolver.model.updates.scenario.StartingVertexUpdate;
 import tspsolver.model.updates.scenario.StartingVertexUpdateAction;
 import tspsolver.util.copy.FileCopy;
 
+import com.kitfox.svg.Group;
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.SVGDiagram;
+import com.kitfox.svg.SVGElementException;
+import com.kitfox.svg.animation.AnimationElement;
 import com.kitfox.svg.app.beans.SVGIcon;
 
 public class GridView extends JPanel implements Observer {
@@ -44,6 +47,7 @@ public class GridView extends JPanel implements Observer {
 	public static final String DATA_MAP_SWITZERLAND = "data/map/switzerland_simple.svg";
 	public static final String SVG_GROUP_VERTICES = "tspsolver.vertices";
 	public static final String SVG_GROUP_EDGES = "tspsolver.edges";
+	public static final String SVG_GROUP_EDGEWEIGHTS = "tspsolver.edges.weights";
 
 	private final static long serialVersionUID = -5210001067574218993L;
 
@@ -120,6 +124,15 @@ public class GridView extends JPanel implements Observer {
 			@Override
 			public void run() {
 				GridView.this.doUpdateScenario(scenario);
+			}
+		});
+	}
+
+	public void showEdgeWeights(final boolean visible) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				GridView.this.doShowEdgeWeights(visible);
 			}
 		});
 	}
@@ -251,7 +264,22 @@ public class GridView extends JPanel implements Observer {
 			this.paintGrid();
 		}
 
+		// Update the diagram
 		this.svgDiagramUpdater.update();
+	}
+
+	private void doShowEdgeWeights(boolean visible) {
+		try {
+			Group svgGroup = (Group) GridView.this.svgDiagram.getElement(GridView.SVG_GROUP_EDGEWEIGHTS);
+			String attribute = visible ? "visible" : "hidden";
+			svgGroup.setAttribute("visibility", AnimationElement.AT_XML, attribute);
+
+			// Update the diagram
+			this.svgDiagramUpdater.update();
+		}
+		catch (SVGElementException exception) {
+			exception.printStackTrace();
+		}
 	}
 
 	private void paintGrid() {

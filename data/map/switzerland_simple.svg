@@ -30,4 +30,5 @@
 	<!-- TSP-Solver additional information -->
 	<g id="tspsolver.vertices" style="fill: #000000;" />
 	<g id="tspsolver.edges" style="stroke: #000000; stroke-width:1;" />
+	<g id="tspsolver.edges.weights" style="fill: #000000; font-size: 20;" visibility="visible" />
 </svg>

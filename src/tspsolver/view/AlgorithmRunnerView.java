@@ -11,6 +11,7 @@ import java.util.Observer;
 import java.util.TimeZone;
 
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -46,6 +47,8 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 
 	private final JLabel optimizerAlgorithmLabel;
 	private final JComboBox<OptimizerAlgorithm> optimizerAlgorithms;
+
+	private final JCheckBox showEdgeWeights;
 
 	private final GridView gridView;
 
@@ -85,7 +88,7 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 		for (StartAlgorithm startAlgorithm : this.algorithmRunner.getStartAlgorithms()) {
 			this.startAlgorithms.addItem(startAlgorithm);
 		}
-		this.startAlgorithms.setActionCommand("select_startAlgorithm");
+		this.startAlgorithms.setActionCommand("select_start_algorithm");
 		this.startAlgorithms.addActionListener(this);
 
 		// Optimizer-Algorithm
@@ -97,8 +100,14 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 		for (OptimizerAlgorithm optimizerAlgorithm : this.algorithmRunner.getOptimizerAlgorithms()) {
 			this.optimizerAlgorithms.addItem(optimizerAlgorithm);
 		}
-		this.optimizerAlgorithms.setActionCommand("select_optimizerAlgorithm");
+		this.optimizerAlgorithms.setActionCommand("select_optimizer_algorithm");
 		this.optimizerAlgorithms.addActionListener(this);
+
+		// Show edge weights
+		this.showEdgeWeights = new JCheckBox("Show the weight of each label");
+		this.showEdgeWeights.setActionCommand("show_edge_weights");
+		this.showEdgeWeights.addActionListener(this);
+		this.showEdgeWeights.setSelected(true);
 
 		// Grid view
 		this.gridView = new GridView();
@@ -165,46 +174,49 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 		this.layoutManager.setX(0).setY(0).addComponent(this.startAlgorithmLabel);
 		this.layoutManager.setX(0).setY(1).addComponent(this.optimizerAlgorithmLabel);
 
-		this.layoutManager.setX(0).setY(3).addComponent(this.runnerStateLabel);
-		this.layoutManager.setX(0).setY(4).addComponent(this.runningAlgorithmLabel);
-		this.layoutManager.setX(0).setY(5).addComponent(this.timeElapsedLabel);
-		this.layoutManager.setX(0).setY(6).addComponent(this.stepCounterLabel);
-		this.layoutManager.setX(0).setY(7).addComponent(this.finishedSuccessfullyLabel);
-		this.layoutManager.setX(0).setY(8).addComponent(this.pathWeightLabel);
-		this.layoutManager.setX(0).setY(9).addComponent(this.numberOfEdgesLabel);
-		this.layoutManager.setX(2).setY(9).addComponent(this.slashLabel);
+		this.layoutManager.setX(0).setY(4).addComponent(this.runnerStateLabel);
+		this.layoutManager.setX(0).setY(5).addComponent(this.runningAlgorithmLabel);
+		this.layoutManager.setX(0).setY(6).addComponent(this.timeElapsedLabel);
+		this.layoutManager.setX(0).setY(7).addComponent(this.stepCounterLabel);
+		this.layoutManager.setX(0).setY(8).addComponent(this.finishedSuccessfullyLabel);
+		this.layoutManager.setX(0).setY(9).addComponent(this.pathWeightLabel);
+		this.layoutManager.setX(0).setY(10).addComponent(this.numberOfEdgesLabel);
+		this.layoutManager.setX(2).setY(10).addComponent(this.slashLabel);
 
 		this.layoutManager.setWeightX(1.0);
 
-		this.layoutManager.setX(1).setY(9).addComponent(this.numberOfEdges);
-		this.layoutManager.setX(3).setY(9).addComponent(this.numberOfVertices);
+		this.layoutManager.setX(1).setY(10).addComponent(this.numberOfEdges);
+		this.layoutManager.setX(3).setY(10).addComponent(this.numberOfVertices);
 
 		this.layoutManager.setWidth(3);
 
 		this.layoutManager.setX(1).setY(0).addComponent(this.startAlgorithms);
 		this.layoutManager.setX(1).setY(1).addComponent(this.optimizerAlgorithms);
 
-		this.layoutManager.setX(1).setY(3).addComponent(this.runnerState);
-		this.layoutManager.setX(1).setY(4).addComponent(this.runningAlgorithm);
-		this.layoutManager.setX(1).setY(5).addComponent(this.timeElapsed);
-		this.layoutManager.setX(1).setY(6).addComponent(this.stepCounter);
-		this.layoutManager.setX(1).setY(7).addComponent(this.finishedSuccessfully);
-		this.layoutManager.setX(1).setY(8).addComponent(this.pathWeight);
+		this.layoutManager.setX(1).setY(4).addComponent(this.runnerState);
+		this.layoutManager.setX(1).setY(5).addComponent(this.runningAlgorithm);
+		this.layoutManager.setX(1).setY(6).addComponent(this.timeElapsed);
+		this.layoutManager.setX(1).setY(7).addComponent(this.stepCounter);
+		this.layoutManager.setX(1).setY(8).addComponent(this.finishedSuccessfully);
+		this.layoutManager.setX(1).setY(9).addComponent(this.pathWeight);
 
-		this.layoutManager.setWeightY(1.0).setWidth(4);
+		this.layoutManager.setWidth(4).setInsets(0, 5, 0, 5);
+		this.layoutManager.setX(0).setY(2).addComponent(this.showEdgeWeights);
+
+		this.layoutManager.setWeightY(1.0).setInsets(0, 5, 5, 5);
 		this.layoutManager.setFill(GridBagConstraints.BOTH);
-		this.layoutManager.setX(0).setY(2).addComponent(this.gridView);
+		this.layoutManager.setX(0).setY(3).addComponent(this.gridView);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
 		String actionCommand = actionEvent.getActionCommand();
 
-		if (actionCommand.equals("select_startAlgorithm")) {
+		if (actionCommand.equals("select_start_algorithm")) {
 			StartAlgorithm startAlgorithm = (StartAlgorithm) this.startAlgorithms.getSelectedItem();
 			this.algorithmRunner.setSelectedStartAlgorithm(startAlgorithm);
 		}
-		else if (actionCommand.equals("select_optimizerAlgorithm")) {
+		else if (actionCommand.equals("select_optimizer_algorithm")) {
 			Object selectedItem = this.optimizerAlgorithms.getSelectedItem();
 			OptimizerAlgorithm optimizerAlgorithm = null;
 
@@ -212,6 +224,10 @@ public class AlgorithmRunnerView extends JPanel implements Observer, ActionListe
 				optimizerAlgorithm = (OptimizerAlgorithm) this.optimizerAlgorithms.getSelectedItem();
 			}
 			this.algorithmRunner.setSelectedOptimizerAlgorithm(optimizerAlgorithm);
+		}
+		else if (actionCommand.equals("show_edge_weights")) {
+			boolean visible = this.showEdgeWeights.isSelected();
+			this.gridView.showEdgeWeights(visible);
 		}
 	}
 

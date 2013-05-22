@@ -27,11 +27,15 @@ public class EdgeView {
 	private final Group svgGroup;
 	private final Line svgLine;
 
+	private final EdgeWeightView edgeWeightView;
+
 	protected EdgeView(Edge edge, SVGDiagram svgDiagram) {
 		this.edge = edge;
 
 		this.svgGroup = (Group) svgDiagram.getElement(GridView.SVG_GROUP_EDGES);
 		this.svgLine = new Line();
+
+		this.edgeWeightView = new EdgeWeightView(edge, svgDiagram);
 	}
 
 	protected void createLine() {
@@ -46,6 +50,8 @@ public class EdgeView {
 			this.svgLine.addAttribute("stroke-dasharray", AnimationElement.AT_CSS, "2, 8");
 
 			this.svgGroup.loaderAddChild(null, this.svgLine);
+
+			this.edgeWeightView.createText();
 		}
 		catch (SVGException exception) {
 			exception.printStackTrace();
@@ -55,6 +61,8 @@ public class EdgeView {
 	protected void deleteLine() {
 		try {
 			this.svgGroup.removeChild(this.svgLine);
+
+			this.edgeWeightView.deleteText();
 		}
 		catch (SVGException exception) {
 			exception.printStackTrace();
