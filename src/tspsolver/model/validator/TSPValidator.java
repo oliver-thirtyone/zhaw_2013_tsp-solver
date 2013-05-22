@@ -12,7 +12,7 @@ import tspsolver.model.scenario.path.Path;
 
 public class TSPValidator implements Validator {
 
-	public static final int MINIMUM_NODE_COUNT = 3;
+	public static final int MINIMUM_VERTEX_COUNT = 3;
 	public static final int MINIMUM_EDGE_COUNT = 2;
 	public static final int REQUIRED_PATH_OCCURENCES = 2;
 
@@ -40,8 +40,8 @@ public class TSPValidator implements Validator {
 	public boolean validateGrid(Scenario scenario, Grid grid) {
 		boolean validGrid = true;
 
-		if (grid.getNumberOfVertices() < TSPValidator.MINIMUM_NODE_COUNT) {
-			System.err.println("We need at least " + TSPValidator.MINIMUM_NODE_COUNT + " vertices in the vertex set");
+		if (grid.getNumberOfVertices() < TSPValidator.MINIMUM_VERTEX_COUNT) {
+			System.err.println("We need at least " + TSPValidator.MINIMUM_VERTEX_COUNT + " vertices in the vertex set");
 			validGrid = false;
 		}
 

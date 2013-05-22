@@ -13,7 +13,7 @@ public class Grid extends Observable implements Serializable, Observer {
 
 	private static final long serialVersionUID = 8471461234146693504L;
 
-	public static final boolean LINK_ADDED_NODE = true;
+	public static final boolean LINK_ADDED_VERTEX = true;
 
 	private final Map<String, Vertex> vertices;
 
@@ -81,7 +81,7 @@ public class Grid extends Observable implements Serializable, Observer {
 	}
 
 	protected void addVertex(Vertex vertex) {
-		this.addVertex(vertex, Grid.LINK_ADDED_NODE);
+		this.addVertex(vertex, Grid.LINK_ADDED_VERTEX);
 	}
 
 	protected synchronized void addVertex(Vertex vertex, boolean link) {
@@ -94,7 +94,7 @@ public class Grid extends Observable implements Serializable, Observer {
 			vertex.addObserver(this);
 
 			this.vertices.put(vertex.getName(), vertex);
-			this.fireVertexUpdate(vertex, VertexUpdateAction.ADD_NODE);
+			this.fireVertexUpdate(vertex, VertexUpdateAction.ADD_VERTEX);
 		}
 	}
 
@@ -106,7 +106,7 @@ public class Grid extends Observable implements Serializable, Observer {
 			vertex.deleteObserver(this);
 
 			this.vertices.remove(vertex);
-			this.fireVertexUpdate(vertex, VertexUpdateAction.REMOVE_NODE);
+			this.fireVertexUpdate(vertex, VertexUpdateAction.REMOVE_VERTEX);
 		}
 	}
 

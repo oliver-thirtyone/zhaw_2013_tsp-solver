@@ -42,7 +42,7 @@ public class GridView extends JPanel implements Observer {
 	public static final int MAP_SWITZERLAND_HEIGHT = 320;
 
 	public static final String DATA_MAP_SWITZERLAND = "data/map/switzerland_simple.svg";
-	public static final String SVG_GROUP_NODES = "tspsolver.vertices";
+	public static final String SVG_GROUP_VERTICES = "tspsolver.vertices";
 	public static final String SVG_GROUP_EDGES = "tspsolver.edges";
 
 	private final static long serialVersionUID = -5210001067574218993L;
@@ -135,11 +135,11 @@ public class GridView extends JPanel implements Observer {
 
 			if (vertexView != null) {
 				switch (action) {
-					case ADD_STARTING_NODE:
-						vertexView.updateCircle(VertexView.CIRCLE_FILL_STARTINGNODE);
+					case ADD_STARTING_VERTEX:
+						vertexView.updateCircle(VertexView.CIRCLE_FILL_STARTINGVERTEX);
 						break;
-					case REMOVE_STARTING_NODE:
-						vertexView.updateCircle(VertexView.CIRCLE_FILL_NODE);
+					case REMOVE_STARTING_VERTEX:
+						vertexView.updateCircle(VertexView.CIRCLE_FILL_VERTEX);
 						break;
 					default:
 						break;
@@ -156,14 +156,14 @@ public class GridView extends JPanel implements Observer {
 			VertexView vertexView = null;
 
 			switch (action) {
-				case ADD_NODE:
+				case ADD_VERTEX:
 					if (!this.vertexViews.containsKey(vertex)) {
 						vertexView = new VertexView(vertex, this.svgDiagram);
 						vertexView.createCircle();
 						this.vertexViews.put(vertex, vertexView);
 					}
 					break;
-				case REMOVE_NODE:
+				case REMOVE_VERTEX:
 					if (this.vertexViews.containsKey(vertex)) {
 						vertexView = this.vertexViews.get(vertex);
 						vertexView.deleteCircle();
@@ -260,12 +260,12 @@ public class GridView extends JPanel implements Observer {
 				this.scenario.update(this.scenario, new EdgeUpdate(edge, EdgeUpdateAction.ADD_EDGE));
 			}
 
-			this.scenario.update(this.scenario, new VertexUpdate(vertex, VertexUpdateAction.ADD_NODE));
+			this.scenario.update(this.scenario, new VertexUpdate(vertex, VertexUpdateAction.ADD_VERTEX));
 		}
 
 		Vertex startingVertex = this.scenario.getStartingVertex();
 		if (startingVertex != null) {
-			this.scenario.update(this.scenario, new StartingVertexUpdate(startingVertex, StartingVertexUpdateAction.ADD_STARTING_NODE));
+			this.scenario.update(this.scenario, new StartingVertexUpdate(startingVertex, StartingVertexUpdateAction.ADD_STARTING_VERTEX));
 		}
 
 		for (Edge edge : this.scenario.getPath().getEdges()) {
@@ -280,11 +280,11 @@ public class GridView extends JPanel implements Observer {
 
 		Vertex startingVertex = this.scenario.getStartingVertex();
 		if (startingVertex != null) {
-			this.scenario.update(this.scenario, new StartingVertexUpdate(startingVertex, StartingVertexUpdateAction.REMOVE_STARTING_NODE));
+			this.scenario.update(this.scenario, new StartingVertexUpdate(startingVertex, StartingVertexUpdateAction.REMOVE_STARTING_VERTEX));
 		}
 
 		for (Vertex vertex : this.scenario.getGrid().getVertices()) {
-			this.scenario.update(this.scenario, new VertexUpdate(vertex, VertexUpdateAction.REMOVE_NODE));
+			this.scenario.update(this.scenario, new VertexUpdate(vertex, VertexUpdateAction.REMOVE_VERTEX));
 
 			for (Edge edge : vertex.getEdges()) {
 				this.scenario.update(this.scenario, new EdgeUpdate(edge, EdgeUpdateAction.REMOVE_EDGE));

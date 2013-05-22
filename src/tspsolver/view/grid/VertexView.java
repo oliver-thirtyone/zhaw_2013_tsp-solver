@@ -12,8 +12,8 @@ public class VertexView {
 
 	public static final String CIRCLE_RADIUS = "8";
 
-	public static final String CIRCLE_FILL_NODE = "#000000";
-	public static final String CIRCLE_FILL_STARTINGNODE = "#0000ff";
+	public static final String CIRCLE_FILL_VERTEX = "#000000";
+	public static final String CIRCLE_FILL_STARTINGVERTEX = "#0000ff";
 
 	private final Vertex vertex;
 
@@ -23,7 +23,7 @@ public class VertexView {
 	protected VertexView(Vertex vertex, SVGDiagram svgDiagram) {
 		this.vertex = vertex;
 
-		this.svgGroup = (Group) svgDiagram.getElement(GridView.SVG_GROUP_NODES);
+		this.svgGroup = (Group) svgDiagram.getElement(GridView.SVG_GROUP_VERTICES);
 		this.svgCircle = new Circle();
 	}
 

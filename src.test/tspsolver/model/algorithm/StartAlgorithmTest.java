@@ -18,10 +18,10 @@ import tspsolver.model.validator.Validator;
 public abstract class StartAlgorithmTest {
 
 	public static final String SCENARIO_NORTH_EAST_SOUTH_WEST = "data.test/scenario/test_north_south_east_west.xml";
-	public static final String SCENARIO_FIVE_NODES = "data.test/scenario/test_five_vertices.xml";
-	public static final String SCENARIO_FIVE_NODES_ONE_NON_ACCESSIBLE_EDGE = "data.test/scenario/test_five_vertices_one_non-accessible_edge.xml";
+	public static final String SCENARIO_FIVE_VERTICES = "data.test/scenario/test_five_vertices.xml";
+	public static final String SCENARIO_FIVE_VERTICES_ONE_NON_ACCESSIBLE_EDGE = "data.test/scenario/test_five_vertices_one_non-accessible_edge.xml";
 	public static final String SCENARIO_UNSOLVABLE = "data.test/scenario/test_unsolvable_scenario.xml";
-	public static final String SCENARIO_FORTYONE_NODES = "data.test/scenario/test_fortyone_vertices.xml";
+	public static final String SCENARIO_FORTYONE_VERTICES = "data.test/scenario/test_fortyone_vertices.xml";
 
 	private static final Validator VALIDATOR = new TSPValidator();
 
@@ -49,10 +49,10 @@ public abstract class StartAlgorithmTest {
 		// Load all scenarios
 		try {
 			scenarioLoader.loadScenario(this.scenarioNorthEastSouthWest, new FileInputStream(StartAlgorithmTest.SCENARIO_NORTH_EAST_SOUTH_WEST));
-			scenarioLoader.loadScenario(this.scenarioFiveVertices, new FileInputStream(StartAlgorithmTest.SCENARIO_FIVE_NODES));
-			scenarioLoader.loadScenario(this.scenarioFiveVerticesOneNonAccessibleEdge, new FileInputStream(StartAlgorithmTest.SCENARIO_FIVE_NODES_ONE_NON_ACCESSIBLE_EDGE));
+			scenarioLoader.loadScenario(this.scenarioFiveVertices, new FileInputStream(StartAlgorithmTest.SCENARIO_FIVE_VERTICES));
+			scenarioLoader.loadScenario(this.scenarioFiveVerticesOneNonAccessibleEdge, new FileInputStream(StartAlgorithmTest.SCENARIO_FIVE_VERTICES_ONE_NON_ACCESSIBLE_EDGE));
 			scenarioLoader.loadScenario(this.scenarioUnsolvable, new FileInputStream(StartAlgorithmTest.SCENARIO_UNSOLVABLE));
-			scenarioLoader.loadScenario(this.scenarioFortyoneVertices, new FileInputStream(StartAlgorithmTest.SCENARIO_FORTYONE_NODES));
+			scenarioLoader.loadScenario(this.scenarioFortyoneVertices, new FileInputStream(StartAlgorithmTest.SCENARIO_FORTYONE_VERTICES));
 		}
 		catch (IllegalArgumentException exception) {
 			exception.printStackTrace();

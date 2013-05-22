@@ -222,13 +222,13 @@ public class Scenario extends Observable implements Serializable, Observer {
 
 	public void setStartingVertex(Vertex startingVertex) {
 		if (this.startingVertex != null) {
-			this.fireStartingVertexUpdate(this.startingVertex, StartingVertexUpdateAction.REMOVE_STARTING_NODE);
+			this.fireStartingVertexUpdate(this.startingVertex, StartingVertexUpdateAction.REMOVE_STARTING_VERTEX);
 		}
 
 		this.startingVertex = startingVertex;
 
 		if (this.startingVertex != null) {
-			this.fireStartingVertexUpdate(this.startingVertex, StartingVertexUpdateAction.ADD_STARTING_NODE);
+			this.fireStartingVertexUpdate(this.startingVertex, StartingVertexUpdateAction.ADD_STARTING_VERTEX);
 		}
 	}
 

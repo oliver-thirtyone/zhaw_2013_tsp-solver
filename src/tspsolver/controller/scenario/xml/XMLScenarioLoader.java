@@ -72,7 +72,7 @@ public class XMLScenarioLoader implements ScenarioLoader {
 						NodeList xmlNodes = rootXMLVertex.getChildNodes();
 						for (int y = 0; y < xmlNodes.getLength(); y++) {
 							Node xmlNode = xmlNodes.item(y);
-							if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_NODE.toString())) {
+							if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_VERTEX.toString())) {
 								this.parseVertex(scenario.getGrid(), vertices, xmlNode);
 							}
 							else if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_ADD_EDGE.toString())) {
@@ -81,7 +81,7 @@ public class XMLScenarioLoader implements ScenarioLoader {
 							else if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_REMOVE_EDGE.toString())) {
 								this.parseRemoveEdge(scenario.getGrid(), vertices, xmlNode);
 							}
-							else if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_STARTINGNODE.toString())) {
+							else if (xmlNode.getNodeName().equals(XMLScenario.ELEMENT_STARTINGVERTEX.toString())) {
 								this.parseStartingVertex(scenario, vertices, xmlNode);
 							}
 						}
@@ -107,10 +107,10 @@ public class XMLScenarioLoader implements ScenarioLoader {
 	private void parseVertex(Grid grid, Map<String, Vertex> vertices, Node xmlNode) {
 		Element nodeElement = (Element) xmlNode;
 
-		String name = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_NAME.toString());
-		String x = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_X.toString());
-		String y = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_Y.toString());
-		String link = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_LINK.toString());
+		String name = nodeElement.getAttribute(XMLScenario.ELEMENT_VERTEX_ATTRIBUTE_NAME.toString());
+		String x = nodeElement.getAttribute(XMLScenario.ELEMENT_VERTEX_ATTRIBUTE_X.toString());
+		String y = nodeElement.getAttribute(XMLScenario.ELEMENT_VERTEX_ATTRIBUTE_Y.toString());
+		String link = nodeElement.getAttribute(XMLScenario.ELEMENT_VERTEX_ATTRIBUTE_LINK.toString());
 
 		// Check if this vertex already exists
 		if (vertices.containsKey(name)) {
@@ -135,8 +135,8 @@ public class XMLScenarioLoader implements ScenarioLoader {
 	private void parseAddEdge(Grid grid, Map<String, Vertex> vertices, Node xmlNode) {
 		Element addEdgeElement = (Element) xmlNode;
 
-		String firstVertexName = addEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_FIRSTNODE.toString());
-		String secondVertexName = addEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_SECONDNODE.toString());
+		String firstVertexName = addEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_FIRSTVERTEX.toString());
+		String secondVertexName = addEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_SECONDVERTEX.toString());
 		String weight = addEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_WEIGHT.toString());
 
 		// Check if the referred vertices do exist
@@ -168,8 +168,8 @@ public class XMLScenarioLoader implements ScenarioLoader {
 	private void parseRemoveEdge(Grid grid, Map<String, Vertex> vertices, Node xmlNode) {
 		Element removeEdgeElement = (Element) xmlNode;
 
-		String firstVertexName = removeEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_FIRSTNODE.toString());
-		String secondVertexName = removeEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_SECONDNODE.toString());
+		String firstVertexName = removeEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_FIRSTVERTEX.toString());
+		String secondVertexName = removeEdgeElement.getAttribute(XMLScenario.ELEMENT_EDGE_ATTRIBUTE_SECONDVERTEX.toString());
 
 		// Check if the referred vertices do exist
 		if (!vertices.containsKey(firstVertexName)) {
@@ -195,7 +195,7 @@ public class XMLScenarioLoader implements ScenarioLoader {
 	private void parseStartingVertex(Scenario scenario, Map<String, Vertex> vertices, Node xmlNode) {
 		Element nodeElement = (Element) xmlNode;
 
-		String name = nodeElement.getAttribute(XMLScenario.ELEMENT_NODE_ATTRIBUTE_NAME.toString());
+		String name = nodeElement.getAttribute(XMLScenario.ELEMENT_VERTEX_ATTRIBUTE_NAME.toString());
 
 		// Check if this vertex exists
 		if (!vertices.containsKey(name)) {
