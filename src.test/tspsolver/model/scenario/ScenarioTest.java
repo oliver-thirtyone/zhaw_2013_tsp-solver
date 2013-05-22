@@ -1,7 +1,5 @@
 package tspsolver.model.scenario;
 
-import java.io.FileNotFoundException;
-
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -53,7 +51,7 @@ public class ScenarioTest {
 	}
 
 	@Test
-	public void testCopy() throws FileNotFoundException {
+	public void testCopy() {
 		Scenario copyOfScenario = this.scenario.copy();
 		Assert.assertEquals(this.scenario, copyOfScenario);
 	}

@@ -56,7 +56,7 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 		Assert.assertEquals(6, stepCounter);
 
 		// Check if the path is valid
-		Assert.assertTrue(this.scenarioNorthEastSouthWest.isPathValid());
+		Assert.assertTrue(StartAlgorithmTest.scenarioNorthEastSouthWest.isPathValid());
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 		Assert.assertEquals(24, stepCounter);
 
 		// Check if the path is valid
-		Assert.assertTrue(this.scenarioFiveVertices.isPathValid());
+		Assert.assertTrue(StartAlgorithmTest.scenarioFiveVertices.isPathValid());
 	}
 
 	@Override
@@ -160,7 +160,7 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 		Assert.assertEquals(24, stepCounter);
 
 		// Check if the path is valid
-		Assert.assertTrue(this.scenarioFiveVerticesOneNonAccessibleEdge.isPathValid());
+		Assert.assertTrue(StartAlgorithmTest.scenarioFiveVerticesOneNonAccessibleEdge.isPathValid());
 	}
 
 	@Override
@@ -183,11 +183,11 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 		Assert.assertTrue(this.path.isEmpty());
 
 		// Check if the path is invalid
-		Assert.assertFalse(this.scenarioUnsolvable.isPathValid());
+		Assert.assertFalse(StartAlgorithmTest.scenarioUnsolvable.isPathValid());
 	}
 
 	@Override
-	protected void doTestScenarioFortyoneVertex() {
+	protected void doTestScenarioFortyoneVertices() {
 		// Step through the algorithm (10000 steps)
 		for (int i = 0; i < 10000; i++) {
 			Assert.assertTrue(this.algorithm.step());
@@ -200,7 +200,7 @@ public class BruteForceAlgorithmTest extends StartAlgorithmTest {
 		Assert.assertTrue(this.algorithm.step());
 
 		// Check if the path is valid. It is not the best path but it should be valid
-		Assert.assertTrue(this.scenarioFortyoneVertices.isPathValid());
+		Assert.assertTrue(StartAlgorithmTest.scenarioFortyoneVertices.isPathValid());
 	}
 
 }

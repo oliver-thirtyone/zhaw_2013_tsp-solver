@@ -3,6 +3,7 @@ package tspsolver.model.algorithm.start;
 import junit.framework.Assert;
 
 import org.junit.Before;
+import org.junit.Test;
 
 import tspsolver.model.algorithm.StartAlgorithmTest;
 import tspsolver.model.scenario.grid.Edge;
@@ -51,7 +52,7 @@ public class MinimumSpanningTreeHeuristikTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(edgeSouthWest));
 
 		// Check if the path is valid
-		Assert.assertTrue(this.scenarioNorthEastSouthWest.isPathValid());
+		Assert.assertTrue(StartAlgorithmTest.scenarioNorthEastSouthWest.isPathValid());
 	}
 
 	@Override
@@ -96,7 +97,7 @@ public class MinimumSpanningTreeHeuristikTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(edge45));
 
 		// Check if the path is valid
-		Assert.assertTrue(this.scenarioFiveVertices.isPathValid());
+		Assert.assertTrue(StartAlgorithmTest.scenarioFiveVertices.isPathValid());
 	}
 
 	@Override
@@ -141,7 +142,7 @@ public class MinimumSpanningTreeHeuristikTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(edge45));
 
 		// Check if the path is valid
-		Assert.assertTrue(this.scenarioFiveVerticesOneNonAccessibleEdge.isPathValid());
+		Assert.assertTrue(StartAlgorithmTest.scenarioFiveVerticesOneNonAccessibleEdge.isPathValid());
 	}
 
 	@Override
@@ -185,7 +186,7 @@ public class MinimumSpanningTreeHeuristikTest extends StartAlgorithmTest {
 	}
 
 	@Override
-	protected void doTestScenarioFortyoneVertex() {
+	protected void doTestScenarioFortyoneVertices() {
 		// Step through the algorithm
 		do {
 			Assert.assertTrue(this.algorithm.step());
@@ -195,7 +196,22 @@ public class MinimumSpanningTreeHeuristikTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.algorithm.step());
 
 		// Check if the path is valid
-		Assert.assertTrue(this.scenarioFortyoneVertices.isPathValid());
+		Assert.assertTrue(StartAlgorithmTest.scenarioFortyoneVertices.isPathValid());
+	}
+
+	@Test
+	public void testScenario00100Vertices() {
+		this.testScenario(StartAlgorithmTest.scenario00100Vertices);
+	}
+
+	@Test
+	public void testScenario00200Vertices() {
+		this.testScenario(StartAlgorithmTest.scenario00200Vertices);
+	}
+
+	@Test
+	public void testScenario0400Vertices() {
+		// FIXME: why does this take so long?
 	}
 
 }

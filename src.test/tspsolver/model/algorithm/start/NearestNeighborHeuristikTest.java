@@ -3,6 +3,7 @@ package tspsolver.model.algorithm.start;
 import junit.framework.Assert;
 
 import org.junit.Before;
+import org.junit.Test;
 
 import tspsolver.model.algorithm.StartAlgorithmTest;
 import tspsolver.model.scenario.grid.Edge;
@@ -60,7 +61,7 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(edgeEastWest));
 
 		// Check if the path is valid
-		Assert.assertTrue(this.scenarioNorthEastSouthWest.isPathValid());
+		Assert.assertTrue(StartAlgorithmTest.scenarioNorthEastSouthWest.isPathValid());
 	}
 
 	@Override
@@ -118,7 +119,7 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(edge35));
 
 		// Check if the path is valid
-		Assert.assertTrue(this.scenarioFiveVertices.isPathValid());
+		Assert.assertTrue(StartAlgorithmTest.scenarioFiveVertices.isPathValid());
 	}
 
 	@Override
@@ -179,7 +180,7 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(edge35));
 
 		// Check if the path is invalid
-		Assert.assertFalse(this.scenarioFiveVerticesOneNonAccessibleEdge.isPathValid());
+		Assert.assertFalse(StartAlgorithmTest.scenarioFiveVerticesOneNonAccessibleEdge.isPathValid());
 	}
 
 	@Override
@@ -222,11 +223,11 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.path.containsEdge(edgeEast2West2));
 
 		// Check if the path is invalid
-		Assert.assertFalse(this.scenarioUnsolvable.isPathValid());
+		Assert.assertFalse(StartAlgorithmTest.scenarioUnsolvable.isPathValid());
 	}
 
 	@Override
-	protected void doTestScenarioFortyoneVertex() {
+	protected void doTestScenarioFortyoneVertices() {
 		// Take 39 steps
 		for (int i = 0; i < 40; i++) {
 			Assert.assertTrue(this.algorithm.step());
@@ -241,7 +242,32 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.algorithm.step());
 
 		// Check if the path is valid
-		Assert.assertTrue(this.scenarioFortyoneVertices.isPathValid());
+		Assert.assertTrue(StartAlgorithmTest.scenarioFortyoneVertices.isPathValid());
+	}
+
+	@Test
+	public void testScenario00100Vertices() {
+		this.testScenario(StartAlgorithmTest.scenario00100Vertices);
+	}
+
+	@Test
+	public void testScenario00200Vertices() {
+		this.testScenario(StartAlgorithmTest.scenario00200Vertices);
+	}
+
+	@Test
+	public void testScenario0400Vertices() {
+		this.testScenario(StartAlgorithmTest.scenario00400Vertices);
+	}
+
+	@Test
+	public void testScenario00800Vertices() {
+		this.testScenario(StartAlgorithmTest.scenario00800Vertices);
+	}
+
+	@Test
+	public void testScenario01600Vertices() {
+		this.testScenario(StartAlgorithmTest.scenario01600Vertices);
 	}
 
 }
