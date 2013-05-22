@@ -54,10 +54,11 @@ public class RandomAlgorithm extends StartAlgorithm {
 				possibleEdges.add(edge);
 			}
 
-			// Get the a random edge to a vertex that we still have to visit
+			// Get a random edge to a vertex that we still have to visit
 			while (possibleEdges.size() > 0 && randomEdge == null) {
-				Edge edge = possibleEdges.get(this.random.nextInt(possibleEdges.size()));
-				possibleEdges.remove(edge);
+				int randomIndex = this.random.nextInt(possibleEdges.size());
+				Edge edge = possibleEdges.get(randomIndex);
+				possibleEdges.remove(randomIndex);
 
 				// If this edge does lead to a vertex we want to visit we will use it
 				for (Vertex vertexToVisit : this.verticesToVisit) {
