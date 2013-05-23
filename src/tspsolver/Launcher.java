@@ -87,6 +87,7 @@ public class Launcher {
 
 		// Create the main view
 		MainFrame mainFrame = new MainFrame(controller);
+		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
 	}
 }
