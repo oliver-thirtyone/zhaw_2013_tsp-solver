@@ -1,0 +1,69 @@
+<project name="Build" basedir=".." default="run">
+	<property file="ant/build.properties" />
+
+	<property name="initialize" value="true" />
+	<condition property="initialize.true">
+		<equals arg1="${initialize}" arg2="true" />
+	</condition>
+
+	<property name="compile" value="true" />
+	<condition property="compile.true">
+		<equals arg1="${compile}" arg2="true" />
+	</condition>
+
+
+	<path id="lib">
+		<fileset dir="lib" includes="**/*.jar" />
+	</path>
+
+
+	<!-- Default target: Creates the jar and the exe -->
+	<target name="run" depends="-initialize">
+		<antcall target="-jar" />
+		<antcall target="-exe" />
+	</target>
+
+	<!-- Public target: Create the jar -->
+	<target name="jar" depends="-initialize">
+		<antcall target="-jar" />
+	</target>
+
+
+	<!-- Cleanup -->
+	<target name="-cleanup" if="initialize.true">
+		<delete dir="bin" />
+		<delete dir="build" />
+	</target>
+
+	<!-- Initialize -->
+	<target name="-initialize" if="initialize.true" depends="-cleanup">
+		<mkdir dir="bin" />
+		<mkdir dir="build" />
+
+		<copy todir="bin">
+			<fileset dir="data" />
+		</copy>
+	</target>
+
+	<!-- Compile -->
+	<target name="-compile" if="compile.true">
+		<javac compiler="modern" srcdir="src" destdir="bin" debug="true" debuglevel="lines,source" fork="true">
+			<classpath>
+				<path refid="lib" />
+			</classpath>
+		</javac>
+	</target>
+
+	<!-- Create the jar file -->
+	<target name="-jar" depends="-compile">
+		<jar basedir="bin" destfile="build/${jar.name}" manifest="${jar.manifest}" />
+	</target>
+
+	<!-- Create the exe file -->
+	<target name="-exe">
+		 <exec executable="cmd" dir="${launch4j.home}">
+            <arg line="/c launch4jc.exe &quot;${basedir}/${launch4j.config}&quot;" />
+        </exec>
+	</target>
+
+</project>

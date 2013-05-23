@@ -1,0 +1,33 @@
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>C:\Development\Java\Tools\TSP-Solver\build\TSP-Solver.jar</jar>
+  <outfile>C:\Development\Java\Tools\TSP-Solver\build\TSP-Solver.exe</outfile>
+  <errTitle>Invalid java environment</errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl>http://java.com/help</supportUrl>
+  <customProcName>false</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon>C:\Development\Java\Tools\TSP-Solver\launch4j\TSP-Solver.ico</icon>
+  <jre>
+    <path></path>
+    <minVersion>1.7.0_01</minVersion>
+    <jdkPreference>preferJre</jdkPreference>
+  </jre>
+  <versionInfo>
+    <fileVersion>1.1.0.0</fileVersion>
+    <txtFileVersion>1.1.0.0</txtFileVersion>
+    <fileDescription>TSP-Solver</fileDescription>
+    <copyright>Copyright � 2013</copyright>
+    <productVersion>1.0.0.0</productVersion>
+    <txtProductVersion>1.0.0.0</txtProductVersion>
+    <productName>TSP-Solver</productName>
+    <companyName></companyName>
+    <internalName>TSP-Solver</internalName>
+    <originalFilename>TSP-Solver.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>

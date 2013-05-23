@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Created-By: Markus Peloso, Oliver Streuli
+Main-Class: tspsolver.Launcher
+Class-Path: lib/svgSalamander_2013-03-23.jar
