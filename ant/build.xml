@@ -39,10 +39,6 @@
 	<target name="-initialize" if="initialize.true" depends="-cleanup">
 		<mkdir dir="bin" />
 		<mkdir dir="build" />
-
-		<copy todir="bin">
-			<fileset dir="data" />
-		</copy>
 	</target>
 
 	<!-- Compile -->

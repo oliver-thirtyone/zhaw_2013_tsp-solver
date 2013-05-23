@@ -4,6 +4,7 @@ import java.awt.GridBagConstraints;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import tspsolver.controller.AlgorithmRunner;
@@ -12,6 +13,7 @@ import tspsolver.util.view.layout.LayoutManager;
 
 public class MainFrame extends JFrame {
 
+	public static final String ICON = "data/img/icon.png";
 	private final static long serialVersionUID = -5157138756987495470L;
 
 	private final LayoutManager layoutManager;
@@ -30,6 +32,9 @@ public class MainFrame extends JFrame {
 			AlgorithmRunnerView algorithmRunnerView = new AlgorithmRunnerView(algorithmRunner);
 			this.algorithmRunnerViews.add(algorithmRunnerView);
 		}
+
+		ImageIcon icon = new ImageIcon(MainFrame.ICON);
+		this.setIconImage(icon != null ? icon.getImage() : null);
 
 		this.components();
 		this.pack();
