@@ -22,7 +22,7 @@ public abstract class MainRunner extends Observable implements Observer {
 	@Override
 	public void update(Observable observable, Object argument) {
 		this.setChanged();
-		this.notifyObservers();
+		this.notifyObservers(argument);
 	}
 
 	public boolean canInitialize() {
@@ -37,18 +37,6 @@ public abstract class MainRunner extends Observable implements Observer {
 	}
 
 	public boolean initialize() {
-		boolean successful = true;
-		for (Runner runner : this.runners) {
-			if (!runner.initialize()) {
-				successful = false;
-			}
-		}
-		return successful;
-	}
-
-	public boolean initialize(int stepDelay) {
-		this.stepDelay = stepDelay;
-
 		boolean successful = true;
 		for (Runner runner : this.runners) {
 			if (!runner.initialize(this.stepDelay)) {
@@ -171,4 +159,8 @@ public abstract class MainRunner extends Observable implements Observer {
 		return this.stepDelay;
 	}
 
+	public void setStepDelay(int stepDelay) {
+		this.stepDelay = stepDelay;
+		this.update(this, null);
+	}
 }

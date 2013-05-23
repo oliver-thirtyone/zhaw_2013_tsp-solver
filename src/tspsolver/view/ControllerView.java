@@ -69,8 +69,10 @@ public class ControllerView extends JPanel implements Observer, ActionListener {
 		this.pause.setActionCommand("pause");
 		this.pause.addActionListener(this);
 
-		this.stepDelayLabel = new JLabel("Instruction delay [ms]:");
+		this.stepDelayLabel = new JLabel("Step delay [ms]:");
 		this.stepDelay = new JTextField(15);
+		this.stepDelay.setActionCommand("set_step_delay");
+		this.stepDelay.addActionListener(this);
 
 		this.scenarioLabel = new JLabel("Scenario:");
 		this.scenarios = new JComboBox<Scenario>();
@@ -141,15 +143,18 @@ public class ControllerView extends JPanel implements Observer, ActionListener {
 	}
 
 	private void actionPerformed(String actionCommand) {
-		// Turn the stepDelay into an integer
-		int stepDelay = Runner.DEFAULT_STEP_DELAY;
-		try {
-			if (!this.stepDelay.getText().isEmpty()) {
-				stepDelay = Integer.parseInt(this.stepDelay.getText());
+		if (actionCommand.equals("set_step_delay") || actionCommand.equals("initialize")) {
+			// Turn the stepDelay into an integer
+			int stepDelay = Runner.DEFAULT_STEP_DELAY;
+			try {
+				if (!this.stepDelay.getText().isEmpty()) {
+					stepDelay = Integer.parseInt(this.stepDelay.getText());
+				}
 			}
-		}
-		catch (NumberFormatException exception) {
-			// Nothing to do here
+			catch (NumberFormatException exception) {
+				// Nothing to do here
+			}
+			this.controller.setStepDelay(stepDelay);
 		}
 
 		if (actionCommand.equals("select_scenario")) {
@@ -157,7 +162,7 @@ public class ControllerView extends JPanel implements Observer, ActionListener {
 			this.controller.setSelectedScenario(scenario);
 		}
 		else if (actionCommand.equals("initialize")) {
-			this.controller.initialize(stepDelay);
+			this.controller.initialize();
 		}
 		else if (actionCommand.equals("start")) {
 			this.controller.start();

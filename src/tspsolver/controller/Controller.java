@@ -2,7 +2,6 @@ package tspsolver.controller;
 
 import tspsolver.model.scenario.Scenario;
 import tspsolver.util.runner.MainRunner;
-import tspsolver.util.runner.Runner;
 
 public class Controller extends MainRunner {
 
@@ -22,18 +21,13 @@ public class Controller extends MainRunner {
 
 	@Override
 	public synchronized boolean initialize() {
-		return this.initialize(Runner.DEFAULT_STEP_DELAY);
-	}
-
-	@Override
-	public synchronized boolean initialize(int stepDelay) {
 		// Check if a scenario is selected
 		if (this.getSelectedScenario() == null) {
 			return false;
 		}
 
 		// Initialize all runners
-		return super.initialize(stepDelay);
+		return super.initialize();
 	}
 
 	@Override
