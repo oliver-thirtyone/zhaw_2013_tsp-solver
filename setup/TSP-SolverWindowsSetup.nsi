@@ -40,6 +40,7 @@ SetShellVarContext all
 setOutPath $INSTDIR
 CreateDirectory "$SMPROGRAMS\ZHAW\Softwareprojekt FS-13\TSP-Solver"
 CreateShortcut  "$SMPROGRAMS\ZHAW\Softwareprojekt FS-13\TSP-Solver\TSP-Solver.lnk" $INSTDIR\TSP-Solver.exe
+CreateShortcut  "$SMPROGRAMS\ZHAW\Softwareprojekt FS-13\TSP-Solver\TSP-Solver Uninstaller.lnk" $INSTDIR\TSP-SolverUninstaller.exe
 
 # default section end
 sectionEnd
@@ -55,6 +56,7 @@ RMDir /r $INSTDIR
 
 # remove the start menu
 SetShellVarContext all
+Delete "$SMPROGRAMS\ZHAW\Softwareprojekt FS-13\TSP-Solver\TSP-Solver Uninstaller.lnk"
 Delete "$SMPROGRAMS\ZHAW\Softwareprojekt FS-13\TSP-Solver\TSP-Solver.lnk"
 RMDir  "$SMPROGRAMS\ZHAW\Softwareprojekt FS-13\TSP-Solver"
 
