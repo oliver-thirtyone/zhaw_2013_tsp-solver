@@ -32,6 +32,8 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 		}
 
 		this.currentPath.addAll(this.startPath);
+
+		this.getPathUpdater().addPath(this.convertToPath(this.currentPath));
 	}
 
 	@Override
@@ -50,7 +52,8 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 		Path newPath = this.convertToPath(this.currentPath);
 
 		// Check if the new path is lighter
-		if (this.getPath().isEmpty() || (!newPath.isEmpty() && newPath.getWeight() < this.getPath().getWeight())) {
+		if (!newPath.isEmpty()
+				&& newPath.getWeight() < this.getPath().getWeight()) {
 			this.getPathUpdater().clearPath();
 			this.getPathUpdater().addPath(newPath);
 		}
@@ -59,8 +62,7 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 		if (lastPermutation) {
 			if (!this.getPath().isEmpty()) {
 				this.finishedSuccessfully();
-			}
-			else {
+			} else {
 				successfulStep = false;
 			}
 		}
@@ -83,14 +85,16 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 			}
 			i -= 1;
 			// lexikogr. Nachfolger hat größeres a[i]
-			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath.indexOf(this.currentPath.get(i + 1))) {
+			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath
+					.indexOf(this.currentPath.get(i + 1))) {
 				break;
 			}
 		}
 		int j = this.currentPath.size();
 		while (true) {
 			j -= 1;
-			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath.indexOf(this.currentPath.get(j))) {
+			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath
+					.indexOf(this.currentPath.get(j))) {
 				break;
 			}
 		}
@@ -134,8 +138,7 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 			if (edge != null) {
 				newPathUpdater.addEdge(edge);
 				currentVertex = vertex;
-			}
-			else {
+			} else {
 				isNewPathValid = false;
 			}
 		}
@@ -144,8 +147,7 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 		Edge edge = currentVertex.getEdgeToVertex(this.getStartingVertex());
 		if (edge != null) {
 			newPathUpdater.addEdge(edge);
-		}
-		else {
+		} else {
 			isNewPathValid = false;
 		}
 
