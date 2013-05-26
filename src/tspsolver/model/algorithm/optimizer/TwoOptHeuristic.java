@@ -9,11 +9,11 @@ import tspsolver.model.scenario.grid.Vertex;
 import tspsolver.model.scenario.path.Path;
 import tspsolver.model.scenario.path.PathUpdater;
 
-public class TwoOptHeuristik extends OptimizerAlgorithm {
+public class TwoOptHeuristic extends OptimizerAlgorithm {
 
 	private final Vector<Vertex> verticesInOrder;
 
-	public TwoOptHeuristik() {
+	public TwoOptHeuristic() {
 		this.verticesInOrder = new Vector<Vertex>();
 	}
 

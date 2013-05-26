@@ -12,7 +12,7 @@ import tspsolver.controller.AlgorithmRunner;
 import tspsolver.controller.scenario.xml.XMLScenarioLoader;
 import tspsolver.model.algorithm.OptimizerAlgorithm;
 import tspsolver.model.algorithm.StartAlgorithm;
-import tspsolver.model.algorithm.start.NearestNeighborHeuristik;
+import tspsolver.model.algorithm.start.NearestNeighborHeuristic;
 import tspsolver.model.scenario.Scenario;
 import tspsolver.model.validator.TSPValidator;
 import tspsolver.util.view.layout.LayoutManager;
@@ -64,7 +64,7 @@ public class TestGridView extends JFrame {
 		testGridView.setVisible(true);
 
 		// Run an algorithm
-		StartAlgorithm algorithm = new NearestNeighborHeuristik();
+		StartAlgorithm algorithm = new NearestNeighborHeuristic();
 		AlgorithmRunner runner = new AlgorithmRunner(new StartAlgorithm[] { algorithm }, new OptimizerAlgorithm[] {});
 
 		// Scenario copyOfScenario = scenario;

@@ -15,7 +15,7 @@ import tspsolver.model.scenario.path.Path;
 import tspsolver.model.scenario.path.PathUpdater;
 import tspsolver.model.validator.TSPValidator;
 
-public class LinKernighanHeuristikTest {
+public class LinKernighanHeuristicTest {
 
 	private Scenario scenario;
 	private Grid grid;
@@ -60,7 +60,7 @@ public class LinKernighanHeuristikTest {
 		this.edgeEastWest = GridFactory.getEdge(this.vertexEast, this.vertexWest);
 		this.edgeSouthWest = GridFactory.getEdge(this.vertexSouth, this.vertexWest);
 
-		this.algorithm = new LinKernighanHeuristik();
+		this.algorithm = new LinKernighanHeuristic();
 	}
 
 	@Test

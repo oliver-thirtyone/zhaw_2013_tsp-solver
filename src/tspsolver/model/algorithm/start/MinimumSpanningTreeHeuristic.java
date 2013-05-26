@@ -11,7 +11,7 @@ import tspsolver.model.comparators.grid.EdgeWeightTreeSetComparator;
 import tspsolver.model.scenario.grid.Edge;
 import tspsolver.model.scenario.grid.Vertex;
 
-public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
+public class MinimumSpanningTreeHeuristic extends StartAlgorithm {
 
 	private enum Phase {
 		CREATE_SPANNING_TREE, DO_EULERIAN_TRAIL
@@ -25,7 +25,7 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 	private Phase phase;
 	private Vertex currentVertex;
 
-	public MinimumSpanningTreeHeuristik() {
+	public MinimumSpanningTreeHeuristic() {
 		this.spanningTreeEdges = new Vector<Edge>();
 		this.spanningTreeVertices = new HashSet<Vertex>();
 

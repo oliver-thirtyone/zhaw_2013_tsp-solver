@@ -11,7 +11,7 @@ public class EdgeWeightTreeSetComparator implements Comparator<Edge> {
 		int result = edge1.getWeight() - edge2.getWeight();
 
 		if (result == 0) { // same weight
-			// This is a fix for the TreeSet in the MinimumSpanningTreeHeuristik
+			// This is a fix for the TreeSet in the MinimumSpanningTreeHeuristic
 			result = -1;
 		}
 

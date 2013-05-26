@@ -10,14 +10,14 @@ import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.scenario.grid.Edge;
 import tspsolver.model.scenario.grid.Vertex;
 
-public class RandomAlgorithm extends StartAlgorithm {
+public class RandomHeuristic extends StartAlgorithm {
 
 	private final SecureRandom random;
 	private final Set<Vertex> verticesToVisit;
 
 	private Vertex currentVertex;
 
-	public RandomAlgorithm() {
+	public RandomHeuristic() {
 		this.random = new SecureRandom();
 		this.verticesToVisit = new HashSet<Vertex>();
 

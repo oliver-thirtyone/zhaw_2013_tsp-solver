@@ -7,13 +7,13 @@ import tspsolver.model.algorithm.StartAlgorithm;
 import tspsolver.model.scenario.grid.Edge;
 import tspsolver.model.scenario.grid.Vertex;
 
-public class NearestNeighborHeuristik extends StartAlgorithm {
+public class NearestNeighborHeuristic extends StartAlgorithm {
 
 	private final Set<Vertex> verticesToVisit;
 
 	private Vertex currentVertex;
 
-	public NearestNeighborHeuristik() {
+	public NearestNeighborHeuristic() {
 		this.verticesToVisit = new HashSet<Vertex>();
 
 		this.reset();

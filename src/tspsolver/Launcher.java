@@ -13,12 +13,12 @@ import tspsolver.controller.scenario.ScenarioLoader;
 import tspsolver.controller.scenario.xml.XMLScenarioLoader;
 import tspsolver.model.algorithm.OptimizerAlgorithm;
 import tspsolver.model.algorithm.StartAlgorithm;
-import tspsolver.model.algorithm.optimizer.LinKernighanHeuristik;
-import tspsolver.model.algorithm.optimizer.TwoOptHeuristik;
+import tspsolver.model.algorithm.optimizer.LinKernighanHeuristic;
+import tspsolver.model.algorithm.optimizer.TwoOptHeuristic;
 import tspsolver.model.algorithm.start.BruteForceAlgorithm;
-import tspsolver.model.algorithm.start.MinimumSpanningTreeHeuristik;
-import tspsolver.model.algorithm.start.NearestNeighborHeuristik;
-import tspsolver.model.algorithm.start.RandomAlgorithm;
+import tspsolver.model.algorithm.start.MinimumSpanningTreeHeuristic;
+import tspsolver.model.algorithm.start.NearestNeighborHeuristic;
+import tspsolver.model.algorithm.start.RandomHeuristic;
 import tspsolver.model.scenario.Scenario;
 import tspsolver.model.validator.TSPValidator;
 import tspsolver.model.validator.Validator;
@@ -70,14 +70,14 @@ public class Launcher {
 			// Create the start-algorithms
 			StartAlgorithm[] startAlgorithms = new StartAlgorithm[4];
 			startAlgorithms[0] = new BruteForceAlgorithm();
-			startAlgorithms[1] = new NearestNeighborHeuristik();
-			startAlgorithms[2] = new MinimumSpanningTreeHeuristik();
-			startAlgorithms[3] = new RandomAlgorithm();
+			startAlgorithms[1] = new NearestNeighborHeuristic();
+			startAlgorithms[2] = new MinimumSpanningTreeHeuristic();
+			startAlgorithms[3] = new RandomHeuristic();
 
 			// Create the optimizer-algorithms
 			OptimizerAlgorithm[] optimizerAlgorithms = new OptimizerAlgorithm[2];
-			optimizerAlgorithms[0] = new TwoOptHeuristik();
-			optimizerAlgorithms[1] = new LinKernighanHeuristik();
+			optimizerAlgorithms[0] = new TwoOptHeuristic();
+			optimizerAlgorithms[1] = new LinKernighanHeuristic();
 
 			algorithmRunners[i] = new AlgorithmRunner(startAlgorithms, optimizerAlgorithms);
 		}
