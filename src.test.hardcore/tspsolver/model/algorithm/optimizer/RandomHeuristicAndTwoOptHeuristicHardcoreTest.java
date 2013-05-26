@@ -25,6 +25,11 @@ public class RandomHeuristicAndTwoOptHeuristicHardcoreTest extends OptimizerAlgo
 	}
 
 	@Test
+	public void testScenario00050Vertices() {
+		this.testScenario(50, "test_hardcore_00050_vertices.xml");
+	}
+
+	@Test
 	public void testScenario00100Vertices() {
 		this.testScenario(100, "test_hardcore_00100_vertices.xml");
 	}

@@ -24,4 +24,9 @@ public class NearestNeighborHeuristicAndLinKernighanHeuristicHardcoreTest extend
 		this.testScenario(13, "test_hardcore_00013_vertices.xml");
 	}
 
+	@Test
+	public void testScenario00050Vertices() {
+		this.testScenario(50, "test_hardcore_00050_vertices.xml");
+	}
+
 }
