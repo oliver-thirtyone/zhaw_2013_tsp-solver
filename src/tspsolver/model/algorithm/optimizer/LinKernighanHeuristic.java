@@ -12,13 +12,13 @@ import tspsolver.model.scenario.path.Path;
 import tspsolver.model.scenario.path.PathUpdater;
 import tspsolver.model.validator.Validator;
 
-public class LinKernighanHeuristik extends OptimizerAlgorithm {
+public class LinKernighanHeuristic extends OptimizerAlgorithm {
 
 	private final Vector<Vertex> verticesInOrder;
 
 	private int j;
 
-	public LinKernighanHeuristik() {
+	public LinKernighanHeuristic() {
 		this.verticesInOrder = new Vector<Vertex>();
 	}
 

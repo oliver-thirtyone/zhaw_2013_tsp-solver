@@ -10,12 +10,12 @@ import tspsolver.model.scenario.grid.Edge;
 import tspsolver.model.scenario.grid.GridFactory;
 import tspsolver.model.scenario.grid.Vertex;
 
-public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
+public class MinimumSpanningTreeHeuristicTest extends StartAlgorithmTest {
 
 	@Override
 	@Before
 	public void setUp() {
-		this.algorithm = new NearestNeighborHeuristik();
+		this.algorithm = new MinimumSpanningTreeHeuristic();
 		super.setUp();
 	}
 
@@ -33,32 +33,23 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 		Edge edgeEastWest = GridFactory.getEdge(vertexEast, vertexWest);
 		Edge edgeSouthWest = GridFactory.getEdge(vertexSouth, vertexWest);
 
-		// Take the first step
-		Assert.assertTrue(this.algorithm.step());
-		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
-		Assert.assertTrue(this.path.containsEdge(edgeNorthEast));
+		// Step through the algorithm
+		do {
+			Assert.assertTrue(this.algorithm.step());
+		} while (!this.algorithm.hasFinishedSuccessfully());
 
-		// Take the second step
-		Assert.assertTrue(this.algorithm.step());
-		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
-		Assert.assertTrue(this.path.containsEdge(edgeEastSouth));
+		// Check if we have four edges
+		Assert.assertEquals(4, this.path.getNumberOfEdges());
 
-		// Take the third step
-		Assert.assertTrue(this.algorithm.step());
-		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
-		Assert.assertTrue(this.path.containsEdge(edgeSouthWest));
-
-		// Take the fourth step
-		Assert.assertTrue(this.algorithm.step());
-		Assert.assertTrue(this.algorithm.hasFinishedSuccessfully());
+		// Check if we went the right path
+		Assert.assertTrue(this.path.containsEdge(edgeNorthSouth));
 		Assert.assertTrue(this.path.containsEdge(edgeNorthWest));
-
-		// Make sure that we can not take an other step
-		Assert.assertFalse(this.algorithm.step());
+		Assert.assertTrue(this.path.containsEdge(edgeEastSouth));
+		Assert.assertTrue(this.path.containsEdge(edgeEastWest));
 
 		// Check if these edges are not part of the path
-		Assert.assertFalse(this.path.containsEdge(edgeNorthSouth));
-		Assert.assertFalse(this.path.containsEdge(edgeEastWest));
+		Assert.assertFalse(this.path.containsEdge(edgeNorthEast));
+		Assert.assertFalse(this.path.containsEdge(edgeSouthWest));
 
 		// Check if the path is valid
 		Assert.assertTrue(StartAlgorithmTest.scenarioNorthEastSouthWest.isPathValid());
@@ -83,40 +74,27 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 		Edge edge35 = GridFactory.getEdge(vertex3, vertex5);
 		Edge edge45 = GridFactory.getEdge(vertex4, vertex5);
 
-		// Take the first step
-		Assert.assertTrue(this.algorithm.step());
-		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
-		Assert.assertTrue(this.path.containsEdge(edge15));
+		// Step through the algorithm
+		do {
+			Assert.assertTrue(this.algorithm.step());
+		} while (!this.algorithm.hasFinishedSuccessfully());
 
-		// Take the second step
-		Assert.assertTrue(this.algorithm.step());
-		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
-		Assert.assertTrue(this.path.containsEdge(edge45));
+		// Check if we have five edges
+		Assert.assertEquals(5, this.path.getNumberOfEdges());
 
-		// Take the third step
-		Assert.assertTrue(this.algorithm.step());
-		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
-		Assert.assertTrue(this.path.containsEdge(edge34));
-
-		// Take the fourth step
-		Assert.assertTrue(this.algorithm.step());
-		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
-		Assert.assertTrue(this.path.containsEdge(edge23));
-
-		// Take the fifth step
-		Assert.assertTrue(this.algorithm.step());
-		Assert.assertTrue(this.algorithm.hasFinishedSuccessfully());
+		// Check if we went the right path
 		Assert.assertTrue(this.path.containsEdge(edge12));
-
-		// Make sure that we can not take an other step
-		Assert.assertFalse(this.algorithm.step());
+		Assert.assertTrue(this.path.containsEdge(edge25));
+		Assert.assertTrue(this.path.containsEdge(edge35));
+		Assert.assertTrue(this.path.containsEdge(edge34));
+		Assert.assertTrue(this.path.containsEdge(edge14));
 
 		// Check if these edges are not part of the path
 		Assert.assertFalse(this.path.containsEdge(edge13));
-		Assert.assertFalse(this.path.containsEdge(edge14));
+		Assert.assertFalse(this.path.containsEdge(edge15));
+		Assert.assertFalse(this.path.containsEdge(edge23));
 		Assert.assertFalse(this.path.containsEdge(edge24));
-		Assert.assertFalse(this.path.containsEdge(edge25));
-		Assert.assertFalse(this.path.containsEdge(edge35));
+		Assert.assertFalse(this.path.containsEdge(edge45));
 
 		// Check if the path is valid
 		Assert.assertTrue(StartAlgorithmTest.scenarioFiveVertices.isPathValid());
@@ -141,46 +119,30 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 		Edge edge35 = GridFactory.getEdge(vertex3, vertex5);
 		Edge edge45 = GridFactory.getEdge(vertex4, vertex5);
 
-		// Check that one vertex is non-accessible
-		Assert.assertFalse(GridFactory.hasEdge(vertex1, vertex2));
-		Assert.assertNull(edge12);
+		// Step through the algorithm
+		do {
+			Assert.assertTrue(this.algorithm.step());
+		} while (!this.algorithm.hasFinishedSuccessfully());
 
-		// Take the first step
-		Assert.assertTrue(this.algorithm.step());
-		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
+		// Check if we have five edges
+		Assert.assertEquals(5, this.path.getNumberOfEdges());
+
+		// Check if we went the right path
 		Assert.assertTrue(this.path.containsEdge(edge15));
-
-		// Take the second step
-		Assert.assertTrue(this.algorithm.step());
-		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
-		Assert.assertTrue(this.path.containsEdge(edge45));
-
-		// Take the third step
-		Assert.assertTrue(this.algorithm.step());
-		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
-		Assert.assertTrue(this.path.containsEdge(edge34));
-
-		// Take the fourth step
-		Assert.assertTrue(this.algorithm.step());
-		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
+		Assert.assertTrue(this.path.containsEdge(edge25));
 		Assert.assertTrue(this.path.containsEdge(edge23));
-
-		// Take the fifth step
-		Assert.assertFalse(this.algorithm.step());
-		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
-
-		// Make sure that we can not take an other step
-		Assert.assertFalse(this.algorithm.step());
+		Assert.assertTrue(this.path.containsEdge(edge34));
+		Assert.assertTrue(this.path.containsEdge(edge14));
 
 		// Check if these edges are not part of the path
+		Assert.assertFalse(this.path.containsEdge(edge12));
 		Assert.assertFalse(this.path.containsEdge(edge13));
-		Assert.assertFalse(this.path.containsEdge(edge14));
 		Assert.assertFalse(this.path.containsEdge(edge24));
-		Assert.assertFalse(this.path.containsEdge(edge25));
 		Assert.assertFalse(this.path.containsEdge(edge35));
+		Assert.assertFalse(this.path.containsEdge(edge45));
 
-		// Check if the path is invalid
-		Assert.assertFalse(StartAlgorithmTest.scenarioFiveVerticesOneNonAccessibleEdge.isPathValid());
+		// Check if the path is valid
+		Assert.assertTrue(StartAlgorithmTest.scenarioFiveVerticesOneNonAccessibleEdge.isPathValid());
 	}
 
 	@Override
@@ -207,7 +169,7 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 		// Take the second step
 		Assert.assertTrue(this.algorithm.step());
 		Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
-		Assert.assertTrue(this.path.containsEdge(edgeEast1West1));
+		Assert.assertTrue(this.path.containsEdge(edgeNorthWest1));
 
 		// Take the third step
 		Assert.assertFalse(this.algorithm.step());
@@ -217,26 +179,18 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 		Assert.assertFalse(this.algorithm.step());
 
 		// Check if these edges are not part of the path
-		Assert.assertFalse(this.path.containsEdge(edgeNorthWest1));
+		Assert.assertFalse(this.path.containsEdge(edgeEast1West1));
 		Assert.assertFalse(this.path.containsEdge(edgeSouthEast2));
 		Assert.assertFalse(this.path.containsEdge(edgeSouthWest2));
 		Assert.assertFalse(this.path.containsEdge(edgeEast2West2));
-
-		// Check if the path is invalid
-		Assert.assertFalse(StartAlgorithmTest.scenarioUnsolvable.isPathValid());
 	}
 
 	@Override
 	protected void doTestScenarioFortyoneVertices() {
-		// Take 39 steps
-		for (int i = 0; i < 40; i++) {
+		// Step through the algorithm
+		do {
 			Assert.assertTrue(this.algorithm.step());
-			Assert.assertFalse(this.algorithm.hasFinishedSuccessfully());
-		}
-
-		// Take the last step
-		Assert.assertTrue(this.algorithm.step());
-		Assert.assertTrue(this.algorithm.hasFinishedSuccessfully());
+		} while (!this.algorithm.hasFinishedSuccessfully());
 
 		// Make sure that we can not take an other step
 		Assert.assertFalse(this.algorithm.step());
@@ -261,13 +215,8 @@ public class NearestNeighborHeuristikTest extends StartAlgorithmTest {
 	}
 
 	@Test
-	public void testScenario00800Vertices() {
+	public void testScenario0800Vertices() {
 		this.testScenario(StartAlgorithmTest.scenario00800Vertices);
-	}
-
-	@Test
-	public void testScenario01600Vertices() {
-		this.testScenario(StartAlgorithmTest.scenario01600Vertices);
 	}
 
 }

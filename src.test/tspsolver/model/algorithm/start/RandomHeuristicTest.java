@@ -10,12 +10,12 @@ import tspsolver.model.scenario.grid.Edge;
 import tspsolver.model.scenario.grid.GridFactory;
 import tspsolver.model.scenario.grid.Vertex;
 
-public class RandomAlgorithmTest extends StartAlgorithmTest {
+public class RandomHeuristicTest extends StartAlgorithmTest {
 
 	@Override
 	@Before
 	public void setUp() {
-		this.algorithm = new RandomAlgorithm();
+		this.algorithm = new RandomHeuristic();
 		super.setUp();
 	}
 
