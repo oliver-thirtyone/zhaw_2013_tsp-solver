@@ -108,8 +108,8 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 				// 3. Choose x1 = (t1, t2) element from T.
 				Edge x1 = t1.getEdgeToVertex(t2);
 				if (x1 == null) {
-					// FIXME: this path does not work, what do we do now?
-					throw new IllegalStateException();
+					// Can't finish the tour
+					return false;
 				}
 				x.add(x1);
 
@@ -148,10 +148,8 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 								{
 									Edge yi = t4.getEdgeToVertex(t1);
 									if (yi == null) {
-										// FIXME: this path does not work, what
-										// do
-										// we do now?
-										throw new IllegalStateException();
+										// Can't finish the tour
+										return false;
 									}
 									y.add(yi);
 
@@ -224,11 +222,8 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 											{
 												Edge yi = t2iMinus1.getEdgeToVertex(t2i);
 												if (yi == null) {
-													// FIXME: this path does not
-													// work, what
-													// do
-													// we do now?
-													throw new IllegalStateException();
+													// Can't finish the tour
+													return false;
 												}
 												y.add(yi);
 
@@ -357,9 +352,9 @@ public class LinKernighanHeuristik extends OptimizerAlgorithm {
 		return true;
 	}
 
-	private double calcGain(Vector<Edge> x, Vector<Edge> y) {
+	private long calcGain(Vector<Edge> x, Vector<Edge> y) {
 
-		double gain = 0.0;
+		long gain = 0;
 
 		for (Edge edge : x) {
 			gain += edge.getWeight();
