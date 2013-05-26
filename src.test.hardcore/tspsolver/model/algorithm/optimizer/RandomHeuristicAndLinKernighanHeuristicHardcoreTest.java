@@ -4,14 +4,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import tspsolver.model.algorithm.OptimizerAlgorithmHardcoreTest;
-import tspsolver.model.algorithm.start.MinimumSpanningTreeHeuristik;
+import tspsolver.model.algorithm.start.RandomHeuristic;
 
-public class MinimumSpanningTreeHeuristikAndLinKernighanHeuristikHardcoreTest extends OptimizerAlgorithmHardcoreTest {
+public class RandomHeuristicAndLinKernighanHeuristicHardcoreTest extends OptimizerAlgorithmHardcoreTest {
 
 	@Before
 	public void setUp() {
-		this.startAlgorithm = new MinimumSpanningTreeHeuristik();
-		this.optimizerAlgorithm = new LinKernighanHeuristik();
+		this.startAlgorithm = new RandomHeuristic();
+		this.optimizerAlgorithm = new LinKernighanHeuristic();
 	}
 
 	@Test

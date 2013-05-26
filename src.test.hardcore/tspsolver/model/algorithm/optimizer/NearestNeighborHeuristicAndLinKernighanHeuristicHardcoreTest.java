@@ -4,14 +4,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import tspsolver.model.algorithm.OptimizerAlgorithmHardcoreTest;
-import tspsolver.model.algorithm.start.NearestNeighborHeuristik;
+import tspsolver.model.algorithm.start.NearestNeighborHeuristic;
 
-public class NearestNeighborHeuristikAndLinKernighanHeuristikHardcoreTest extends OptimizerAlgorithmHardcoreTest {
+public class NearestNeighborHeuristicAndLinKernighanHeuristicHardcoreTest extends OptimizerAlgorithmHardcoreTest {
 
 	@Before
 	public void setUp() {
-		this.startAlgorithm = new NearestNeighborHeuristik();
-		this.optimizerAlgorithm = new LinKernighanHeuristik();
+		this.startAlgorithm = new NearestNeighborHeuristic();
+		this.optimizerAlgorithm = new LinKernighanHeuristic();
 	}
 
 	@Test

@@ -5,11 +5,11 @@ import org.junit.Test;
 
 import tspsolver.model.algorithm.StartAlgorithmHardcoreTest;
 
-public class NearestNeighborHeuristikHardcoreTest extends StartAlgorithmHardcoreTest {
+public class RandomHeuristicHardcoreTest extends StartAlgorithmHardcoreTest {
 
 	@Before
 	public void setUp() {
-		this.algorithm = new NearestNeighborHeuristik();
+		this.algorithm = new RandomHeuristic();
 	}
 
 	@Test

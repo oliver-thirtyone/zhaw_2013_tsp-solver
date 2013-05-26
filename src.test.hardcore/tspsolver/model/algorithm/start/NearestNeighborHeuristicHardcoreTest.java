@@ -5,11 +5,11 @@ import org.junit.Test;
 
 import tspsolver.model.algorithm.StartAlgorithmHardcoreTest;
 
-public class MinimumSpanningTreeHeuristikHardcoreTest extends StartAlgorithmHardcoreTest {
+public class NearestNeighborHeuristicHardcoreTest extends StartAlgorithmHardcoreTest {
 
 	@Before
 	public void setUp() {
-		this.algorithm = new MinimumSpanningTreeHeuristik();
+		this.algorithm = new NearestNeighborHeuristic();
 	}
 
 	@Test
@@ -55,6 +55,21 @@ public class MinimumSpanningTreeHeuristikHardcoreTest extends StartAlgorithmHard
 	@Test
 	public void testScenario01400Vertices() {
 		this.testScenario(1400, "test_hardcore_01400_vertices.xml");
+	}
+
+	@Test
+	public void testScenario01600Vertices() {
+		this.testScenario(1600, "test_hardcore_01600_vertices.xml");
+	}
+
+	@Test
+	public void testScenario03200Vertices() {
+		this.testScenario(3200, "test_hardcore_03200_vertices.xml");
+	}
+
+	@Test
+	public void testScenario04000Vertices() {
+		this.testScenario(4000, "test_hardcore_04000_vertices.xml");
 	}
 
 }
