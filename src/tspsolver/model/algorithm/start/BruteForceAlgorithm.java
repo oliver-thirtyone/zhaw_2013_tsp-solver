@@ -82,9 +82,6 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 				return true;
 			}
 			i -= 1;
-			// FIXME: Dies könnte optimiert werden jedes Vertex müsste einen
-			// spezfische reihenfolge, ändlich dem eines alphabet, die grösse
-			// funktioniert nicht weil nicht eindeutig
 			// lexikogr. Nachfolger hat größeres a[i]
 			if (this.startPath.indexOf(this.currentPath.get(i)) < this.startPath.indexOf(this.currentPath.get(i + 1))) {
 				break;

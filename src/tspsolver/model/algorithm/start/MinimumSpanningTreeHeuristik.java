@@ -19,7 +19,7 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 	private final Vector<Edge> spanningTreeEdges;
 	private final Set<Vertex> spanningTreeVertices;
-	private final TreeSet<Edge> spanningTreePossibleEdges;
+	private TreeSet<Edge> spanningTreePossibleEdges;
 	private final Stack<Vertex> brancheVertices;
 
 	private Phase phase;
@@ -29,7 +29,8 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 		this.spanningTreeEdges = new Vector<Edge>();
 		this.spanningTreeVertices = new HashSet<Vertex>();
 
-		this.spanningTreePossibleEdges = new TreeSet<Edge>(new EdgeWeightComparator());
+		this.spanningTreePossibleEdges = new TreeSet<Edge>(
+				new EdgeWeightComparator());
 		this.brancheVertices = new Stack<Vertex>();
 
 		this.reset();
@@ -63,21 +64,24 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 	public boolean doStep() {
 		boolean success = false;
 		switch (this.phase) {
-			case CREATE_SPANNING_TREE:
-				success = this.doStepCreateSpanningTree();
-				break;
-			case DO_EULERIAN_TRAIL:
-				success = this.doStepEulerianTrail();
-				break;
-			default:
-				break;
+		case CREATE_SPANNING_TREE:
+			success = this.doStepCreateSpanningTree();
+			break;
+		case DO_EULERIAN_TRAIL:
+			success = this.doStepEulerianTrail();
+			break;
+		default:
+			break;
 		}
 		return success;
 	}
 
 	private boolean doStepCreateSpanningTree() {
-		boolean successfulStep = true; // FIXME: default should be false
-		// FIXME: return false if we could not add a new edge
+		boolean successfulStep = false;
+
+		TreeSet<Edge> newSpanningTreePossibleEdges = new TreeSet<Edge>(
+				new EdgeWeightComparator());
+		newSpanningTreePossibleEdges.addAll(this.spanningTreePossibleEdges);
 
 		// Take the lowest one, that not build a circle and add it to the tree.
 		for (Edge edge : this.spanningTreePossibleEdges) {
@@ -87,67 +91,62 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 				this.spanningTreeEdges.add(edge);
 				this.getPathUpdater().addEdge(edge);
 
-				if (this.spanningTreeEdges.size() < this.getGrid().getNumberOfVertices() - 1) {
+				if (this.spanningTreeEdges.size() < this.getGrid()
+						.getNumberOfVertices() - 1) {
 
 					// Prepare for next step.
 					this.spanningTreeVertices.add(edge.getFirstVertex());
 
 					// Add all new possible edges
-					// FIXME: Bin nicht sicher ob dieser Schritt richtig
-					// funktioniert, ich gehe davon aus das in einem TreeSet
-					// jeweils nur eine Instanz des selben Edges drin sein kann.
 					for (Edge edgeToAdd : edge.getFirstVertex().getEdges()) {
-						this.spanningTreePossibleEdges.add(edgeToAdd);
+						newSpanningTreePossibleEdges.add(edgeToAdd);
 					}
 
 					// The edge is used now.
-					this.spanningTreePossibleEdges.remove(edge);
-				}
-				else {
+					newSpanningTreePossibleEdges.remove(edge);
+
+					this.spanningTreePossibleEdges = newSpanningTreePossibleEdges;
+				} else {
 					// finish create spanning tree
 					this.initEulerianTrail();
 				}
 
+				successfulStep = true;
 				break;
-			}
-			else if (this.spanningTreeVertices.contains(edge.getSecondVertex()) == false) {
+			} else if (this.spanningTreeVertices.contains(edge
+					.getSecondVertex()) == false) {
 
 				// Add the edge to the spanning tree.
 				this.spanningTreeEdges.add(edge);
 				this.getPathUpdater().addEdge(edge);
 
-				if (this.spanningTreeEdges.size() < this.getGrid().getNumberOfVertices() - 1) {
+				if (this.spanningTreeEdges.size() < this.getGrid()
+						.getNumberOfVertices() - 1) {
 
 					// Prepare for next step.
 					this.spanningTreeVertices.add(edge.getSecondVertex());
 
 					// Add all new possible edges
-					// FIXME: Bin nicht sicher ob dieser Schritt richtig
-					// funktioniert, ich gehe davon aus das in einem TreeSet
-					// jeweils nur eine Instanz des selben Edges drin sein kann.
 					for (Edge edgeToAdd : edge.getSecondVertex().getEdges()) {
-						this.spanningTreePossibleEdges.add(edgeToAdd);
+						newSpanningTreePossibleEdges.add(edgeToAdd);
 					}
 
 					// The edge is used now.
-					this.spanningTreePossibleEdges.remove(edge);
-				}
-				else {
+					newSpanningTreePossibleEdges.remove(edge);
+
+					this.spanningTreePossibleEdges = newSpanningTreePossibleEdges;
+				} else {
 					// finish create spanning tree
 					this.initEulerianTrail();
 				}
 
+				successfulStep = true;
 				break;
 
-			}
-			else {
+			} else {
 				// This edge will build a circle, remove it to improve
 				// performance
-				// FIXME: Alternative zu diesem Schritt währe, dass man die
-				// jeweiligen Kanten, welche einen Kreis bilden, nicht
-				// hinzufügt. Ich denke aber das diese Variante bei einer
-				// grossen Anzahl Knoten besser ist.
-				this.spanningTreeVertices.remove(edge);
+				newSpanningTreePossibleEdges.remove(edge);
 			}
 		}
 
@@ -167,15 +166,17 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 
 		int i = 1;
 		while (this.spanningTreeEdges.isEmpty() == false) {
-			Edge edge = this.spanningTreeEdges.elementAt(this.spanningTreeEdges.size() - i);
+			Edge edge = this.spanningTreeEdges.elementAt(this.spanningTreeEdges
+					.size() - i);
 
 			// Find the next edge in the spanning tree that is connected to the
 			// current branch vertex.
 			if (edge.getFirstVertex() == brancheVertex) {
 
-				Edge newEdge = this.currentVertex.getEdgeToVertex(edge.getSecondVertex());
+				Edge newEdge = this.currentVertex.getEdgeToVertex(edge
+						.getSecondVertex());
 				if (newEdge == null) {
-					// FIXME: this path does not work, what do we do now?
+					// Can't finish the tour
 					return false;
 				}
 
@@ -197,12 +198,12 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 				this.getPathUpdater().updatePath();
 				return true;
 
-			}
-			else if (edge.getSecondVertex() == brancheVertex) {
+			} else if (edge.getSecondVertex() == brancheVertex) {
 
-				Edge newEdge = this.currentVertex.getEdgeToVertex(edge.getFirstVertex());
+				Edge newEdge = this.currentVertex.getEdgeToVertex(edge
+						.getFirstVertex());
 				if (newEdge == null) {
-					// FIXME: this path does not work, what do we do now?
+					// Can't finish the tour
 					return false;
 				}
 
@@ -224,25 +225,22 @@ public class MinimumSpanningTreeHeuristik extends StartAlgorithm {
 				this.getPathUpdater().updatePath();
 				return true;
 
-			}
-			else if (i >= this.spanningTreeEdges.size()) {
+			} else if (i >= this.spanningTreeEdges.size()) {
 				// A leaf from the spanning tree
-				// Nothing happen to the path, so recall the step.
-
-				// FIXME: Remove the recursion
-				return this.doStepEulerianTrail();
-			}
-			else {
+				return true;
+			} else {
 				i++;
 			}
 		}
 
 		// Finishing the eulerian trail:
-		// Connect the last vertex from the eulerian path with the start vertex to
+		// Connect the last vertex from the eulerian path with the start vertex
+		// to
 		// close the circle
-		Edge newEdge = this.getStartingVertex().getEdgeToVertex(this.currentVertex);
+		Edge newEdge = this.getStartingVertex().getEdgeToVertex(
+				this.currentVertex);
 		if (newEdge == null) {
-			// FIXME: this path does not work, what do we do now?
+			// Can't finish the tour
 			return false;
 		}
 
