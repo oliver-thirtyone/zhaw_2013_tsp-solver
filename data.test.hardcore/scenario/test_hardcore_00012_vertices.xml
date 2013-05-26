@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<scenario name="Randomly generated scenario: 12 vertices">
+	<vertex name="0" x="478" y="268" />
+	<vertex name="1" x="405" y="170" />
+	<vertex name="2" x="808" y="310" />
+	<vertex name="3" x="122" y="160" />
+	<vertex name="4" x="309" y="375" />
+	<vertex name="5" x="611" y="530" />
+	<vertex name="6" x="783" y="50" />
+	<vertex name="7" x="876" y="202" />
+	<vertex name="8" x="160" y="247" />
+	<vertex name="9" x="353" y="488" />
+	<vertex name="10" x="241" y="550" />
+	<vertex name="11" x="628" y="307" />
+
+	<starting-vertex name="0" />
+</scenario>
