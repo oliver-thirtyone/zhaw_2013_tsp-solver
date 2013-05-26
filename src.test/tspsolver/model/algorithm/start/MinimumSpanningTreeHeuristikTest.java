@@ -211,7 +211,12 @@ public class MinimumSpanningTreeHeuristikTest extends StartAlgorithmTest {
 
 	@Test
 	public void testScenario0400Vertices() {
-		// FIXME: why does this take so long?
+		this.testScenario(StartAlgorithmTest.scenario00400Vertices);
+	}
+
+	@Test
+	public void testScenario0800Vertices() {
+		this.testScenario(StartAlgorithmTest.scenario00800Vertices);
 	}
 
 }

@@ -41,7 +41,8 @@ public class TwoOptHeuristik extends OptimizerAlgorithm {
 
 					this.verticesInOrder.add(currentVertex);
 					break;
-				} else if (edge.getSecondVertex() == currentVertex) {
+				}
+				else if (edge.getSecondVertex() == currentVertex) {
 
 					edges.remove(edge);
 
@@ -118,8 +119,7 @@ public class TwoOptHeuristik extends OptimizerAlgorithm {
 
 		for (int j = 1; j <= this.verticesInOrder.size(); j++) {
 			Vertex firstVertex = vertexPath.get(j - 1);
-			Vertex secondVertex = (j == this.verticesInOrder.size()) ? vertexPath
-					.get(0) : vertexPath.get(j);
+			Vertex secondVertex = (j == this.verticesInOrder.size()) ? vertexPath.get(0) : vertexPath.get(j);
 
 			Edge edge = firstVertex.getEdgeToVertex(secondVertex);
 			if (edge == null) {
