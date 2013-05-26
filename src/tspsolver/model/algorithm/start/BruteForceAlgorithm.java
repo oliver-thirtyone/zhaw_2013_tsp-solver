@@ -44,7 +44,7 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 	protected boolean doStep() {
 		boolean successfulStep = true;
 
-		boolean lastPermutation = this.next_permutation();
+		boolean lastPermutation = this.nextPermutation();
 
 		// Create the new path
 		Path newPath = this.convertToPath(this.currentPath);
@@ -69,7 +69,7 @@ public class BruteForceAlgorithm extends StartAlgorithm {
 		return successfulStep;
 	}
 
-	private boolean next_permutation() {
+	private boolean nextPermutation() {
 
 		// letztes Element; man arbeitet sich von hinten nach vorne durch
 		int i = this.currentPath.size() - 1; //
