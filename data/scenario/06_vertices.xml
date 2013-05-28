@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<scenario name="Six Vertices">
+<scenario name="06 vertices">
 	<vertex name="1" x="420" y="250" />
 	<vertex name="2" x="650" y="150" />
 	<vertex name="3" x="460" y="300" />

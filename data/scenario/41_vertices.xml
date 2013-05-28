@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<scenario name="41 locations in Switzerland">
+<scenario name="41 vertices">
 	<vertex name="Vertex1" x="227" y="271" />
 	<vertex name="Vertex2" x="523" y="95" />
 	<vertex name="Vertex3" x="605" y="561" />

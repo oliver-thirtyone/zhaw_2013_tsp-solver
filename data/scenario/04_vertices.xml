@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<scenario name="North, East, South, West">
+<scenario name="04 vertices">
 	<vertex name="north" x="350" y="25" link="false" />
 	<vertex name="east" x="550" y="250" link="false" />
 	<vertex name="south" x="350" y="500" link="false" />
